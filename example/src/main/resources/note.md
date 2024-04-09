@@ -17,7 +17,7 @@ rocketmq nameserver所在服务器需要开放端口9876，broker所在服务器
 消费者的 AllocateMessageQueueStrategy 队列负载算法，如果同一个消费组的多个消费者分别设置了不同的队列负载算法，会以哪一个为准呢？
 
 
-
+AllocateMessageQueueConsistentHash 这个类实现了哈希一致性算法，看看源码还是挺有趣的呢
 
 
 
