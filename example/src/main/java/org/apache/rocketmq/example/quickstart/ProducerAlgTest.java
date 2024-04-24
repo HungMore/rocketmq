@@ -88,4 +88,109 @@ public class ProducerAlgTest {
         return true;
     }
 
+    public boolean isHappy(int n) {
+        Set<Long> longSet = new HashSet<>();
+        long temp = n;
+        longSet.add(temp);
+        while (true) {
+            temp = transform(temp);
+            if (temp == 1) {
+                return true;
+            }
+            if (!longSet.add(temp)) {
+                return false;
+            }
+        }
+    }
+
+    private long transform(long n) {
+        String longString = Long.toString(n);
+        long res = 0;
+        for (int i = 0; i < longString.length(); i++) {
+            res += (int) Math.pow((longString.charAt(i) - '0'), 2);
+        }
+        return res;
+    }
+
+    public boolean wordPattern(String pattern, String s) {
+        String[] split = s.split(" ");
+        if (split.length != pattern.length()) {
+            return false;
+        }
+        Map<Character, String> map1 = new HashMap<>();
+        Map<String, Character> map2 = new HashMap<>();
+        for (int i = 0; i < pattern.length(); i++) {
+            String word = map1.get(pattern.charAt(i));
+            if (word == null) {
+                Character character = map2.get(split[i]);
+                if (character != null) {
+                    return false;
+                } else {
+                    map1.put(pattern.charAt(i), split[i]);
+                    map2.put(split[i], pattern.charAt(i));
+                }
+            } else if (!word.equals(split[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isIsomorphic(String s, String t) {
+        Map<Character, Character> map1 = new HashMap<>();
+        Map<Character, Character> map2 = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            Character s2tChar = map1.get(s.charAt(i));
+            if (s2tChar == null) {
+                Character t2sChar = map2.get(t.charAt(i));
+                if (t2sChar != null) {
+                    return false;
+                } else {
+                    map1.put(s.charAt(i), t.charAt(i));
+                    map2.put(t.charAt(i), s.charAt(i));
+                }
+            } else if (t.charAt(i) != s2tChar) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public String frequencySort(String s) {
+        HashMap<Character, Integer> char2Times = new HashMap<>();
+        TreeSet<Pair> treeSet = new TreeSet<>();
+        for (int i = 0; i < s.length(); i++) {
+            char2Times.merge(s.charAt(i), 1, Integer::sum);
+        }
+        for (Map.Entry<Character, Integer> entry : char2Times.entrySet()) {
+            treeSet.add(new Pair(entry.getKey(), entry.getValue()));
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Pair pair : treeSet) {
+            for (int i = 0; i < pair.times; i++) {
+                stringBuilder.append(pair.c);
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private class Pair implements Comparable<Pair> {
+        char c;
+        int times;
+
+        @Override
+        public int compareTo(Pair p) {
+            int gap = p.times - this.times;
+            if (gap == 0) {
+                return this.c - p.c;
+            }
+            return gap;
+        }
+
+        public Pair(char c, int times) {
+            this.c = c;
+            this.times = times;
+        }
+    }
+
 }
