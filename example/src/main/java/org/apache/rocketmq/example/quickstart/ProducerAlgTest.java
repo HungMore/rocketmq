@@ -193,4 +193,34 @@ public class ProducerAlgTest {
         }
     }
 
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> value2Index = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            Integer index = value2Index.get(target - nums[i]);
+            if (index != null) {
+                return new int[]{i, index};
+            }
+            value2Index.put(nums[i], i);
+        }
+        throw new RuntimeException("no answer: " + Arrays.toString(nums) + ", " + target);
+    }
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                for (int k = j + 1; k < nums.length; k++) {
+                    if (nums[i] + nums[j] + nums[k] == 0) {
+                        ArrayList<Integer> integers = new ArrayList<>(3);
+                        integers.add(nums[i]);
+                        integers.add(nums[j]);
+                        integers.add(nums[k]);
+                        // todo mozh 还要去重
+                        res.add(integers);
+                    }
+                }
+            }
+        }
+        return res;
+    }
 }

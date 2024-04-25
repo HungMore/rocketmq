@@ -243,7 +243,7 @@ public String frequencySort(String s);
 定义类Pair，Pair包含两个属性，字母以及字母出现的次数，Pair的排序规则为先按照次数降序排序，再按照字母升序排序。
 逐个遍历s中的字符，将字符及其次数存入HashMap中。
 然后逐个遍历HashMap中的entry，生成对应的Pair对象，并将Pair对象存入优先级队列（或者TreeSet）中。
-然后弹出优先级队列（或者TreeSet），组装返回值。
+然后弹出优先级队列（或者遍历TreeSet），组装返回值。
 代码：
 ```java
 public String frequencySort(String s) {
@@ -285,8 +285,69 @@ public String frequencySort(String s) {
 ```
 疑问：
 1. 优先级队列PriorityQueue和TreeSet这两个数据结构有何异同呢？
-复杂度上来说，它们的差别不大，主要是功能有差别。优先级队列底层是堆，元素可重复，可获取最大值，无序，要有序输出只能不断地弹出堆顶销毁堆；TreeSet是二叉搜索树，不可重复，有序。
+复杂度上来说，它们的差别不大，主要是功能有差别。优先级队列底层是堆，元素可重复，可获取最大值，无序，要有序输出只能不断地弹出堆顶销毁堆；TreeSet底层是二叉搜索树（严格来说是红黑树），不可重复，有序。
 2. 看官方答案，有提到用桶排序来做，有空了解下桶排序。
 定义桶，每个桶表示频次，桶内元素表示该频次下的字母，然后从大到小遍历桶构造返回值即可。在这题中需要先用HashMap记录字母的频次，然后再构建桶。
 
-4.4
+###### 问题1：two sum。
+
+给定一个整数数组nums和一个整数目标值target，请你在该数组中找出和为目标值target的那两个整数，并返回它们的数组下标。
+你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。
+你可以按任意顺序返回答案。
+示例 1：
+输入：nums = [2,7,11,15], target = 9
+输出：[0,1]
+解释：因为 nums[0] + nums[1] == 9 ，返回 [0, 1] 。
+```java
+public int[] twoSum(int[] nums, int target);
+```
+
+这题因为需要返回数组的下标，所以使用map（HashMap）来存数值到下标的映射。
+遍历数组的每个元素num，判断map中是否存在target-num，如果存在，说明找到了和为target的两个整数，返回它们的下标即可；如果不存在，将num及其下标存入map中，遍历下一个元素。
+因为题目说明问题有且仅有一个解，所以如果遍历完数组依然没有找到解，就抛出异常吧。
+代码：
+```java
+public int[] twoSum(int[] nums, int target) {
+    HashMap<Integer, Integer> value2Index = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        Integer index = value2Index.get(target - nums[i]);
+        if (index != null) {
+            return new int[]{i, index};
+        }
+        value2Index.put(nums[i], i);
+    }
+    throw new RuntimeException("no answer: " + Arrays.toString(nums) + ", " + target);
+}
+```
+这题还有一个值得扩散的地方，如果题目中给出的数组是有序的，那我们就可以用指针对撞的方式来做，空间复杂度将进一步降低。
+
+###### 问题15：3sum。
+
+给你一个整数数组nums，判断是否存在三元组[nums[i], nums[j], nums[k]]，满足i!=j、i!=k且j!=k，同时还满足nums[i]+nums[j]+nums[k]==0。请你返回所有和为0且不重复的三元组。
+注意：答案中不可以包含重复的三元组。
+示例 1：
+输入：nums = [-1,0,1,2,-1,-4]
+输出：[[-1,-1,2],[-1,0,1]]
+解释：
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
+不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
+注意，输出的顺序和三元组的顺序并不重要。
+```java
+public List<List<Integer>> threeSum(int[] nums);
+```
+
+题目要求i\j\k互不相等，所以我们需要考虑i\j\k的所有组合情况。
+我们可以定义三层循环，i从0到nums.length-1，j从i+1到nums.length-1，k从j+1到nums.length-1，判断nums[i]+nums[j]+nums[k]是否等于0，如果等于0，加入结果集，直至三层循环遍历完成。
+但是这题还有一个要求：答案中不能包含重复的三元组，所以我们还要对三元组进行去重。
+代码：
+```java
+
+```
+
+###### 问题18：4sum。
+
+###### 问题16：3sum closest。
+
+这题波波老师说不涉及查找表。
