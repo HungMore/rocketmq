@@ -340,10 +340,53 @@ public List<List<Integer>> threeSum(int[] nums);
 
 题目要求i\j\k互不相等，所以我们需要考虑i\j\k的所有组合情况。
 我们可以定义三层循环，i从0到nums.length-1，j从i+1到nums.length-1，k从j+1到nums.length-1，判断nums[i]+nums[j]+nums[k]是否等于0，如果等于0，加入结果集，直至三层循环遍历完成。
-但是这题还有一个要求：答案中不能包含重复的三元组，所以我们还要对三元组进行去重。
+但是这题还有一个要求：答案中不能包含重复的三元组，所以我们还要对三元组进行去重。这样做复杂度就很高了，三层循环复杂度来到O(n^3)，去重又消耗额外的性能，无法成功ac。在这题中我们要换种解法。
+
+首先回忆下我们在做two sum这道题的时候，我们说过如果数组有序，我们就可以用对撞指针低成本来做。
+所以在这题中，我们先对数组进行排序。
+排序完成以后，对应nums[i]，我们需要找到nums[j] + nums[k] = -nums[i]，而利用数组已经排好序的性质，我们可以使用对撞指针在O(n)的复杂度就找到这样的i和j。
+另外，排好序以后，我们进行去重也很简单，如果nums[i+1] == nums[i]，那我们判断完nums[i]以后，完全就可以不再判断nums[i+1]了（nums[j]、nums[k]也是同理）。
 代码：
 ```java
-
+public List<List<Integer>> threeSum(int[] nums) {
+    Arrays.sort(nums);
+    List<List<Integer>> res = new LinkedList<>();
+    for (int i = 0; i < nums.length; i++) {
+        // 小小优化点，nums[i] > 0，后面肯定无解了
+        if (nums[i] > 0) {
+            break;
+        }
+        if (i > 0 && nums[i] == nums[i - 1]) {
+            continue;
+        }
+        int j = i + 1, k = nums.length - 1;
+        while (j < k) {
+            if (j > i + 1 && nums[j] == nums[j - 1]) {
+                j++;
+                continue;
+            }
+            if (k < nums.length - 1 && nums[k] == nums[k + 1]) {
+                k--;
+                continue;
+            }
+            int sum = -nums[j] - nums[k];
+            if (sum == nums[i]) {
+                ArrayList<Integer> integers = new ArrayList<>(3);
+                integers.add(nums[i]);
+                integers.add(nums[j]);
+                integers.add(nums[k]);
+                res.add(integers);
+                j++;
+                k--;
+            } else if (sum < nums[i]) {
+                k--;
+            } else {
+                j++;
+            }
+        }
+    }
+    return res;
+}
 ```
 
 ###### 问题18：4sum。

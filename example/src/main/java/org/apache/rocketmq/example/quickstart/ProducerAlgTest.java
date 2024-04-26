@@ -1,11 +1,5 @@
 package org.apache.rocketmq.example.quickstart;
 
-import com.alibaba.fastjson.JSON;
-import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.rocketmq.client.producer.selector.SelectMessageQueueByHash;
-import org.apache.rocketmq.common.message.Message;
-
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -18,14 +12,15 @@ public class ProducerAlgTest {
     public static void main(String[] args) throws Exception {
         ProducerAlgTest producerAlgTest = new ProducerAlgTest();
 
-        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
-        producer.setNamesrvAddr("127.0.0.1:9876");
-        producer.start();
-        Message message2 = new Message("order_topic",
-                null,
-                "key1",
-                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
-        producer.send(message2, new SelectMessageQueueByHash(), "12");
+        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
+//        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
+//        producer.setNamesrvAddr("127.0.0.1:9876");
+//        producer.start();
+//        Message message2 = new Message("order_topic",
+//                null,
+//                "key1",
+//                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
+//        producer.send(message2, new SelectMessageQueueByHash(), "12");
     }
 
     public int[] intersection(int[] nums1, int[] nums2) {
@@ -206,18 +201,39 @@ public class ProducerAlgTest {
     }
 
     public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
         List<List<Integer>> res = new LinkedList<>();
         for (int i = 0; i < nums.length; i++) {
-            for (int j = i + 1; j < nums.length; j++) {
-                for (int k = j + 1; k < nums.length; k++) {
-                    if (nums[i] + nums[j] + nums[k] == 0) {
-                        ArrayList<Integer> integers = new ArrayList<>(3);
-                        integers.add(nums[i]);
-                        integers.add(nums[j]);
-                        integers.add(nums[k]);
-                        // todo mozh 还要去重
-                        res.add(integers);
-                    }
+            // 小小优化点，nums[i] > 0，后面肯定无解了
+            if (nums[i] > 0) {
+                break;
+            }
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int j = i + 1, k = nums.length - 1;
+            while (j < k) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    j++;
+                    continue;
+                }
+                if (k < nums.length - 1 && nums[k] == nums[k + 1]) {
+                    k--;
+                    continue;
+                }
+                int sum = -nums[j] - nums[k];
+                if (sum == nums[i]) {
+                    ArrayList<Integer> integers = new ArrayList<>(3);
+                    integers.add(nums[i]);
+                    integers.add(nums[j]);
+                    integers.add(nums[k]);
+                    res.add(integers);
+                    j++;
+                    k--;
+                } else if (sum < nums[i]) {
+                    k--;
+                } else {
+                    j++;
                 }
             }
         }
