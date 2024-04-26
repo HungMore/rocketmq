@@ -391,6 +391,70 @@ public List<List<Integer>> threeSum(int[] nums) {
 
 ###### 问题18：4sum。
 
+给你一个由n个整数组成的数组nums，和一个目标值target。
+请你找出并返回满足下述全部条件且不重复的四元组[nums[a], nums[b], nums[c], nums[d]]（若两个四元组元素一一对应，则认为两个四元组重复）：
+0 <= a, b, c, d < n
+a、b、c 和 d 互不相同
+nums[a] + nums[b] + nums[c] + nums[d] == target
+你可以按任意顺序返回答案。
+示例 1：
+输入：nums = [1,0,-1,0,-2,2], target = 0
+输出：[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+```java
+public List<List<Integer>> fourSum(int[] nums, int target);
+```
+
+3sum那题的解题思路可以用到这题上面。
+首先我们将数组排序。
+排序以后，对于nums[i]，我们需要选取一个nums[j]（j>i），然后通过对撞指针的方式找到nums[i] + nums[j] + nums[k] + nums[l] == target的四元组加入到结果集，其中i<j<k<l。
+同样的，对于结果的去重，如果nums[i+1]==nums[i]，我们就可以跳过nums[i+1]，nums[j]、nums[k]、nums[l]也是同理，相等的元素就跳过，无需重复判断。
+算法的复杂度为O(n^3)。
+代码：
+```java
+public List<List<Integer>> fourSum(int[] nums, int target) {
+    Arrays.sort(nums);
+    List<List<Integer>> res = new LinkedList<>();
+    for (int i = 0; i < nums.length; i++) {
+        if (i > 0 && nums[i] == nums[i - 1]) {
+            continue;
+        }
+        for (int j = i + 1; j < nums.length; j++) {
+            if (j > i + 1 && nums[j] == nums[j - 1]) {
+                continue;
+            }
+            // 防止溢出
+            long sum = (long) nums[i] + nums[j];
+            int k = j + 1, l = nums.length - 1;
+            while (k < l) {
+                if (k > j + 1 && nums[k] == nums[k - 1]) {
+                    k++;
+                    continue;
+                }
+                if (l < nums.length - 1 && nums[l] == nums[l + 1]) {
+                    l--;
+                    continue;
+                }
+                if (nums[k] + nums[l] + sum == target) {
+                    ArrayList<Integer> integers = new ArrayList<>(4);
+                    integers.add(nums[i]);
+                    integers.add(nums[j]);
+                    integers.add(nums[k]);
+                    integers.add(nums[l]);
+                    res.add(integers);
+                    k++;
+                    l--;
+                } else if (nums[k] + nums[l] + sum < target) {
+                    k++;
+                } else {
+                    l--;
+                }
+            }
+        }
+    }
+    return res;
+}
+```
+
 ###### 问题16：3sum closest。
 
 这题波波老师说不涉及查找表。

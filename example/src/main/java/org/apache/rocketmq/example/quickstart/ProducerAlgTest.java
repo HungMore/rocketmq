@@ -239,4 +239,46 @@ public class ProducerAlgTest {
         }
         return res;
     }
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new LinkedList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            for (int j = i + 1; j < nums.length; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                long sum = (long) nums[i] + nums[j];
+                int k = j + 1, l = nums.length - 1;
+                while (k < l) {
+                    if (k > j + 1 && nums[k] == nums[k - 1]) {
+                        k++;
+                        continue;
+                    }
+                    if (l < nums.length - 1 && nums[l] == nums[l + 1]) {
+                        l--;
+                        continue;
+                    }
+                    if (nums[k] + nums[l] + sum == target) {
+                        ArrayList<Integer> integers = new ArrayList<>(4);
+                        integers.add(nums[i]);
+                        integers.add(nums[j]);
+                        integers.add(nums[k]);
+                        integers.add(nums[l]);
+                        res.add(integers);
+                        k++;
+                        l--;
+                    } else if (nums[k] + nums[l] + sum < target) {
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+        return res;
+    }
 }
