@@ -486,3 +486,4 @@ public int threeSumClosest(int[] nums, int target) {
     return (int) res;
 }
 ```
+看了官方的解答，这题还是可以排序后用对撞指针来做的，我是真没想到那个对撞指针收缩的公式。明天按照官方解答的思路写一写吧，也要尝试下自己用文字写出思路。
