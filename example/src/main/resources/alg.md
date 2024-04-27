@@ -457,4 +457,32 @@ public List<List<Integer>> fourSum(int[] nums, int target) {
 
 ###### 问题16：3sum closest。
 
-这题波波老师说不涉及查找表。
+给你一个长度为n的整数数组nums和一个目标值target。请你从nums中选出三个整数，使它们的和与target最接近。 
+返回这三个数的和。
+假定每组输入只存在恰好一个解。
+示例 1：
+输入：nums = [-1,2,1,-4], target = 1
+输出：2
+解释：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) 。
+```java
+public int threeSumClosest(int[] nums, int target);
+```
+
+这题没想到什么好的解法，只能考虑暴力解法了，定义三层循环遍历所有的三元组，找出其中最接近target的。
+代码：
+```java
+public int threeSumClosest(int[] nums, int target) {
+    long res = Integer.MAX_VALUE + target;
+    for (int i = 0; i < nums.length; i++) {
+        for (int j = i + 1; j < nums.length; j++) {
+            for (int k = j + 1; k < nums.length; k++) {
+                long sum = (long) nums[i] + nums[j] + nums[k];
+                if (Math.abs(sum - target) < Math.abs(res - target)) {
+                    res = sum;
+                }
+            }
+        }
+    }
+    return (int) res;
+}
+```
