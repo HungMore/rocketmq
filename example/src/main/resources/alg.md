@@ -611,3 +611,48 @@ public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
     return cnt;
 }
 ```
+
+###### 问题49：group anagrams。
+
+字母异位词分组。
+给你一个字符串数组，请你将字母异位词组合在一起。可以按任意顺序返回结果列表。
+字母异位词是由重新排列源单词的所有字母得到的一个新单词。
+示例 1:
+输入: strs = ["eat", "tea", "tan", "ate", "nat", "bat"]
+输出: [["bat"],["nat","tan"],["ate","eat","tea"]]
+```java
+public List<List<String>> groupAnagrams(String[] strs);
+```
+
+这题要按照字母异位词进行分组，所以我们首先就会考虑使用一个HashMap存`字母异位词->单词集合`的映射关系，然后我们将HashMap的values返回即可。但是在这个方法中，我们还要想办法将多个字母异位词“序列化”成同一个key，这样才能分组成功。由于题目规定字符串只包含小写字母，那我们可以考虑这样一种字母异位词“序列化”方式：使用一个数组`int[26]`记录字母异位词，下标表示字母，值表示字母出现的次数，然后将该数组转换为`a3b4`（字母a出现3次字母b出现4次）这样的字符串，保证不同的字母异位词可以“序列化”成同一个字符串key。
+代码：
+```java
+public List<List<String>> groupAnagrams(String[] strs) {
+    HashMap<String, List<String>> map = new HashMap<>();
+    for (String str : strs) {
+        String key = serialize(str);
+        List<String> stringList = map.getOrDefault(key, new LinkedList<>());
+        stringList.add(str);
+        map.put(key, stringList);
+    }
+    ArrayList<List<String>> res = new ArrayList<>(map.size());
+    res.addAll(map.values());
+    return res;
+}
+
+private String serialize(String str) {
+    int[] temp = new int[26];
+    for (int i = 0; i < str.length(); i++) {
+        temp[str.charAt(i) - 'a']++;
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    for (int i = 0; i < 26; i++) {
+        if (temp[i] != 0) {
+            stringBuilder.append((char) (i + 'a')).append(temp[i]);
+        }
+    }
+    return stringBuilder.toString();
+}
+```
+
+4.6
