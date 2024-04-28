@@ -297,4 +297,42 @@ public class ProducerAlgTest {
         return (int) res;
     }
 
+    public int threeSumClosest2(int[] nums, int target) {
+        Arrays.sort(nums);
+        long res = Integer.MAX_VALUE + (long) target;
+        for (int i = 0; i < nums.length; i++) {
+            // 优化点，去重
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int j = i + 1, k = nums.length - 1;
+            while (j < k) {
+                // 这里要用if，不要用while，差点就用成while了。。。
+                // 用while可能导致j越界的
+                // 也是优化点，去重
+                if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    j++;
+                    continue;
+                }
+                if (k < nums.length - 1 && nums[k] == nums[k + 1]) {
+                    k--;
+                    continue;
+                }
+                long sum = (long) nums[i] + nums[j] + nums[k];
+                if (Math.abs(sum - target) < Math.abs(res - target)) {
+                    res = sum;
+                }
+                // 优化点，等于target一定是最接近的，无需再判断了
+                if (sum == target) {
+                    return (int) res;
+                } else if (sum > target) {
+                    k--;
+                } else {
+                    j++;
+                }
+            }
+        }
+        return (int) res;
+    }
+
 }

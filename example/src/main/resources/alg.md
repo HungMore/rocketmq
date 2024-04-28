@@ -487,3 +487,51 @@ public int threeSumClosest(int[] nums, int target) {
 }
 ```
 看了官方的解答，这题还是可以排序后用对撞指针来做的，我是真没想到那个对撞指针收缩的公式。明天按照官方解答的思路写一写吧，也要尝试下自己用文字写出思路。
+
+我们可以按照3sum那道题的思路，使用排序+对撞指针的方法来优化。
+首先我们对数组nums进行排序，排序以后对于nums[i]，我们需要找到nums[j]、nums[k]（i<j<k），使得nums[i] + nums[j] + nums[k]的和最接近target。
+在寻找nums[j]、nums[k]的过程中，我们可以定义对撞指针，使j指向i的右侧元素，k指向数组末尾，
+如果此时nums[i] + nums[j] + nums[k] > target，表明三数之和过大，如果此时继续增大j，只会导致和更大（因为数组已经排好序），越发远离target，所以在这种情况下我们只需要考虑将k减小；（这个推导也是这个算法的精髓了）
+同理，如果此时nums[i] + nums[j] + nums[k] < target，表明三数之和过小，如果此时继续减小k，只会导致和更小，越发远离target，所以在这种情况下我们只需要考虑将j增大。
+综上，对于nums[i]，利用对撞指针，我们只需要在O(n)的复杂度下找出最接近target的nums[j]、nums[k]。
+整个算法的复杂度就为O(n^2)。
+代码：
+```java
+public int threeSumClosest(int[] nums, int target) {
+    Arrays.sort(nums);
+    long res = Integer.MAX_VALUE + (long) target;
+    for (int i = 0; i < nums.length; i++) {
+        // 优化点，去重
+        if (i > 0 && nums[i] == nums[i - 1]) {
+            continue;
+        }
+        int j = i + 1, k = nums.length - 1;
+        while (j < k) {
+            // 这里要用if，不要用while，差点就用成while了。。。
+            // 用while可能导致j越界的
+            // 也是优化点，去重
+            if (j > i + 1 && nums[j] == nums[j - 1]) {
+                j++;
+                continue;
+            }
+            if (k < nums.length - 1 && nums[k] == nums[k + 1]) {
+                k--;
+                continue;
+            }
+            long sum = (long) nums[i] + nums[j] + nums[k];
+            if (Math.abs(sum - target) < Math.abs(res - target)) {
+                res = sum;
+            }
+            // 优化点，等于target一定是最接近的，无需再判断了
+            if (sum == target) {
+                return (int) res;
+            } else if (sum > target) {
+                k--;
+            } else {
+                j++;
+            }
+        }
+    }
+    return (int) res;
+}
+```
