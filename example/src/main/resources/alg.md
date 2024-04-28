@@ -535,3 +535,79 @@ public int threeSumClosest(int[] nums, int target) {
     return (int) res;
 }
 ```
+
+###### 问题454：4sum II。
+
+给你四个整数数组nums1、nums2、nums3和nums4，数组长度都是n，请你计算有多少个元组(i,j,k,l)能满足：
+0<=i,j,k,l<n
+nums1[i]+nums2[j]+nums3[k]+nums4[l]==0
+示例 1：
+输入：nums1 = [1,2], nums2 = [-2,-1], nums3 = [-1,2], nums4 = [0,2]
+输出：2
+解释：
+两个元组如下：
+1. (0, 0, 0, 1) -> nums1[0] + nums2[0] + nums3[0] + nums4[1] = 1 + (-2) + (-1) + 2 = 0
+2. (1, 1, 0, 0) -> nums1[1] + nums2[1] + nums3[0] + nums4[0] = 2 + (-1) + (-1) + 0 = 0
+```java
+public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4);
+```
+
+这题说白了，就是从四个数组中，各找一个元素，使得四个元素加起来的和等于0。
+如果是使用暴力解法，我们需要定义四层循环，分别遍历四元组的每一种情况，判断当前四元组之和是否等于0，整体的复杂度将是O(n^4)。
+但是如果我们使用HashMap存储nums4的`值->下标集合`的映射关系，我们就可以只定义三层循环，循环遍历nums1、nums2、nums3，可以将复杂度降低到O(n^3)。
+更进一步，如果我们使用两个HashMap，map1存储nums1和nums2的`和->下标二元组集合`的映射关系，map2存储nums3和nums4的`和->下标二元组集合`的映射关系，然后我们再使用二层循环循环遍历map1和map2，就可以在O(n^2)的复杂度下完成题解。
+代码：
+```java
+public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+    int res = 0;
+    HashMap<Long, List<List<Integer>>> map1 = buildMap(nums1, nums2);
+    HashMap<Long, List<List<Integer>>> map2 = buildMap(nums3, nums4);
+    for (Map.Entry<Long, List<List<Integer>>> entry : map1.entrySet()) {
+        // 从map2中查找和为-entry.getKey()的二元组集合，然后让它们的集合长度相乘
+        List<List<Integer>> sumList = map2.get(-entry.getKey());
+        if (sumList != null) {
+            
+            res += sumList.size() * entry.getValue().size();
+        }
+    }
+    return res;
+}
+
+private HashMap<Long, List<List<Integer>>> buildMap(int[] nums1, int[] nums2) {
+    HashMap<Long, List<List<Integer>>> sum2TwoIndexUnitList = new HashMap<>();
+    int n = nums1.length;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            long sum = (long) nums1[i] + nums2[j];
+            List<List<Integer>> sumList = sum2TwoIndexUnitList.getOrDefault(sum, new LinkedList<>());
+            ArrayList<Integer> integers = new ArrayList<>(2);
+            integers.add(i);
+            integers.add(j);
+            sumList.add(integers);
+            sum2TwoIndexUnitList.put(sum, sumList);
+        }
+    }
+    return sum2TwoIndexUnitList;
+}
+```
+以上的算法还是可以优化下的啦，因为题目只需要找到四元组的个数，而不需要知道每个四元组分别是什么，所以代码可以进一步优化成下面这样，HashMap只存`下标二元组集合`的长度，但是代码整体的复杂度还是O(n^2)：
+```java
+public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+    Map<Integer, Integer> map = new HashMap<>();
+    int cnt = 0;
+
+    for (int i : nums1) {
+        for (int j : nums2) {
+            map.merge(i + j, 1, Integer::sum);
+        }
+    }
+
+    for (int i : nums3) {
+        for (int j : nums4) {
+            cnt += map.getOrDefault(-(i + j), 0);
+        }
+    }
+
+    return cnt;
+}
+```

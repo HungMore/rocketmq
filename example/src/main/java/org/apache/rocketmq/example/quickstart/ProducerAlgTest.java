@@ -335,4 +335,36 @@ public class ProducerAlgTest {
         return (int) res;
     }
 
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        int res = 0;
+        HashMap<Long, List<List<Integer>>> map1 = buildMap(nums1, nums2);
+        HashMap<Long, List<List<Integer>>> map2 = buildMap(nums3, nums4);
+        for (Map.Entry<Long, List<List<Integer>>> entry : map1.entrySet()) {
+            // 从map2中查找和为-entry.getKey()的二元组集合，然后让它们的集合长度相乘
+            List<List<Integer>> sumList = map2.get(-entry.getKey());
+            if (sumList != null) {
+
+                res += sumList.size() * entry.getValue().size();
+            }
+        }
+        return res;
+    }
+
+    private HashMap<Long, List<List<Integer>>> buildMap(int[] nums1, int[] nums2) {
+        HashMap<Long, List<List<Integer>>> sum2TwoIndexUnitList = new HashMap<>();
+        int n = nums1.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                long sum = (long) nums1[i] + nums2[j];
+                List<List<Integer>> sumList = sum2TwoIndexUnitList.getOrDefault(sum, new LinkedList<>());
+                ArrayList<Integer> integers = new ArrayList<>(2);
+                integers.add(i);
+                integers.add(j);
+                sumList.add(integers);
+                sum2TwoIndexUnitList.put(sum, sumList);
+            }
+        }
+        return sum2TwoIndexUnitList;
+    }
+
 }
