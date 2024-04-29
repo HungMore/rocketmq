@@ -430,4 +430,45 @@ public class ProducerAlgTest {
         return (int) (Math.pow(pointsi[0] - pointsj[0], 2) + Math.pow(pointsi[1] - pointsj[1], 2));
     }
 
+    public int maxPoints(int[][] points) {
+        if (points == null || points.length == 0) {
+            return 0;
+        }
+        if (points.length == 1) {
+            return 1;
+        }
+        int res = 2;
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i + 1; j < points.length; j++) {
+                // 由points[i]、points[j]两点构成的直线上，一开始只有两个点
+                int myNumber = 2;
+                for (int k = j + 1; k < points.length; k++) {
+                    if (isOnALine(points, i, j, k)) {
+                        myNumber++;
+                    }
+                }
+                if (myNumber > res) {
+                    res = myNumber;
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 判断i\j\k三点是否在一条直线上
+     *
+     * @param points
+     * @param i
+     * @param j
+     * @param k
+     * @return
+     */
+    private boolean isOnALine(int[][] points, int i, int j, int k) {
+        int[] pointi = points[i];
+        int[] pointj = points[j];
+        int[] pointk = points[k];
+        return (pointk[1] - pointj[1]) * (pointi[0] - pointj[0]) == (pointk[0] - pointj[0]) * (pointi[1] - pointj[1]);
+    }
+
 }

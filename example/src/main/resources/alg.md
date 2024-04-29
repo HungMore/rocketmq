@@ -711,3 +711,64 @@ private int distance(int[][] points, int i, int j) {
 }
 ```
 
+###### 问题149：max points on a line
+
+给你一个数组points，其中points[i]=[xi, yi]表示X-Y平面上的一个点。求最多有多少个点在同一条直线上。
+示例 1：
+输入：points = [[1,1],[2,2],[3,3]]
+输出：3
+```java
+public int maxPoints(int[][] points);
+```
+
+正所谓两点确定一条直线。
+对于点points[i]和点points[j]组合构成的直线，我们需要判断points[k]是否在该直线上（i<j<k），不断遍历k，记录在该直线上的点的个数。
+所以我们可以定义i、j、k（i<j<k）的三层循环，不断地判断有多少个points[k]在由points[i]、points[j]构成的直线上，在遍历的过程中更新结果。整体复杂度为O(n^3)。
+而判断points[k]是否在由points[i]、points[j]构成的直线上也很简单，只需要比较它们的斜率，如果(yk-yj)/(xk-xj)==(yi-yj)/(xi-xj)，即(yk-yj)*(xi-xj)==(xk-xj)*(yi-yj)（之所以要将除法转化为乘法，是为了规避除法的精度问题），那么这三点就在一条直线上。
+代码：
+```java
+public int maxPoints(int[][] points) {
+    if (points == null || points.length == 0) {
+        return 0;
+    }
+    if (points.length == 1) {
+        return 1;
+    }
+    int res = 2;
+    for (int i = 0; i < points.length; i++) {
+        for (int j = i + 1; j < points.length; j++) {
+            // 由points[i]、points[j]两点构成的直线上，一开始只有两个点
+            int myNumber = 2;
+            for (int k = j + 1; k < points.length; k++) {
+                if (isOnALine(points, i, j, k)) {
+                    myNumber++;
+                }
+            }
+            if (myNumber > res) {
+                res = myNumber;
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * 判断i\j\k三点是否在一条直线上
+ *
+ * @param points
+ * @param i
+ * @param j
+ * @param k
+ * @return
+ */
+private boolean isOnALine(int[][] points, int i, int j, int k) {
+    int[] pointi = points[i];
+    int[] pointj = points[j];
+    int[] pointk = points[k];
+    return (pointk[1] - pointj[1]) * (pointi[0] - pointj[0]) == (pointk[0] - pointj[0]) * (pointi[1] - pointj[1]);
+}
+```
+看了官方的答案，它有复杂度更低的解法，要去了解下并写下来。
+
+
+4.7
