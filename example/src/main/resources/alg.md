@@ -851,16 +851,25 @@ public boolean containsNearbyDuplicate(int[] nums, int k);
 代码：
 ```java
 public boolean containsNearbyDuplicate(int[] nums, int k) {
-        HashMap<Integer, Integer> value2Index = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            Integer index = value2Index.get(nums[i]);
-            if (index != null) {
-                if (Math.abs(index - i) <= k) {
-                    return true;
-                }
+    HashMap<Integer, Integer> value2Index = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        Integer index = value2Index.get(nums[i]);
+        if (index != null) {
+            if (Math.abs(index - i) <= k) {
+                return true;
             }
-            value2Index.put(nums[i], i);
         }
-        return false;
+        value2Index.put(nums[i], i);
     }
+    return false;
+}
 ```
+bobo老师的解法用的是滑动窗口，也可以写一写。（bobo老师说这题可以和问题3对比下，那题也是滑动窗口+查找表，只是窗口大小不固定）
+定义长度为k的滑动窗口，判断窗口内是否有重复元素即可。
+
+###### 问题217：contains duplicate。
+
+
+
+
+4.8
