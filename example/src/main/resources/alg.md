@@ -655,4 +655,59 @@ private String serialize(String str) {
 }
 ```
 
-4.6
+###### 问题447：number of boomerangs
+
+给定平面上n对互不相同的点points，其中points[i]=[xi, yi]。回旋镖是由点(i, j, k)表示的元组，其中i和j之间的欧式距离和i和k之间的欧式距离相等（需要考虑元组的顺序）。
+返回平面上所有回旋镖的数量。
+示例 1：
+输入：points = [[0,0],[1,0],[2,0]]
+输出：2
+解释：两个回旋镖为 [[1,0],[0,0],[2,0]] 和 [[1,0],[2,0],[0,0]]
+```java
+public int numberOfBoomerangs(int[][] points);
+```
+
+这题目读起来有点绕。首先明确下欧式距离的定义，欧式距离就是我们求解两点距离的公式：点(x1,y1)和点(x2,y2)的距离d=开根((x1-x2)^2+(y1-y2)^2)。
+所以这道题，就是要求我们找出两个点到同一个点的距离相等的三元组，并且需要考虑元组的顺序。
+对于点points[i]，我们可以定义一个HashMap，记录`其他点到points[i]的距离`->`该距离下的点的集合`的映射关系。
+如果HashMap的entry.value的长度大于1，说明有多个点到points[i]距离等于entry.key，我们就可以构造`(entry.value.size)*(entry.value.size-1)`个满足条件的三元组（排列与组合中的排列）。
+使用以上思路遍历完所有的点，就可以获得这道题的题解。整体的算法复杂度将是O(n^2)。
+代码：
+```java
+public int numberOfBoomerangs(int[][] points) {
+    int res = 0;
+    for (int i = 0; i < points.length; i++) {
+        // 偷个懒，其实我们不需要保存具体的点，只需要记录点的个数
+        HashMap<Integer, Integer> distance2PointNumber = new HashMap<>();
+        for (int j = 0; j < points.length; j++) {
+            if (j == i) {
+                continue;
+            }
+            int distance = distance(points, i, j);
+            distance2PointNumber.merge(distance, 1, Integer::sum);
+        }
+        for (Map.Entry<Integer, Integer> entry : distance2PointNumber.entrySet()) {
+            if (entry.getValue() > 1) {
+                res += entry.getValue() * (entry.getValue() - 1);
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * 计算points[i]和points[j]的距离的平方
+ * 偷下懒，不需要计算开根，因为距离的平方相等那么距离肯定就相等
+ *
+ * @param points
+ * @param i
+ * @param j
+ * @return
+ */
+private int distance(int[][] points, int i, int j) {
+    int[] pointsi = points[i];
+    int[] pointsj = points[j];
+    return (int) (Math.pow(pointsi[0] - pointsj[0], 2) + Math.pow(pointsi[1] - pointsj[1], 2));
+}
+```
+

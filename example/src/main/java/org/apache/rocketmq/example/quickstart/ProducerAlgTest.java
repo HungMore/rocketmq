@@ -394,4 +394,40 @@ public class ProducerAlgTest {
         return stringBuilder.toString();
     }
 
+    public int numberOfBoomerangs(int[][] points) {
+        int res = 0;
+        for (int i = 0; i < points.length; i++) {
+            // 偷个懒，其实我们不需要保存具体的点，只需要记录点的个数
+            HashMap<Integer, Integer> distance2PointNumber = new HashMap<>();
+            for (int j = 0; j < points.length; j++) {
+                if (j == i) {
+                    continue;
+                }
+                int distance = distance(points, i, j);
+                distance2PointNumber.merge(distance, 1, Integer::sum);
+            }
+            for (Map.Entry<Integer, Integer> entry : distance2PointNumber.entrySet()) {
+                if (entry.getValue() > 1) {
+                    res += entry.getValue() * (entry.getValue() - 1);
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 计算points[i]和points[j]的距离的平方
+     * 偷下懒，不需要计算开根，因为距离的平方相等那么距离肯定就相等
+     *
+     * @param points
+     * @param i
+     * @param j
+     * @return
+     */
+    private int distance(int[][] points, int i, int j) {
+        int[] pointsi = points[i];
+        int[] pointsj = points[j];
+        return (int) (Math.pow(pointsi[0] - pointsj[0], 2) + Math.pow(pointsi[1] - pointsj[1], 2));
+    }
+
 }
