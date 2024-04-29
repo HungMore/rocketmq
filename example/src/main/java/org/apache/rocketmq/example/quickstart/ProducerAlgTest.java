@@ -523,4 +523,18 @@ public class ProducerAlgTest {
         return b == 0 ? a : gcd(b, a % b);
     }
 
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        HashMap<Integer, Integer> value2Index = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            Integer index = value2Index.get(nums[i]);
+            if (index != null) {
+                if (Math.abs(index - i) <= k) {
+                    return true;
+                }
+            }
+            value2Index.put(nums[i], i);
+        }
+        return false;
+    }
+
 }

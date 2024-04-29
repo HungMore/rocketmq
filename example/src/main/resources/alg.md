@@ -833,4 +833,34 @@ private int gcd(int a, int b) {
 }
 ```
 
-4.7
+###### 问题219：contains duplicate ii
+
+给你一个整数数组nums和一个整数k，判断数组中是否存在两个不同的索引i和j，满足nums[i]==nums[j]且abs(i-j)<=k。如果存在，返回true；否则，返回false。
+示例 1：
+输入：nums = [1,2,3,1], k = 3
+输出：true
+```java
+public boolean containsNearbyDuplicate(int[] nums, int k);
+```
+
+这题很简单啦，使用一个HashMap存`数值`->`该数值的最近的一个下标`的映射关系。
+从左往右遍历nums的过程中，对于当前元素nums[i]
+判断HashMap中是否存在nums[i]对应的entry，如果不存在，则存入HashMap中；如果存在，判断两个下标的绝对值是否小于k，如果是，返回true，如果不是，更新nums[i]数值对应的最近一个下标（可以更新的原因是后续的元素的下标一定和当前的这个元素下标更接近）。
+如果遍历完nums都没有这样的元素，返回false。
+整体复杂度为O(n)。
+代码：
+```java
+public boolean containsNearbyDuplicate(int[] nums, int k) {
+        HashMap<Integer, Integer> value2Index = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            Integer index = value2Index.get(nums[i]);
+            if (index != null) {
+                if (Math.abs(index - i) <= k) {
+                    return true;
+                }
+            }
+            value2Index.put(nums[i], i);
+        }
+        return false;
+    }
+```
