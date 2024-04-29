@@ -768,7 +768,69 @@ private boolean isOnALine(int[][] points, int i, int j, int k) {
     return (pointk[1] - pointj[1]) * (pointi[0] - pointj[0]) == (pointk[0] - pointj[0]) * (pointi[1] - pointj[1]);
 }
 ```
-简单瞄了官方的答案，它有复杂度更低的解法，要去了解下并写下来。
-官方的答案有点复杂，今晚再仔细阅读吧。
+简单瞄了眼官方的答案，它有复杂度更低的解法，要去了解下并写下来。
+~~官方的答案有点复杂，今晚再仔细阅读吧。~~
+
+官方的答案和`宫水三叶`的思路是一样的，其实只要理解了就觉得并不难。。。
+我们考虑points[i]这个点，我们可以使用一个HashMap来存`其他的点与它构成的直线的斜率`->`该斜率下的点的数目`的映射关系
+（不难理解，若两个点和点points[i]构成的斜率一样，那么它们和points[i]就在同一条直线上）
+对于points[i]这个点来说，HashMap的values中的最大值就是最多有多少个点和points[i]在同一条直线上。
+我们遍历points中所有的点，都计算它们的最大值，即可获得这题的解。
+另外，这题还有一点需要注意：HashMap中的key（斜率）一定要使用最简分数，确保相同的斜率定位到相同的entry，并且数据类型不要使用不精确的浮点数，一种可行方案是用如“3/4”这样的字符串形式来存（其实更严谨的，用“3/4”这样的字符串来存，还要考虑斜率为负的情况，保证“-3/4”要等于“3/-4”，这里比较讨巧的是求最大公约数这个方法让我们规避掉了这个问题）。
+算法的整体复杂度是O(n^2).
+代码：
+```java
+public int maxPoints(int[][] points) {
+    if (points == null || points.length == 0) {
+        return 0;
+    }
+    if (points.length == 1) {
+        return 1;
+    }
+    int res = 2;
+    for (int i = 0; i < points.length; i++) {
+        // slope斜率->该斜率下的点的数目
+        HashMap<String, Integer> slope2PointNumber = new HashMap<>();
+        for (int j = i + 1; j < points.length; j++) {
+            String key = calculateSlope(points, i, j);
+            slope2PointNumber.merge(key, 1, Integer::sum);
+        }
+        for (Integer pointNumber : slope2PointNumber.values()) {
+            // 加一是因为还要加上points[i]这个点
+            if (res < pointNumber + 1) {
+                res = pointNumber + 1;
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * 计算i\j两个点构成的斜率，要化简为最简分数！
+ *
+ * @param points
+ * @param i
+ * @param j
+ * @return
+ */
+private String calculateSlope(int[][] points, int i, int j) {
+    int dy = points[j][1] - points[i][1];
+    int dx = points[j][0] - points[i][0];
+    int gcd = gcd(dy, dx);
+    return (dy / gcd) + "/" + (dx / gcd);
+}
+
+/**
+ * 求最大公约数，这个算法一时还写不出来
+ * 欧几里得算法，辗转相除法
+ *
+ * @param a
+ * @param b
+ * @return
+ */
+private int gcd(int a, int b) {
+    return b == 0 ? a : gcd(b, a % b);
+}
+```
 
 4.7

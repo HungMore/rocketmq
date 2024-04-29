@@ -471,4 +471,56 @@ public class ProducerAlgTest {
         return (pointk[1] - pointj[1]) * (pointi[0] - pointj[0]) == (pointk[0] - pointj[0]) * (pointi[1] - pointj[1]);
     }
 
+    public int maxPoints2(int[][] points) {
+        if (points == null || points.length == 0) {
+            return 0;
+        }
+        if (points.length == 1) {
+            return 1;
+        }
+        int res = 2;
+        for (int i = 0; i < points.length; i++) {
+            // slope斜率->该斜率下的点的数目
+            HashMap<String, Integer> slope2PointNumber = new HashMap<>();
+            for (int j = i + 1; j < points.length; j++) {
+                String key = calculateSlope(points, i, j);
+                slope2PointNumber.merge(key, 1, Integer::sum);
+            }
+            for (Integer pointNumber : slope2PointNumber.values()) {
+                // 加一是因为还要加上points[i]这个点
+                if (res < pointNumber + 1) {
+                    res = pointNumber + 1;
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 计算i\j两个点构成的斜率，要化简为最简分数！
+     *
+     * @param points
+     * @param i
+     * @param j
+     * @return
+     */
+    private String calculateSlope(int[][] points, int i, int j) {
+        int dy = points[j][1] - points[i][1];
+        int dx = points[j][0] - points[i][0];
+        int gcd = gcd(dy, dx);
+        return (dy / gcd) + "/" + (dx / gcd);
+    }
+
+    /**
+     * 求最大公约数，这个算法一时还写不出来
+     * 欧几里得算法，辗转相除法
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    private int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
 }
