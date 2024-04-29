@@ -768,7 +768,7 @@ private boolean isOnALine(int[][] points, int i, int j, int k) {
     return (pointk[1] - pointj[1]) * (pointi[0] - pointj[0]) == (pointk[0] - pointj[0]) * (pointi[1] - pointj[1]);
 }
 ```
-看了官方的答案，它有复杂度更低的解法，要去了解下并写下来。
-
+简单瞄了官方的答案，它有复杂度更低的解法，要去了解下并写下来。
+官方的答案有点复杂，今晚再仔细阅读吧。
 
 4.7
