@@ -925,7 +925,26 @@ public int lengthOfLongestSubstring(String s) {
 
 ###### 问题217：contains duplicate。
 
+给你一个整数数组nums。如果任一值在数组中出现至少两次，返回true；如果数组中每个元素互不相同，返回false。
+示例 1：
+输入：nums = [1,2,3,1]
+输出：true
+```java
+public boolean containsDuplicate(int[] nums);
+```
 
-
+这题就很简单啦，遍历数组，用个set判断是否重复。
+代码：
+```java
+public boolean containsDuplicate(int[] nums) {
+    HashSet<Integer> set = new HashSet<>();
+    for (int num : nums) {
+        if (!set.add(num)) {
+            return true;
+        }
+    }
+    return false;
+}
+```
 
 4.8
