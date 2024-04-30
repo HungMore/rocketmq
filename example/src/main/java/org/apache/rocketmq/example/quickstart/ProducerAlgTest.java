@@ -11,7 +11,7 @@ public class ProducerAlgTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgTest producerAlgTest = new ProducerAlgTest();
-        System.out.println(producerAlgTest.containsNearbyAlmostDuplicate2(new int[]{1,5,9,1,5,9}, 2, 3));
+        System.out.println(producerAlgTest.containsNearbyAlmostDuplicate3(new int[]{1, 5, 9, 1, 5, 9}, 2, 3));
 //        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -693,4 +693,25 @@ public class ProducerAlgTest {
         return false;
     }
 
+    public boolean containsNearbyAlmostDuplicate3(int[] nums, int indexDiff, int valueDiff) {
+        int size = indexDiff + 1;
+        TreeSet<Integer> window = new TreeSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (window.size() == size) {
+                window.remove(nums[i - size]);
+            }
+            if (!window.isEmpty()) {
+                Integer ceiling = window.ceiling(nums[i]);
+                if (ceiling != null && ceiling - nums[i] <= valueDiff) {
+                    return true;
+                }
+                Integer floor = window.floor(nums[i]);
+                if (floor != null && nums[i] - floor <= valueDiff) {
+                    return true;
+                }
+            }
+            window.add(nums[i]);
+        }
+        return false;
+    }
 }

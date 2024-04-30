@@ -1106,3 +1106,32 @@ public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valu
 }
 ```
 这个解法只超过了8%的用户，还有更好的解法吧。。。
+看了bobo老师的讲解，我被降维打击了。。。
+其实根本就不用将当前元素加入到滑动窗口以后，再去查找滑动窗口里的最小差值。
+我们可以每加入一个元素nums[i]前，就判断当前窗口是否有元素在[nums[i] - valueDiff, nums[i] + valueDiff]这个区间（使用nums[i]最接近的两个数字比较就可以了），如果有，就返回true；没有就遍历下一个元素。所以我们用一个TreeSet作为窗口的容器就可以了。妈的，我怎么给搞得这么复杂。
+代码：
+```java
+public boolean containsNearbyAlmostDuplicate3(int[] nums, int indexDiff, int valueDiff) {
+    int size = indexDiff + 1;
+    TreeSet<Integer> window = new TreeSet<>();
+    for (int i = 0; i < nums.length; i++) {
+        if (window.size() == size) {
+            window.remove(nums[i - size]);
+        }
+        if (!window.isEmpty()) {
+            Integer ceiling = window.ceiling(nums[i]);
+            if (ceiling != null && ceiling - nums[i] <= valueDiff) {
+                return true;
+            }
+            Integer floor = window.floor(nums[i]);
+            if (floor != null && nums[i] - floor <= valueDiff) {
+                return true;
+            }
+        }
+        window.add(nums[i]);
+    }
+    return false;
+}
+```
+看leetcode的答案，还有一种O(n)的基于桶排序的解法，有空了解下。
+
