@@ -11,8 +11,8 @@ public class ProducerAlgTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgTest producerAlgTest = new ProducerAlgTest();
-
-        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
+        System.out.println(producerAlgTest.containsNearbyDuplicate2(new int[]{1, 2, 3, 1, 2, 3}, 2));
+//        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
 //        producer.start();
@@ -533,6 +533,21 @@ public class ProducerAlgTest {
                 }
             }
             value2Index.put(nums[i], i);
+        }
+        return false;
+    }
+
+    public boolean containsNearbyDuplicate2(int[] nums, int k) {
+        // 容量为k+1的窗口
+        int size = k + 1;
+        HashSet<Integer> window = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (window.size() == size) {
+                window.remove(nums[i - size]);
+            }
+            if (!window.add(nums[i])) {
+                return true;
+            }
         }
         return false;
     }

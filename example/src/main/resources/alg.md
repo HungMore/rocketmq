@@ -865,7 +865,27 @@ public boolean containsNearbyDuplicate(int[] nums, int k) {
 }
 ```
 bobo老师的解法用的是滑动窗口，也可以写一写。（bobo老师说这题可以和问题3对比下，那题也是滑动窗口+查找表，只是窗口大小不固定）
-定义长度为k的滑动窗口，判断窗口内是否有重复元素即可。
+使用滑动窗口的思路来做下这一道题
+首先我们定义长度为k+1的滑动窗口（因为要判重，所以用set来充当窗口容器；长度为k+1是因为下标差等于k是有k+1个元素的）
+然后逐个遍历数组，对于nums[i]，我们判断当前滑动窗口的大小是否等于k+1
+如果等于，说明已满，我们要先移除nums[i-k-1]再尝试添加nums[i]；如果不等于k，说明窗口未满，直接尝试添加nums[i]到窗口中，如果添加失败，说明窗口中已经存在该元素，返回true。算法复杂度为O(n)。
+代码：
+```java
+public boolean containsNearbyDuplicate(int[] nums, int k) {
+    // 容量为k+1的窗口
+    int size = k + 1;
+    HashSet<Integer> window = new HashSet<>();
+    for (int i = 0; i < nums.length; i++) {
+        if (window.size() == size) {
+            window.remove(nums[i - size]);
+        }
+        if (!window.add(nums[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+```
 
 ###### 问题217：contains duplicate。
 
