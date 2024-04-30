@@ -11,7 +11,7 @@ public class ProducerAlgTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgTest producerAlgTest = new ProducerAlgTest();
-        System.out.println(producerAlgTest.containsNearbyDuplicate2(new int[]{1, 2, 3, 1, 2, 3}, 2));
+        System.out.println(producerAlgTest.containsNearbyAlmostDuplicate2(new int[]{1,5,9,1,5,9}, 2, 3));
 //        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -571,6 +571,123 @@ public class ProducerAlgTest {
         for (int num : nums) {
             if (!set.add(num)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+        int size = indexDiff + 1;
+        TreeSet<Integer> window = new TreeSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            // 窗口已满，要先移除nums[i-size]
+            if (window.size() == size) {
+                window.remove(nums[i - size]);
+            }
+            if (!window.add(nums[i])) {
+                // 窗口内出现重复元素，最小差值为0，返回true
+                return true;
+            }
+            // 获取最小差值
+            if (valueDiff != 0) {
+                int minValueDiff = getMinValueDiff(window);
+                if (minValueDiff <= valueDiff) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * O(k)的复杂度找到最小差值
+     *
+     * @param treeSet
+     * @return
+     */
+    private int getMinValueDiff(TreeSet<Integer> treeSet) {
+        int[] numbers = new int[treeSet.size()];
+        int i = 0;
+        for (Integer integer : treeSet) {
+            numbers[i++] = integer;
+        }
+        int minValueDiff = Integer.MAX_VALUE;
+        for (i = 0; i < numbers.length - 1; i++) {
+            minValueDiff = Math.min(minValueDiff, numbers[i + 1] - numbers[i]);
+        }
+        return minValueDiff;
+    }
+
+    public boolean containsNearbyAlmostDuplicate2(int[] nums, int indexDiff, int valueDiff) {
+        int size = indexDiff + 1;
+        TreeSet<Integer> window = new TreeSet<>();
+        TreeMap<Integer, Set<Integer>> gap2Numbers = new TreeMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            // 窗口已满，要先移除nums[i-size]
+            if (window.size() == size) {
+                int removeNumber = nums[i - size];
+                Integer lower = window.lower(removeNumber);
+                Integer higher = window.higher(removeNumber);
+                window.remove(removeNumber);
+                if (valueDiff != 0) {
+                    if (higher != null) {
+                        int gap = higher - removeNumber;
+                        Set<Integer> numbers = gap2Numbers.get(gap);
+                        numbers.remove(removeNumber);
+                        if (numbers.isEmpty()) {
+                            gap2Numbers.remove(gap);
+                        }
+                    }
+                    if (lower != null) {
+                        int gap = removeNumber - lower;
+                        Set<Integer> numbers = gap2Numbers.get(gap);
+                        numbers.remove(lower);
+                        if (numbers.isEmpty()) {
+                            gap2Numbers.remove(gap);
+                        }
+                    }
+                    if (higher != null && lower != null) {
+                        int gap = higher - lower;
+                        Set<Integer> numbers = gap2Numbers.getOrDefault(gap, new HashSet<>());
+                        numbers.add(lower);
+                        gap2Numbers.put(gap, numbers);
+                    }
+                }
+            }
+            if (!window.add(nums[i])) {
+                // 窗口内出现重复元素，最小差值为0，返回true
+                return true;
+            }
+            if (valueDiff != 0) {
+                Integer higher = window.higher(nums[i]);
+                if (higher != null) {
+                    int gap = higher - nums[i];
+                    Set<Integer> numbers = gap2Numbers.getOrDefault(gap, new HashSet<>());
+                    numbers.add(nums[i]);
+                    gap2Numbers.put(gap, numbers);
+                }
+                Integer lower = window.lower(nums[i]);
+                if (lower != null) {
+                    int gap = nums[i] - lower;
+                    Set<Integer> numbers = gap2Numbers.getOrDefault(gap, new HashSet<>());
+                    numbers.add(lower);
+                    gap2Numbers.put(gap, numbers);
+                }
+                if (higher != null && lower != null) {
+                    int gap = higher - lower;
+                    Set<Integer> numbers = gap2Numbers.get(gap);
+                    numbers.remove(lower);
+                    if (numbers.isEmpty()) {
+                        gap2Numbers.remove(gap);
+                    }
+                }
+                if (!gap2Numbers.isEmpty()) {
+                    int minValueDiff = gap2Numbers.firstKey();
+                    if (minValueDiff <= valueDiff) {
+                        return true;
+                    }
+                }
+
             }
         }
         return false;

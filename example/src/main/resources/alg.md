@@ -947,4 +947,162 @@ public boolean containsDuplicate(int[] nums) {
 }
 ```
 
-4.8
+###### 问题220：contains duplicate III
+
+给你一个整数数组nums和两个整数indexDiff和valueDiff。
+找出满足下述条件的下标对(i, j)：
+i!=j,
+abs(i-j)<=indexDiff
+abs(nums[i]-nums[j])<=valueDiff
+如果存在，返回true；否则，返回false。
+示例 1：
+输入：nums = [1,2,3,1], indexDiff = 3, valueDiff = 0
+输出：true
+解释：
+    可以找出 (i, j) = (0, 3) 。
+    满足下述 3 个条件：
+    i != j --> 0 != 3
+    abs(i - j) <= indexDiff --> abs(0 - 3) <= 3
+    abs(nums[i] - nums[j]) <= valueDiff --> abs(1 - 1) <= 0
+```java
+public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff);
+```
+
+这题就是说要从数组中找出两个元素，使得它们的下标的差值不超过indexDiff，元素的值的差值不超过valueDiff。
+参考问题219的解法，下标差不超过indexDiff，我们就可以定义固定长度为indexDiff+1的滑动窗口，然后判断窗口内的元素值的最小差值是否不超过valueDiff即可。现在的问题就转化为，我们如何快速地找到窗口内的最小差值。一般来说，查找最小差值，我们需要两两组合比较，复杂度是O(k^2)，但是如果窗口内的元素有序，我们就可以在O(k)的复杂度下找到最小差值，所以如果我们能将窗口的元素保持有序，就可以更快速地找到最小差值，所以我们可以使用TreeSet这样的数据结构来作为窗口的容器（另外，虽然TreeSet不允许存入重复元素，但是对于重复元素，它们的差值就是0，肯定不超过valueDiff的。所以窗口内出现重复元素我们可以直接返回true）。
+整体复杂度为O(n*indexDiff)
+代码：
+```java
+public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+    int size = indexDiff + 1;
+    TreeSet<Integer> window = new TreeSet<>();
+    for (int i = 0; i < nums.length; i++) {
+        // 窗口已满，要先移除nums[i-size]
+        if (window.size() == size) {
+            window.remove(nums[i - size]);
+        }
+        if (!window.add(nums[i])) {
+            // 窗口内出现重复元素，最小差值为0，返回true
+            return true;
+        }
+        // 获取最小差值
+        if (valueDiff != 0) {
+            int minValueDiff = getMinValueDiff(window);
+            if (minValueDiff <= valueDiff) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * O(k)的复杂度找到最小差值
+ *
+ * @param treeSet
+ * @return
+ */
+private int getMinValueDiff(TreeSet<Integer> treeSet) {
+    int[] numbers = new int[treeSet.size()];
+    int i = 0;
+    for (Integer integer : treeSet) {
+        numbers[i++] = integer;
+    }
+    int minValueDiff = Integer.MAX_VALUE;
+    for (i = 0; i < numbers.length - 1; i++) {
+        minValueDiff = Math.min(minValueDiff, numbers[i + 1] - numbers[i]);
+    }
+    return minValueDiff;
+}
+```
+竟然超时了！其实`2<=nums.length<=10^5`、`1<=indexDiff<=nums.length`这两个数据量也提醒我们O(n*indexDiff)的复杂度是无法通过的，因为这约等于O(n^2)，最多将进行约10^10次运算，指定要超时啦。
+我们再考虑下方案的优化。
+其实我们没必要每次操作TreeSet都重新计算整个TreeSet中的最小差值，因为给TreeSet增/删一个元素，其实只会影响它相邻的元素。
+我们可以定义两个容器，第一个为TreeSet，充当滑动窗口的容器，将窗口中的元素进行升序排列。第二个容器为TreeMap，
+存`差值`->`该差值的元素的集合`的映射关系，即`gap`->`[nums[i]、...]`（我们给出如下定义，某个元素的差值等于它与它的下一个元素的差，即nums[i]的差值等于nums[i+1]-nums[i]）
+那我们往滑动窗口添加元素的时候需要：
+1. TreeSet中新增当前元素
+2. TreeMap中更新当前元素的差值的entry（加上当前元素元素）、前一个元素原来的差值的entry（删除前一个元素）、前一个元素新的差值的entry（加上前一个元素）。
+我们要找到最小的差值，直接从TreeMap中找第一个就可以了。
+往滑动窗口删除元素时需要：
+1. TreeSet中删除当前元素
+2. TreeMap中更新当前元素的差值的entry（删除当前元素）、前一个元素原来的差值的entry（删除前一个元素）、前一个元素新的差值的entry（加上前一个元素）
+整体复杂度O(n*log(indexDiff))
+代码：
+```java
+public boolean containsNearbyAlmostDuplicate(int[] nums, int indexDiff, int valueDiff) {
+    int size = indexDiff + 1;
+    TreeSet<Integer> window = new TreeSet<>();
+    TreeMap<Integer, Set<Integer>> gap2Numbers = new TreeMap<>();
+    for (int i = 0; i < nums.length; i++) {   
+        // 窗口已满，要先移除nums[i-size]
+        if (window.size() == size) {
+            int removeNumber = nums[i - size];
+            Integer lower = window.lower(removeNumber);
+            Integer higher = window.higher(removeNumber);
+            window.remove(removeNumber);
+            if (valueDiff != 0) {
+                if (higher != null) {
+                    int gap = higher - removeNumber;
+                    Set<Integer> numbers = gap2Numbers.get(gap);
+                    numbers.remove(removeNumber);
+                    if (numbers.isEmpty()) {
+                        gap2Numbers.remove(gap);
+                    }
+                }
+                if (lower != null) {
+                    int gap = removeNumber - lower;
+                    Set<Integer> numbers = gap2Numbers.get(gap);
+                    numbers.remove(lower);
+                    if (numbers.isEmpty()) {
+                        gap2Numbers.remove(gap);
+                    }
+                }
+                if (higher != null && lower != null) {
+                    int gap = higher - lower;
+                    Set<Integer> numbers = gap2Numbers.getOrDefault(gap, new HashSet<>());
+                    numbers.add(lower);
+                    gap2Numbers.put(gap, numbers);
+                }
+            }
+        }
+        if (!window.add(nums[i])) {
+            // 窗口内出现重复元素，最小差值为0，返回true
+            return true;
+        }
+        if (valueDiff != 0) {
+            Integer higher = window.higher(nums[i]);
+            if (higher != null) {
+                int gap = higher - nums[i];
+                Set<Integer> numbers = gap2Numbers.getOrDefault(gap, new HashSet<>());
+                numbers.add(nums[i]);
+                gap2Numbers.put(gap, numbers);
+            }
+            Integer lower = window.lower(nums[i]);
+            if (lower != null) {
+                int gap = nums[i] - lower;
+                Set<Integer> numbers = gap2Numbers.getOrDefault(gap, new HashSet<>());
+                numbers.add(lower);
+                gap2Numbers.put(gap, numbers);
+            }
+            if (higher != null && lower != null) {
+                int gap = higher - lower;
+                Set<Integer> numbers = gap2Numbers.get(gap);
+                numbers.remove(lower);
+                if (numbers.isEmpty()) {
+                    gap2Numbers.remove(gap);
+                }
+            }
+            if (!gap2Numbers.isEmpty()) {
+                int minValueDiff = gap2Numbers.firstKey();
+                if (minValueDiff <= valueDiff) {
+                    return true;
+                }
+            }
+
+        }
+    }
+    return false;
+}
+```
+这个解法只超过了8%的用户，还有更好的解法吧。。。
