@@ -552,4 +552,18 @@ public class ProducerAlgTest {
         return false;
     }
 
+    public int lengthOfLongestSubstring(String s) {
+        int res = 0;
+        HashSet<Character> set = new HashSet<>();
+        int i = 0, j = 0;
+        while (j < s.length()) {
+            while (!set.add(s.charAt(j))) {
+                set.remove(s.charAt(i++));
+            }
+            res = Math.max(res, set.size());
+            j++;
+        }
+        return res;
+    }
+
 }

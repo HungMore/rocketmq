@@ -886,6 +886,42 @@ public boolean containsNearbyDuplicate(int[] nums, int k) {
     return false;
 }
 ```
+然后我们再来看看问题3，对比下。
+
+###### 问题3：无重复字符的最长子串
+
+给定一个字符串s，请你找出其中不含有重复字符的最长子串的长度。
+示例 1:
+输入: s = "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+```java
+public int lengthOfLongestSubstring(String s);
+```
+
+这题我们可以用滑动窗口+set(HashSet)的方法来做。
+定义双指针i和j，分别指向char[i]和char[j]，然后使用set来存窗口[i,j]之间的字符集合。
+i和j初始化为0，然后尝试将char[j]添加到set中，如果添加成功，说明[i,j]中暂未出现重复字符，更新返回值，j++；如果添加失败，说明set中已经有char[j]，不断地将char[i++]移出，直至将已经存在的char[j]移除，然后添加新的char[j]。
+当j来到字符串的末尾，算法结束。
+算法复杂度为O(n)。
+代码：
+```java
+public int lengthOfLongestSubstring(String s) {
+    int res = 0;
+    HashSet<Character> set = new HashSet<>();
+    int i = 0, j = 0;
+    while (j < s.length()) {
+        while (!set.add(s.charAt(j))) {
+            set.remove(s.charAt(i++));
+        }
+        res = Math.max(res, set.size());
+        j++;
+    }
+    return res;
+}
+```
+上面这个代码应该是我对这道题写过的最简洁的代码了。
+这道题和问题219的两种滑动窗口确实值得回味，一个是固定长度的滑动窗口，判断窗口内是否有重复元素；一个是不固定长度的窗口，要保证窗口内部没有重复的元素。
 
 ###### 问题217：contains duplicate。
 
