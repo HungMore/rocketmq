@@ -11,7 +11,12 @@ public class ProducerAlgTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgTest producerAlgTest = new ProducerAlgTest();
-        System.out.println(producerAlgTest.containsNearbyAlmostDuplicate3(new int[]{1, 5, 9, 1, 5, 9}, 2, 3));
+        System.out.println(producerAlgTest.containsNearbyAlmostDuplicate4(new int[]{-3, 3}, 2, 4));
+        System.out.println(-3/4);
+        System.out.println(-3.0/4);
+        System.out.println(Math.floor(-3.0/4));
+        System.out.println((int)Math.floor(-3.0/4));
+        System.out.println((int)(-3.0/4));
 //        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -713,5 +718,42 @@ public class ProducerAlgTest {
             window.add(nums[i]);
         }
         return false;
+    }
+
+    public boolean containsNearbyAlmostDuplicate4(int[] nums, int indexDiff, int valueDiff) {
+        // 桶，key为商，value为该商的最新的一个数值
+        HashMap<Integer, Integer> bucket = new HashMap<>();
+        // 滑动窗口的大小，桶的总容量
+        int size = indexDiff + 1;
+        for (int i = 0; i < nums.length; i++) {
+            if (bucket.size() == size) {
+                int bucketNo = getBucketNo(nums[i - size], valueDiff);
+                bucket.remove(bucketNo);
+            }
+            int bucketNo = getBucketNo(nums[i], valueDiff);
+            Integer value = bucket.get(bucketNo);
+            if (value != null) {
+                return true;
+            }
+            Integer nextValue = bucket.get(bucketNo + 1);
+            if (nextValue != null && Math.abs(nextValue - nums[i]) <= valueDiff) {
+                return true;
+            }
+            Integer preValue = bucket.get(bucketNo - 1);
+            if (preValue != null && Math.abs(preValue - nums[i]) <= valueDiff) {
+                return true;
+            }
+            bucket.put(bucketNo, nums[i]);
+        }
+        return false;
+    }
+
+    private int getBucketNo(int num, int valueDiff) {
+        if (num >= 0) {
+            return num / (valueDiff + 1);
+        } else {
+            // 负数为何这么算？
+            return (num + 1) / (valueDiff + 1) - 1;
+        }
     }
 }

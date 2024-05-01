@@ -1133,5 +1133,61 @@ public boolean containsNearbyAlmostDuplicate3(int[] nums, int indexDiff, int val
     return false;
 }
 ```
-看leetcode的答案，还有一种O(n)的基于桶排序的解法，有空了解下。
+看leetcode的答案，还有一种O(n)的基于桶分组的解法，有空了解下。
+
+桶分组的讲解可以看这两个回答：
+1. [C++ 利用桶分组, 详细解释](https://leetcode.cn/problems/contains-duplicate-iii/solutions/727120/c-li-yong-tong-fen-zu-xiang-xi-jie-shi-b-ofj6/)，这个答案分析得很详细、很好理解！
+2. [【宫水三叶】一题双解：「滑动窗口 & 二分」&「桶排序」解法](https://leetcode.cn/problems/contains-duplicate-iii/solutions/726905/gong-shui-san-xie-yi-ti-shuang-jie-hua-d-dlnv/)，这个答案可以作为第一个的补充。
+
+我个人觉得桶分组的答案是挺难想到的，它使用桶分组式的滑动窗口对TreeSet式的滑动窗口进行了优化。
+在TreeSet的解法中我们使用TreeSet来作为滑动窗口的容器（窗口大小为indexDiff+1），所以我们可以在log(indexDiff)的复杂度下找到最接近当前元素的前后两个元素，进而判断它们的差值是否在valueDiff的范围内。
+而使用桶分组的思维：如果两个数除以`valueDiff+1`的商相等（不考虑余数），那么它们的差值肯定就小于等于valueDiff；如果它们的商的差值大于1，它们的差值肯定就大于valueDiff；如果它们的商的差值等于1，就需要重新判断它们的差值。
+所以我们可以使用数值除以`valueDiff+1`的商作为桶的编号，每个桶内存该商下的数值，其实每个桶只需要存该商下的最新的一个数值就可以了，因为如果商值相等，整个算法已经返回true了。
+所有桶的总容量需要保证最大为indexDiff+1。
+整体的算法思路为：
+对于nums[i]，首先我们需要判断桶的总容量是否已经达到indexDiff+1，如果是的话，我们要移除nums[i-(indexDiff+1)]的桶；
+然后计算nums[i]的桶的编号，判断当前桶内是否已经有元素，如果是的话，返回true
+否则取出nums[i]的前、后一个桶的值，判断桶内的值和nums[i]的差值是否小于等于valueDiff，如果是，返回true，如果不是，存入nums[i]，遍历下一个元素。
+代码：
+```java
+public boolean containsNearbyAlmostDuplicate4(int[] nums, int indexDiff, int valueDiff) {
+    // 桶，key为商，value为该商的最新的一个数值
+    HashMap<Integer, Integer> bucket = new HashMap<>();
+    // 滑动窗口的大小，桶的总容量
+    int size = indexDiff + 1;
+    for (int i = 0; i < nums.length; i++) {
+        if (bucket.size() == size) {
+            int bucketNo = getBucketNo(nums[i - size], valueDiff);
+            bucket.remove(bucketNo);
+        }
+        int bucketNo = getBucketNo(nums[i], valueDiff);
+        Integer value = bucket.get(bucketNo);
+        if (value != null) {
+            return true;
+        }
+        Integer nextValue = bucket.get(bucketNo + 1);
+        if (nextValue != null && Math.abs(nextValue - nums[i]) <= valueDiff) {
+            return true;
+        }
+        Integer preValue = bucket.get(bucketNo - 1);
+        if (preValue != null && Math.abs(preValue - nums[i]) <= valueDiff) {
+            return true;
+        }
+        bucket.put(bucketNo, nums[i]);
+    }
+    return false;
+}
+
+private int getBucketNo(int num, int valueDiff) {
+    if (num >= 0) {
+        return num / (valueDiff + 1);
+    } else {
+        // 负数为何这么算？
+        return (num + 1) / (valueDiff + 1) - 1;
+    }
+}
+```
+这个解法中关于负数获取其桶的编号的问题，可以看看leetcode的这个评论：
+[Edward Elric的评论](https://leetcode.cn/problems/contains-duplicate-iii/solutions/726619/cun-zai-zhong-fu-yuan-su-iii-by-leetcode-bbkt/comments/895169)，很精彩，除法是向0方向舍入的，所以正数和负数的舍入方向相反！
+
 
