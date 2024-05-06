@@ -7,11 +7,11 @@ import java.util.*;
  * @Description 生产者测试
  * @createTime 2024年04月23日 17:25
  */
-public class ProducerAlgTest {
+public class ProducerAlgSearchTableTest {
 
     public static void main(String[] args) throws Exception {
-        ProducerAlgTest producerAlgTest = new ProducerAlgTest();
-        System.out.println(producerAlgTest.containsNearbyAlmostDuplicate4(new int[]{-3, 3}, 2, 4));
+        ProducerAlgSearchTableTest producerAlgSearchTableTest = new ProducerAlgSearchTableTest();
+        System.out.println(producerAlgSearchTableTest.containsNearbyAlmostDuplicate4(new int[]{-3, 3}, 2, 4));
         System.out.println(-3/4);
         System.out.println(-3.0/4);
         System.out.println(Math.floor(-3.0/4));
