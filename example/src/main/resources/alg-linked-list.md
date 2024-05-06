@@ -25,7 +25,7 @@ public ListNode reverseList(ListNode head) {
     return pre;
 }
 ```
-labuladong的构造dummy节点的解法也挺有意思，这个方法应该是最优的了，思路也很清晰：
+labuladong的构造dummy节点的解法也挺有意思，这个方法应该是最优的了，思路也很清晰（这个方法叫头插法）：
 ```java
 public ListNode reverseList(ListNode head) {
     // 这个小技巧真不错呢，需要新建一个链表的，都用个dummy节点！
@@ -61,7 +61,7 @@ public ListNode reverseBetween(ListNode head, int left, int right);
 ```
 
 首先使用dummy节点来表示头节点的前一个节点（因为头节点也可能参与翻转）
-需要一个指针记录翻转区间的前一个节点，然后使用问题206的方式将翻转区间内的节点逐个连接到这个节点后面，进而实现翻转
+需要一个指针记录翻转区间的前一个节点，然后使用问题206的头插法方式将翻转区间内的节点逐个连接到这个节点后面，进而实现翻转
 最后，需要一个指针记录翻转区间的第一个节点，翻转完成后它要指向翻转区间外的后序节点
 代码：
 ```java

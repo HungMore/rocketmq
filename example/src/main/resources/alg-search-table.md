@@ -1017,6 +1017,9 @@ private int getMinValueDiff(TreeSet<Integer> treeSet) {
 ```
 竟然超时了！其实`2<=nums.length<=10^5`、`1<=indexDiff<=nums.length`这两个数据量也提醒我们O(n*indexDiff)的复杂度是无法通过的，因为这约等于O(n^2)，最多将进行约10^10次运算，指定要超时啦。
 我们再考虑下方案的优化。
+
+> 下面这个方案太复杂了，没必要看了。。。
+
 其实我们没必要每次操作TreeSet都重新计算整个TreeSet中的最小差值，因为给TreeSet增/删一个元素，其实只会影响它相邻的元素。
 我们可以定义两个容器，第一个为TreeSet，充当滑动窗口的容器，将窗口中的元素进行升序排列。第二个容器为TreeMap，
 存`差值`->`该差值的元素的集合`的映射关系，即`gap`->`[nums[i]、...]`（我们给出如下定义，某个元素的差值等于它与它的下一个元素的差，即nums[i]的差值等于nums[i+1]-nums[i]）
