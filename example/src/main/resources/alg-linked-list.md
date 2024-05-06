@@ -40,7 +40,7 @@ public ListNode reverseList(ListNode head) {
     return dummy.next;
 }
 ```
-利用递归栈来翻转的解法也挺有意思，而且这可以和二叉树的后序遍历联系起来（其实我没理解这个解法，后续再学习吧）：
+利用递归栈来翻转的解法也挺有意思，而且这可以和二叉树的后序遍历联系起来（其实我没理解这个解法，后续再学习吧`todo`）：
 ```java
 public ListNode reverseList(ListNode head) {
     if (head == null || head.next == null) {
