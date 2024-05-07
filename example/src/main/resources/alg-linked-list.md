@@ -211,5 +211,47 @@ public ListNode oddEvenList(ListNode head) {
 
 ###### 问题2：add two numbers
 
+给你两个非空的链表，表示两个非负的整数。它们每位数字都是按照逆序的方式存储的，并且每个节点只能存储一位数字。
+请你将两个数相加，并以相同形式返回一个表示和的链表。
+你可以假设除了数字 0 之外，这两个数都不会以0开头。
+示例 1：
+输入：l1 = [2,4,3], l2 = [5,6,4]
+输出：[7,0,8]
+解释：342 + 465 = 807.
+注意l1和l2的长度可能并不一样
+```java
+public ListNode addTwoNumbers(ListNode l1, ListNode l2);
+```
+
+这题也比较简单，记录一个进位就好啦。
+代码：
+```java
+public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(-1);
+    ListNode res = dummy;
+    int carry = 0;
+    while (l1 != null || l2 != null || carry != 0) {
+        int sum = carry;
+        if (l1 != null) {
+            sum += l1.val;
+            l1 = l1.next;
+        }
+        if (l2 != null) {
+            sum += l2.val;
+            l2 = l2.next;
+        }
+        if (sum > 9) {
+            sum = sum % 10;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+        res.next = new ListNode(sum);
+        res = res.next;
+    }
+    return dummy.next;
+}
+```
+
 ###### 问题445：add two numbers ii
 
