@@ -1,5 +1,7 @@
 package org.apache.rocketmq.example.quickstart;
 
+import java.util.Stack;
+
 /**
  * @author mo
  * @Description 生产者测试
@@ -146,6 +148,38 @@ public class ProducerAlgLinkedListTest {
             }
             res.next = new ListNode(sum);
             res = res.next;
+        }
+        return dummy.next;
+    }
+
+    public ListNode addTwoNumbersII(ListNode l1, ListNode l2) {
+        Stack<Integer> stack1 = new Stack<>();
+        Stack<Integer> stack2 = new Stack<>();
+        while (l1 != null) {
+            stack1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            stack2.push(l2.val);
+            l2 = l2.next;
+        }
+        ListNode dummy = new ListNode(-1);
+        int carry = 0;
+        while (!stack1.isEmpty() || !stack2.isEmpty() || carry != 0) {
+            int sum = carry;
+            if (!stack1.isEmpty()) {
+                sum += stack1.pop();
+            }
+            if (!stack2.isEmpty()) {
+                sum += stack2.pop();
+            }
+            if (sum > 9) {
+                sum = sum % 10;
+                carry = 1;
+            } else {
+                carry = 0;
+            }
+            dummy.next = new ListNode(sum, dummy.next);
         }
         return dummy.next;
     }
