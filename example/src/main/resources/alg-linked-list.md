@@ -25,7 +25,7 @@ public ListNode reverseList(ListNode head) {
     return pre;
 }
 ```
-labuladong的构造dummy节点的解法也挺有意思，这个方法应该是最优的了，思路也很清晰（这个方法叫头插法）：
+labuladong的构造dummy节点的解法也挺有意思，这个方法应该是最优的了，思路也很清晰（这个方法叫头插法）（其实上面那个解法也是头插法，只是没用dummy节点，它的思路也是每次将cur插到pre的前面）：
 ```java
 public ListNode reverseList(ListNode head) {
     // 这个小技巧真不错呢，需要新建一个链表的，都用个dummy节点！
