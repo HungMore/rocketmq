@@ -120,6 +120,38 @@ public ListNode deleteDuplicates(ListNode head) {
 
 ###### 问题86：partition list
 
+给你一个链表的头节点head和一个特定值x，请你对链表进行分隔，使得所有小于x的节点都出现在大于或等于x的节点之前。
+你应当保留两个分区中每个节点的初始相对位置。
+```java
+public ListNode partition(ListNode head, int x);
+```
+
+这题也不难，定义两个新的链表，链表1记录小于x的元素，链表2记录大于等于x的元素
+然后遍历题目给出的链表，如果元素的值小于x，追加到链表1上，否则追加到链表2上
+代码：
+```java
+public ListNode partition(ListNode head, int x) {
+    ListNode dummy1 = new ListNode(-1);
+    ListNode dummy2 = new ListNode(-2);
+    ListNode temp1 = dummy1;
+    ListNode temp2 = dummy2;
+    ListNode cur = head;
+    while (cur != null) {
+        if (cur.val < x) {
+            temp1.next = cur;
+            temp1 = temp1.next;
+        } else {
+            temp2.next = cur;
+            temp2 = temp2.next;
+        }
+        cur = cur.next;
+    }
+    temp1.next = dummy2.next;
+    temp2.next = null;
+    return dummy1.next;
+}
+```
+
 ###### 问题328：odd even linked list
 
 ###### 问题2：add two numbers
