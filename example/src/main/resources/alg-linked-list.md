@@ -89,4 +89,40 @@ public ListNode reverseBetween(ListNode head, int left, int right) {
 }
 ```
 
-5.2
+###### 问题83：remove duplicates from sorted list
+
+给定一个已排序的链表的头head，删除所有重复的元素，使每个元素只出现一次。返回已排序的链表。
+```java
+public ListNode deleteDuplicates(ListNode head);
+```
+
+这题感觉不难，定义快慢两个指针，初始化时都指向头节点
+然后判断快指针指向的元素值是否等于慢指针的，如果是，快指针往前走一步
+如果不是，将慢指针的next指针指向快指针的元素，慢指针指向快指针，快指针往前走一步
+当快指针走向null，将慢指针的next指向null。
+代码：
+```java
+public ListNode deleteDuplicates(ListNode head) {
+    ListNode slow = head, fast = head;
+    while (fast != null) {
+        if (fast.val != slow.val) {
+            slow.next = fast;
+            slow = fast;
+        }
+        fast = fast.next;
+    }
+    if (slow != null) {
+        slow.next = null;
+    }
+    return head;
+}
+```
+
+###### 问题86：partition list
+
+###### 问题328：odd even linked list
+
+###### 问题2：add two numbers
+
+###### 问题445：add two numbers ii
+

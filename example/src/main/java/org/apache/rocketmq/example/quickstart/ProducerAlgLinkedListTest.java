@@ -9,12 +9,10 @@ public class ProducerAlgLinkedListTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgLinkedListTest test = new ProducerAlgLinkedListTest();
-        ListNode node5 = new ListNode(5, null);
-        ListNode node4 = new ListNode(4, node5);
-        ListNode node3 = new ListNode(3, node4);
-        ListNode node2 = new ListNode(2, node3);
-        ListNode node1 = new ListNode(1, node2);
-        ListNode reverseBetween = test.reverseBetween(node1, 1, 3);
+        int[] arr = {1, 2, 3, 4, 5};
+        ListNode head = createLinkedList(arr);
+        displayLinkedList(head);
+        ListNode reverseBetween = test.reverseBetween(head, 2, 5);
         displayLinkedList(reverseBetween);
 
 
@@ -64,10 +62,38 @@ public class ProducerAlgLinkedListTest {
         return dummy.next;
     }
 
-    public static void displayLinkedList(ListNode head){
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (fast != null) {
+            if (fast.val != slow.val) {
+                slow.next = fast;
+                slow = fast;
+            }
+            fast = fast.next;
+        }
+        if (slow != null) {
+            slow.next = null;
+        }
+        return head;
+    }
+
+    public static ListNode createLinkedList(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return null;
+        }
+        ListNode head = new ListNode(arr[0]);
         ListNode cur = head;
-        while (cur != null){
-            System.out.print(cur.val + "->");
+        for (int i = 1; i < arr.length; i++) {
+            cur.next = new ListNode(arr[i]);
+            cur = cur.next;
+        }
+        return head;
+    }
+
+    public static void displayLinkedList(ListNode head) {
+        ListNode cur = head;
+        while (cur != null) {
+            System.out.print(cur.val + " -> ");
             cur = cur.next;
         }
         System.out.println("null");
