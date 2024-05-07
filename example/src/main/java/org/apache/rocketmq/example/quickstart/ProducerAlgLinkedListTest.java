@@ -101,6 +101,29 @@ public class ProducerAlgLinkedListTest {
         return dummy1.next;
     }
 
+    public ListNode oddEvenList(ListNode head) {
+        ListNode dummy1 = new ListNode(-1);
+        ListNode dummy2 = new ListNode(-2);
+        ListNode temp1 = dummy1;
+        ListNode temp2 = dummy2;
+        ListNode cur = head;
+        int index = 1;
+        while (cur != null) {
+            if (index % 2 == 1) {
+                temp1.next = cur;
+                temp1 = temp1.next;
+            } else {
+                temp2.next = cur;
+                temp2 = temp2.next;
+            }
+            cur = cur.next;
+            index++;
+        }
+        temp1.next = dummy2.next;
+        temp2.next = null;
+        return dummy1.next;
+    }
+
     public static ListNode createLinkedList(int[] arr) {
         if (arr == null || arr.length == 0) {
             return null;

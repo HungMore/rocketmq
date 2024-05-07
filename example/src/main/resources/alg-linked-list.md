@@ -154,6 +154,61 @@ public ListNode partition(ListNode head, int x) {
 
 ###### 问题328：odd even linked list
 
+给定单链表的头节点head，将所有索引为奇数的节点和索引为偶数的节点分别组合在一起，然后返回重新排序的列表。
+第一个节点的索引被认为是奇数，第二个节点的索引为偶数，以此类推。
+请注意，偶数组和奇数组内部的相对顺序应该与输入时保持一致。
+你必须在 O(1) 的额外空间复杂度和 O(n) 的时间复杂度下解决这个问题。
+```java
+public ListNode oddEvenList(ListNode head);
+```
+
+这题和问题86分隔链表是一样的，只是一个按照值的大小分割，一个按照索引号分割，直接写代码吧。
+代码：
+```java
+public ListNode oddEvenList(ListNode head) {
+    ListNode dummy1 = new ListNode(-1);
+    ListNode dummy2 = new ListNode(-2);
+    ListNode temp1 = dummy1;
+    ListNode temp2 = dummy2;
+    ListNode cur = head;
+    int index = 1;
+    while (cur != null) {
+        if (index % 2 == 1) {
+            temp1.next = cur;
+            temp1 = temp1.next;
+        } else {
+            temp2.next = cur;
+            temp2 = temp2.next;
+        }
+        cur = cur.next;
+        index++;
+    }
+    temp1.next = dummy2.next;
+    temp2.next = null;
+    return dummy1.next;
+}
+```
+查看了下我对这题的题解记录，我还写过一个"穿针引线"的解法，也挺不错，可以参考下。（但是我觉得定义两个新的链表然后连上去的解法可能更好写、更通用一点）
+```java
+public ListNode oddEvenList(ListNode head) {
+    if(head == null){
+        return head;
+    }
+    ListNode endOdd = head; // 奇指针
+    ListNode beginEven = head.next; // 偶头指针
+    ListNode endEven = head.next; // 偶尾指针
+    while(endOdd.next != null && endEven.next != null){
+        endOdd.next = endEven.next;
+        endOdd = endOdd.next;
+        endEven.next = endOdd.next;
+        endEven = endEven.next;
+    }
+    endOdd.next = beginEven;
+    return head;
+}
+```
+
+
 ###### 问题2：add two numbers
 
 ###### 问题445：add two numbers ii
