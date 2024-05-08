@@ -11,11 +11,13 @@ public class ProducerAlgLinkedListTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgLinkedListTest test = new ProducerAlgLinkedListTest();
-        int[] arr = {1, 2, 3, 4, 5};
+        int[] arr = {1, 2, 2};
         ListNode head = createLinkedList(arr);
+        System.out.println("before: ");
         displayLinkedList(head);
-        ListNode reverseBetween = test.reverseBetween(head, 2, 5);
-        displayLinkedList(reverseBetween);
+        ListNode after = test.deleteDuplicatesII(head);
+        System.out.println("after: ");
+        displayLinkedList(after);
 
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
@@ -195,6 +197,35 @@ public class ProducerAlgLinkedListTest {
             head = head.next;
         }
         tail.next = null;
+        return dummy.next;
+    }
+
+    public ListNode deleteDuplicatesII(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        ListNode tail = dummy;
+        if (head != null) {
+            ListNode slow = head;
+            ListNode fast = head.next;
+            boolean isDuplicate = false;
+            while (fast != null) {
+                if (fast.val == slow.val) {
+                    isDuplicate = true;
+                } else if (isDuplicate) {
+                    slow = fast;
+                    isDuplicate = false;
+                } else {
+                    tail.next = slow;
+                    tail = tail.next;
+                    slow = fast;
+                }
+                fast = fast.next;
+            }
+            if (isDuplicate) {
+                tail.next = null;
+            } else {
+                tail.next = slow;
+            }
+        }
         return dummy.next;
     }
 

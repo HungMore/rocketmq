@@ -326,3 +326,51 @@ public ListNode removeElements(ListNode head, int val) {
     return dummy.next;
 }
 ```
+
+###### 问题82：remove duplicates from sorted list ii
+
+给定一个已排序的链表的头head，删除原始链表中所有重复数字的节点，只留下不同的数字。返回已排序的链表。
+示例 1：
+输入：head = [1,2,3,3,4,4,5]
+输出：[1,2,5]
+```java
+public ListNode deleteDuplicates(ListNode head);
+```
+
+因为要返回新的链表，所以定义dummy节点链表。
+然后使用快慢指针遍历head链表（快慢指针初始化指向两个相邻的节点），如果快指针的值等于慢指针的值，快指针往前走一步，并使用一个标志变量标识**当前慢指针是重复的**（标志变量初始化为不重复）；如果快指针不等于慢指针，判断标志位是否重复，如果是，说明`[慢指针, 快指针)`这个区间是重复的，将慢指针指向快指针，快指针往前走一步，并重置标志变量为不重复；如果标志位不是重复，说明快慢指针不同，将慢指针的节点连接到dummy链表的后面，慢指针指向快指针，快指针往前走一步。当快指针走到head链表的末尾的时候，还有判断下最后一个slow节点，如果当前标志位为重复，则将dummy链表的末尾置为空；如果标志位不为重复，dummy链表追加上最后这个slow节点。（经常都是要debug才知道dummy链表的末尾没有处理。。。）
+代码：
+```java
+public ListNode deleteDuplicates(ListNode head) {
+    ListNode dummy = new ListNode(-1);
+    ListNode tail = dummy;
+    if (head != null) {
+        ListNode slow = head;
+        ListNode fast = head.next;
+        boolean isDuplicate = false;
+        while (fast != null) {
+            if (fast.val == slow.val) {
+                isDuplicate = true;
+            } else if (isDuplicate) {
+                slow = fast;
+                isDuplicate = false;
+            } else {
+                tail.next = slow;
+                tail = tail.next;
+                slow = fast;
+            }
+            fast = fast.next;
+        }
+        if (isDuplicate) {
+            tail.next = null;
+        } else {
+            tail.next = slow;
+        }
+    }
+    return dummy.next;
+}
+```
+
+###### 问题21：merge two sorted lists
+
+5.4
