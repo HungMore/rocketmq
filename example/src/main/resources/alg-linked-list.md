@@ -373,4 +373,37 @@ public ListNode deleteDuplicates(ListNode head) {
 
 ###### 问题21：merge two sorted lists
 
+将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+示例 1：
+输入：l1 = [1,2,4], l2 = [1,3,4]
+输出：[1,1,2,3,4,4]
+```java
+public ListNode mergeTwoLists(ListNode list1, ListNode list2);
+```
+
+这题就是归并的过程，很简单啦。因为要产生一个新的链表，所以也是使用dummy节点。
+代码：
+```java
+public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    ListNode dummy = new ListNode(-1);
+    ListNode tail = dummy;
+    while (list1 != null && list2 != null) {
+        if (list1.val <= list2.val) {
+            tail.next = list1;
+            list1 = list1.next;
+        } else {
+            tail.next = list2;
+            list2 = list2.next;
+        }
+        tail = tail.next;
+    }
+    if (list1 != null) {
+        tail.next = list1;
+    } else {
+        tail.next = list2;
+    }
+    return dummy.next;
+}
+```
+
 5.4
