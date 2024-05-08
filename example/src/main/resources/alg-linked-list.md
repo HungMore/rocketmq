@@ -299,4 +299,30 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 }
 ```
 
-5.3
+###### 问题203：remove linked list elements
+
+给你一个链表的头节点head和一个整数val，请你删除链表中所有满足Node.val==val的节点，并返回新的头节点。
+示例 1：
+输入：head = [1,2,6,3,4,5,6], val = 6
+输出：[1,2,3,4,5]
+```java
+public ListNode removeElements(ListNode head, int val);
+```
+
+这题挺简单的，定义dummy虚拟头节点，然后遍历链表，如果节点的值不等于val，将节点连接到dummy链表的后面。
+代码：
+```java
+public ListNode removeElements(ListNode head, int val) {
+    ListNode dummy = new ListNode(-1);
+    ListNode tail = dummy;
+    while (head != null) {
+        if (head.val != val) {
+            tail.next = head;
+            tail = tail.next;
+        }
+        head = head.next;
+    }
+    tail.next = null;
+    return dummy.next;
+}
+```

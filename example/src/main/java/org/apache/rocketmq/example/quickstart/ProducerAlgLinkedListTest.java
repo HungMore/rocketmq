@@ -184,6 +184,20 @@ public class ProducerAlgLinkedListTest {
         return dummy.next;
     }
 
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode dummy = new ListNode(-1);
+        ListNode tail = dummy;
+        while (head != null) {
+            if (head.val != val) {
+                tail.next = head;
+                tail = tail.next;
+            }
+            head = head.next;
+        }
+        tail.next = null;
+        return dummy.next;
+    }
+
     public static ListNode createLinkedList(int[] arr) {
         if (arr == null || arr.length == 0) {
             return null;
