@@ -266,6 +266,66 @@ public class ProducerAlgLinkedListTest {
         return dummy.next;
     }
 
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1, head);
+        ListNode groupPre = dummy;
+        ListNode groupPost = null;
+        while (head != null) {
+            ListNode groupTail = getGroupTail(head, k);
+            // 后面剩余有完整的一组，剩余节点大于等于k个
+            if (groupTail != null) {
+                groupPost = groupTail.next;
+                groupPre.next = reverseK(head, k);
+                head.next = groupPost;
+                groupPre = head;
+                head = groupPost;
+                // 后面不足一组
+            } else {
+                groupPre.next = head;
+                head = null;
+            }
+        }
+        return dummy.next;
+    }
+
+    /**
+     * 返回以head为组首的组内最后一个元素
+     * 如果剩余节点数不足k个，无法构成一组，返回空
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    private ListNode getGroupTail(ListNode head, int k) {
+        int count = 0;
+        while (head != null && count < k - 1) {
+            count++;
+            head = head.next;
+        }
+        return head;
+    }
+
+    /**
+     * 翻转k个节点（链表确保有k个节点或以上），并返回新的头节点，组内最后一个节点指向null的！
+     *
+     * @param head
+     * @param k
+     * @return
+     */
+    private ListNode reverseK(ListNode head, int k) {
+        ListNode dummy = new ListNode(-1);
+        int count = 0;
+        while (count < k) {
+            ListNode insert = head;
+            head = head.next;
+            insert.next = dummy.next;
+            dummy.next = insert;
+            count++;
+        }
+        return dummy.next;
+    }
+
+
     public static ListNode createLinkedList(int[] arr) {
         if (arr == null || arr.length == 0) {
             return null;

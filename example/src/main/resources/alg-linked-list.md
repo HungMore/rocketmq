@@ -435,3 +435,89 @@ public ListNode swapPairs(ListNode head) {
     return dummy.next;
 }
 ```
+
+###### 问题25：reverse nodes in k-group
+
+给你链表的头节点head，每k个节点一组进行翻转，请你返回修改后的链表。
+k是一个正整数，它的值小于或等于链表的长度。如果节点总数不是k的整数倍，那么请将最后剩余的节点保持原有顺序。
+你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
+示例 1：
+输入：head = [1,2,3,4,5], k = 2
+输出：[2,1,4,3,5]
+示例 2：
+输入：head = [1,2,3,4,5], k = 3
+输出：[3,2,1,4,5]
+```java
+public ListNode reverseKGroup(ListNode head, int k);
+```
+
+问题24是这题的一个特例。不过这题还是可以参考问题24的思路：k个节点一组，所以我们需要使用两个指针记录组外的前继节点和后继节点。同时，为了保证组内翻转后，能成功连上组外的后继节点，我们需要一个变量来保存组内原先的第一个节点(其实就是代码中的head节点)。题目还强调如果节点数不是k的整数倍，剩余最后一组要保持原顺序，所以我们不能简单地对每一组都使用头插法翻转，而是先遍历一遍够不够k个，够就头插法翻转，不够就原序接上。
+代码：
+```java
+public ListNode reverseKGroup(ListNode head, int k) {
+    ListNode dummy = new ListNode(-1, head);
+    ListNode groupPre = dummy;
+    ListNode groupPost = null;
+    while (head != null) {
+        ListNode groupTail = getGroupTail(head, k);
+        // 后面剩余有完整的一组，剩余节点大于等于k个
+        if (groupTail != null) {
+            groupPost = groupTail.next;
+            groupPre.next = reverseK(head, k);
+            head.next = groupPost;
+            groupPre = head;
+            head = groupPost;
+            // 后面不足一组
+        } else {
+            groupPre.next = head;
+            head = null;
+        }
+    }
+    return dummy.next;
+}
+
+/**
+ * 返回以head为组首的组内最后一个元素
+ * 如果剩余节点数不足k个，无法构成一组，返回空
+ *
+ * @param head
+ * @param k
+ * @return
+ */
+private ListNode getGroupTail(ListNode head, int k) {
+    int count = 0;
+    while (head != null && count < k - 1) {
+        count++;
+        head = head.next;
+    }
+    return head;
+}
+
+/**
+ * 翻转k个节点（链表确保有k个节点或以上），并返回新的头节点，组内最后一个节点指向null的！
+ *
+ * @param head
+ * @param k
+ * @return
+ */
+private ListNode reverseK(ListNode head, int k) {
+    ListNode dummy = new ListNode(-1);
+    int count = 0;
+    while (count < k) {
+        ListNode insert = head;
+        head = head.next;
+        insert.next = dummy.next;
+        dummy.next = insert;
+        count++;
+    }
+    return dummy.next;
+}
+```
+
+
+###### 问题147：insertion sort list
+
+###### 问题148：sort list
+
+归并排序
+ 
