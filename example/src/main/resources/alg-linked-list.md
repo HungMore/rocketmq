@@ -514,7 +514,6 @@ private ListNode reverseK(ListNode head, int k) {
 }
 ```
 
-
 ###### 问题147：insertion sort list
 
 给定单个链表的头head，使用插入排序对链表进行排序，并返回排序后链表的头。
@@ -548,6 +547,21 @@ public ListNode insertionSortList(ListNode head) {
 
 ###### 问题148：sort list
 
-归并排序
+给你链表的头结点head，请将其按升序排列并返回排序后的链表。
+示例 1：
+输入：head = [4,2,1,3]
+输出：[1,2,3,4]
+进阶：你可以在O(nlogn)时间复杂度和常数级空间复杂度下，对链表进行排序吗？
+```java
+public ListNode sortList(ListNode head);
+```
+
+bobo老师说用归并排序，递归版本的归并排序确实可以实现O(nlogn)的时间复杂度，但是无法实现常数级的空间复杂度，所以这题的要求就是用迭代版本的归并排序。
+找寻划分归并排序的中间节点有个小技巧，就是使用快慢指针，慢指针走一步，快指针走两步，当快指针到达尾部时，慢指针就在中间。
+迭代版暂时写不出来，先不做吧。`todo`
+代码：
+```java
+
+```
  
 5.5
