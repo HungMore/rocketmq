@@ -406,4 +406,31 @@ public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
 }
 ```
 
-5.4
+###### 问题24：swap nodes in pairs
+
+给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。
+示例 1：
+输入：head = [1,2,3,4]
+输出：[2,1,4,3]
+```java
+public ListNode swapPairs(ListNode head);
+```
+
+试试用穿针引线的方式来做一做。我们需要两两一对进行内部交换，交换后需要连接上其他的“对”，所以需要两个指针记录“对”的前继节点、后继节点。
+代码：
+```java
+public ListNode swapPairs(ListNode head) {
+    ListNode dummy = new ListNode(-1, head);
+    ListNode pairPre = dummy;
+    ListNode pairPost = null;
+    while (head != null && head.next != null) {
+        pairPost = head.next.next;
+        pairPre.next = head.next;
+        head.next.next = head;
+        head.next = pairPost;
+        pairPre = head;
+        head = pairPost;
+    }
+    return dummy.next;
+}
+```
