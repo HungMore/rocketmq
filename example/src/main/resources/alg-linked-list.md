@@ -423,6 +423,7 @@ public ListNode swapPairs(ListNode head) {
     ListNode dummy = new ListNode(-1, head);
     ListNode pairPre = dummy;
     ListNode pairPost = null;
+    // head和head.next构建一对
     while (head != null && head.next != null) {
         pairPost = head.next.next;
         pairPre.next = head.next;
