@@ -517,7 +517,37 @@ private ListNode reverseK(ListNode head, int k) {
 
 ###### 问题147：insertion sort list
 
+给定单个链表的头head，使用插入排序对链表进行排序，并返回排序后链表的头。
+插入排序算法的步骤:
+插入排序是迭代的，每次只移动一个元素，直到所有元素可以形成一个有序的输出列表。
+每次迭代中，插入排序只从输入数据中移除一个待排序的元素，找到它在序列中适当的位置，并将其插入。
+重复直到所有输入数据插入完为止。
+```java
+public ListNode insertionSortList(ListNode head);
+```
+
+插入排序很熟悉了，直接写代码吧。
+代码：
+```java
+public ListNode insertionSortList(ListNode head) {
+    ListNode dummy = new ListNode(Integer.MIN_VALUE);
+    while (head != null) {
+        ListNode pre = dummy;
+        while (pre.next != null && pre.next.val <= head.val) {
+            pre = pre.next;
+        }
+
+        ListNode insert = head;
+        head = head.next;
+        insert.next = pre.next;
+        pre.next = insert;
+    }
+    return dummy.next;
+}
+```
+
 ###### 问题148：sort list
 
 归并排序
  
+5.5

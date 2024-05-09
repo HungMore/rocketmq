@@ -11,11 +11,11 @@ public class ProducerAlgLinkedListTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgLinkedListTest test = new ProducerAlgLinkedListTest();
-        int[] arr = {1, 2, 3, 4, 5};
+        int[] arr = {5, 4, 3, 2, 1};
         ListNode head = createLinkedList(arr);
         System.out.println("before: ");
         displayLinkedList(head);
-        ListNode after = test.swapPairs(head);
+        ListNode after = test.insertionSortList(head);
         System.out.println("after: ");
         displayLinkedList(after);
 
@@ -325,6 +325,21 @@ public class ProducerAlgLinkedListTest {
         return dummy.next;
     }
 
+    public ListNode insertionSortList(ListNode head) {
+        ListNode dummy = new ListNode(Integer.MIN_VALUE);
+        while (head != null) {
+            ListNode pre = dummy;
+            while (pre.next != null && pre.next.val <= head.val) {
+                pre = pre.next;
+            }
+
+            ListNode insert = head;
+            head = head.next;
+            insert.next = pre.next;
+            pre.next = insert;
+        }
+        return dummy.next;
+    }
 
     public static ListNode createLinkedList(int[] arr) {
         if (arr == null || arr.length == 0) {
