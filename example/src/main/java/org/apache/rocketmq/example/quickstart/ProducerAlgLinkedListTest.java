@@ -341,6 +341,12 @@ public class ProducerAlgLinkedListTest {
         return dummy.next;
     }
 
+    public void deleteNode(ListNode node) {
+        ListNode next = node.next;
+        node.val = next.val;
+        node.next = next.next;
+    }
+
     public static ListNode createLinkedList(int[] arr) {
         if (arr == null || arr.length == 0) {
             return null;
