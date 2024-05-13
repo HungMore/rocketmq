@@ -745,4 +745,47 @@ public void reorderList(ListNode head) {
 
 ###### 问题234：palindrome linked list
 
+给你一个单链表的头节点head，请你判断该链表是否为回文链表。如果是，返回true；否则，返回false。
+示例 1：
+输入：head = [1,2,2,1]
+输出：true
+```java
+public boolean isPalindrome(ListNode head);
+```
 
+使用栈来做的话就很简单啦（不断比较栈顶指针和遍历指针是否相等就可以），不过做完`问题143 重排链表`以后，这题也可以使用`寻找中心节点+链表逆序`的方式来判断是否回文。
+将后半段链表逆序，然后判断是否一致。
+代码：
+```java
+public boolean isPalindrome(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    ListNode secondHalf = fast == null ? slow : slow.next;
+    ListNode reverseNode = reverseNode(secondHalf);
+    while (reverseNode != null) {
+        if (head.val != reverseNode.val) {
+            return false;
+        }
+        reverseNode = reverseNode.next;
+        head = head.next;
+    }
+    return true;
+}
+
+private ListNode reverseNode(ListNode head) {
+    ListNode dummy = new ListNode(-1);
+    while (head != null) {
+        ListNode insert = head;
+        head = head.next;
+        insert.next = dummy.next;
+        dummy.next = insert;
+    }
+    return dummy.next;
+}
+```
+
+但是这样写这个函数是有副作用的，人家只是希望判断下是否是回文，你却在函数内部将链表的内部结构都给改了，这是不太对的，所以官方解答也提议要将链表还原回去。不过，即便还原回去了，这个方法在并发执行的时候可能还会出现各式各样的问题，解题学习可以这么做，实际工作就不推荐了。

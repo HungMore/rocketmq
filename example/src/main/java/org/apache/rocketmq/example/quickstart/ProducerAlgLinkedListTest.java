@@ -13,11 +13,11 @@ public class ProducerAlgLinkedListTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgLinkedListTest test = new ProducerAlgLinkedListTest();
-        int[] arr = {1, 2, 3, 4};
+        int[] arr = {1, 2, 2, 1};
         ListNode head = createLinkedList(arr);
         System.out.println("before: ");
         displayLinkedList(head);
-        test.reorderList(head);
+        System.out.println(test.isPalindrome(head));
         System.out.println("after: ");
         displayLinkedList(head);
 
@@ -426,6 +426,36 @@ public class ProducerAlgLinkedListTest {
         } else {
             tail.next = null;
         }
+    }
+
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode secondHalf = fast == null ? slow : slow.next;
+        ListNode reverseNode = reverseNode(secondHalf);
+        while (reverseNode != null) {
+            if (head.val != reverseNode.val) {
+                return false;
+            }
+            reverseNode = reverseNode.next;
+            head = head.next;
+        }
+        return true;
+    }
+
+    private ListNode reverseNode(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        while (head != null) {
+            ListNode insert = head;
+            head = head.next;
+            insert.next = dummy.next;
+            dummy.next = insert;
+        }
+        return dummy.next;
     }
 
     public static ListNode createLinkedList(int[] arr) {
