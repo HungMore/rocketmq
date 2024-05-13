@@ -347,6 +347,23 @@ public class ProducerAlgLinkedListTest {
         node.next = next.next;
     }
 
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode fast = head;
+        int i = 0;
+        while (i < n) {
+            fast = fast.next;
+            i++;
+        }
+        ListNode dummy = new ListNode(-1, head);
+        ListNode slow = dummy;
+        while (fast != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return dummy.next;
+    }
+
     public static ListNode createLinkedList(int[] arr) {
         if (arr == null || arr.length == 0) {
             return null;

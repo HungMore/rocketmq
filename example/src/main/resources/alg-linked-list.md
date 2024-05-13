@@ -589,6 +589,7 @@ public void deleteNode(ListNode node);
 这题的题目有点绕，简单来说，就是通过修改node节点的值的方式来删除一个节点，而不是通过修改引用的指向的方式来删除。
 整体思路也很简单，我们将待删除节点的后一个节点的值拷贝到待删除节点，然后将待删除节点的后一个节点的next指针也拷贝到待删除节点的next指针就可以。
 相当于把next节点完完整整地拷贝到current节点，current节点的值就消失了，但是从实际的内存上来说，消失的是next节点。（我替代了你，消失的既是你，也是我！）
+代码：
 ```java
 public void deleteNode(ListNode node) {
     ListNode next = node.next;
@@ -596,3 +597,41 @@ public void deleteNode(ListNode node) {
     node.next = next.next;
 }
 ```
+
+这题也说明了链表的题并不都是“穿针引线”，有的时候也可以通过修改值来实现。‘
+
+###### 问题19：remove Nth node from end of list
+
+给你一个链表，删除链表的倒数第n个结点，并且返回链表的头结点。
+示例 1：
+输入：head = [1,2,3,4,5], n = 2
+输出：[1,2,3,5]
+```java
+public ListNode removeNthFromEnd(ListNode head, int n);
+```
+
+这题是老熟人了，定义快慢两个指针
+快指针先走n步，然后慢指针起步，快指针每走一步，慢指针也跟着走一步，快慢指针之间的距离总是维持在n
+当快指针到达链表的末尾，值为null时，慢指针指向的就是倒数第n个节点。
+这题因为要删除倒数第n个节点，所以我们要找的是倒数第n+1个节点，然后将倒数第n+1的节点的next指针指向倒数第n个节点的next节点
+我们初始化慢指针的时候，可以让它指向dummy节点（dummy.next=head），这样慢指针最终走到的就是倒数第n+1个节点，并且这样设定也解决了移除头节点的特例
+代码：
+```java
+public ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode fast = head;
+    int i = 0;
+    while (i < n) {
+        fast = fast.next;
+        i++;
+    }
+    ListNode dummy = new ListNode(-1, head);
+    ListNode slow = dummy;
+    while (fast != null) {
+        fast = fast.next;
+        slow = slow.next;
+    }
+    slow.next = slow.next.next;
+    return dummy.next;
+}
+```
+
