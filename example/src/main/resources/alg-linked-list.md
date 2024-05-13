@@ -738,7 +738,9 @@ public void reorderList(ListNode head) {
     }
 }
 ```
-
+[官方解答](https://leetcode.cn/problems/reorder-list/solutions/452867/zhong-pai-lian-biao-by-leetcode-solution/)还提供了两种解法
+第一种是将ListNode的节点按顺序存入到一个ArrayList中，然后通过下标的方式直接获取首尾的元素，也就是i=0，j=size-1，然后i、j不断靠近，直至i>=j
+第二种是`寻找链表中点 + 链表逆序 + 合并链表`，首先使用快慢指针（快指针走两步慢指针走一步）找到链表的中点，然后将链表的后半部分逆序，然后再与前半部分归并。
 
 
 ###### 问题234：palindrome linked list
