@@ -688,7 +688,7 @@ public ListNode rotateRight(ListNode head, int k) {
     return next;
 }
 ```
-
+官方题解也不错的，可以看看：[官方题解](https://leetcode.cn/problems/rotate-list/solutions/681812/xuan-zhuan-lian-biao-by-leetcode-solutio-woq1/)
 
 ###### 问题143：reorder list
 
