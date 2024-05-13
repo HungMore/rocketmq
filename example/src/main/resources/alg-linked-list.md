@@ -692,6 +692,55 @@ public ListNode rotateRight(ListNode head, int k) {
 
 ###### 问题143：reorder list
 
+给定一个单链表L的头节点head，单链表L表示为：
+L0 → L1 → … → Ln - 1 → Ln
+请将其重新排列后变为：
+L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+示例 1：
+输入：head = [1,2,3,4]
+输出：[1,4,2,3]
+```java
+public void reorderList(ListNode head);
+```
+
+这个重排就类似于高斯的等差数列求和，首尾不断组合
+我们可以使用一个栈，将链表的节点全部压入栈（以实现逆序）
+然后一个指针指向头节点，记作遍历指针，一个指针指向栈顶，记作栈顶指针
+遍历指针指向的节点插入链表，往后走一步
+栈顶指针指向的节点插入链表，弹栈
+直至两个指针到达链表的中心。如果链表的元素总数是偶数个，两个指针各走一半即可；如果为奇数，中间的节点再连接到链表最后。
+代码：
+```java
+public void reorderList(ListNode head) {
+    ListNode cur = head;
+    Deque<ListNode> stack = new LinkedList<>();
+    while (cur != null) {
+        stack.push(cur);
+        cur = cur.next;
+    }
+    int len = stack.size();
+    ListNode dummy = new ListNode(-1);
+    ListNode tail = dummy;
+    cur = head;
+    for (int i = 0; i < len / 2; i++) {
+        tail.next = cur;
+        cur = cur.next;
+        tail = tail.next;
+        tail.next = stack.pop();
+        tail = tail.next;
+    }
+    if (len % 2 == 1) {
+        tail.next = cur;
+        tail.next.next = null;
+    } else {
+        tail.next = null;
+    }
+}
+```
+
+
+
 ###### 问题234：palindrome linked list
 
 

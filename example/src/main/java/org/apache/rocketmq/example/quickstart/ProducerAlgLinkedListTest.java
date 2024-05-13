@@ -1,5 +1,7 @@
 package org.apache.rocketmq.example.quickstart;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Stack;
 
 /**
@@ -11,13 +13,13 @@ public class ProducerAlgLinkedListTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgLinkedListTest test = new ProducerAlgLinkedListTest();
-        int[] arr = {1, 2, 3, 4, 5};
+        int[] arr = {1, 2, 3, 4};
         ListNode head = createLinkedList(arr);
         System.out.println("before: ");
         displayLinkedList(head);
-        ListNode after = test.rotateRight(head, 5);
+        test.reorderList(head);
         System.out.println("after: ");
-        displayLinkedList(after);
+        displayLinkedList(head);
 
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
@@ -398,6 +400,32 @@ public class ProducerAlgLinkedListTest {
         slow.next = null;
         fast.next = head;
         return next;
+    }
+
+    public void reorderList(ListNode head) {
+        ListNode cur = head;
+        Deque<ListNode> stack = new LinkedList<>();
+        while (cur != null) {
+            stack.push(cur);
+            cur = cur.next;
+        }
+        int len = stack.size();
+        ListNode dummy = new ListNode(-1);
+        ListNode tail = dummy;
+        cur = head;
+        for (int i = 0; i < len / 2; i++) {
+            tail.next = cur;
+            cur = cur.next;
+            tail = tail.next;
+            tail.next = stack.pop();
+            tail = tail.next;
+        }
+        if (len % 2 == 1) {
+            tail.next = cur;
+            tail.next.next = null;
+        } else {
+            tail.next = null;
+        }
     }
 
     public static ListNode createLinkedList(int[] arr) {
