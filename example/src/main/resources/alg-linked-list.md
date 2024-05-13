@@ -635,3 +635,63 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
 }
 ```
 
+###### 问题61：rotate list
+
+给你一个链表的头节点head，旋转链表，将链表每个节点向右移动k个位置。
+示例 1：
+输入：head = [1,2,3,4,5], k = 2
+输出：[4,5,1,2,3]
+```java
+public ListNode rotateRight(ListNode head, int k);
+```
+
+做完`问题19：删除倒数第N个节点`以后，这题的思路就比较明确了。
+我们要找到倒数第k个节点以及倒数第k+1个节点，将倒数第k+1个节点的next指针置为空，然后将倒数第k个节点作为头节点
+这题因为要将链表的最后一个节点连接上链表的第一个节点，所以我们希望快指针不要走到null，而是走到链表的最后一个节点。
+我们初始化快指针为head，快指针先走k-1步，慢指针起步，当快指针走到链表的最后一个节点时，慢指针就是倒数第k个节点。
+如果将慢指针初始化为dummy节点（dummy.next=head），那么慢指针就是倒数第k+1个节点。
+代码：
+```java
+public ListNode rotateRight(ListNode head, int k) {
+    int len = 0;
+    ListNode cur = head;
+    while (cur != null) {
+        len++;
+        cur = cur.next;
+    }
+    if (len == 0) {
+        return head;
+    }
+    // 如果k大于等于链表的长度，需要取余
+    if (k >= len) {
+        k = k % len;
+    }
+    // 如果k等于0，相当于不旋转，直接返回
+    if (k == 0) {
+        return head;
+    }
+    ListNode fast = head;
+    int i = 1;
+    while (i < k) {
+        fast = fast.next;
+        i++;
+    }
+    ListNode dummy = new ListNode(-1, head);
+    ListNode slow = dummy;
+    while (fast.next != null) {
+        fast = fast.next;
+        slow = slow.next;
+    }
+    ListNode next = slow.next;
+    slow.next = null;
+    fast.next = head;
+    return next;
+}
+```
+
+
+###### 问题143：reorder list
+
+###### 问题234：palindrome linked list
+
+

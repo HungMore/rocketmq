@@ -11,11 +11,11 @@ public class ProducerAlgLinkedListTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgLinkedListTest test = new ProducerAlgLinkedListTest();
-        int[] arr = {5, 4, 3, 2, 1};
+        int[] arr = {1, 2, 3, 4, 5};
         ListNode head = createLinkedList(arr);
         System.out.println("before: ");
         displayLinkedList(head);
-        ListNode after = test.insertionSortList(head);
+        ListNode after = test.rotateRight(head, 5);
         System.out.println("after: ");
         displayLinkedList(after);
 
@@ -362,6 +362,42 @@ public class ProducerAlgLinkedListTest {
         }
         slow.next = slow.next.next;
         return dummy.next;
+    }
+
+    public ListNode rotateRight(ListNode head, int k) {
+        int len = 0;
+        ListNode cur = head;
+        while (cur != null) {
+            len++;
+            cur = cur.next;
+        }
+        if (len == 0) {
+            return head;
+        }
+        // 如果k大于等于链表的长度，需要取余
+        if (k >= len) {
+            k = k % len;
+        }
+        // 如果k等于0，相当于不旋转，直接返回
+        if (k == 0) {
+            return head;
+        }
+        ListNode fast = head;
+        int i = 1;
+        while (i < k) {
+            fast = fast.next;
+            i++;
+        }
+        ListNode dummy = new ListNode(-1, head);
+        ListNode slow = dummy;
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        ListNode next = slow.next;
+        slow.next = null;
+        fast.next = head;
+        return next;
     }
 
     public static ListNode createLinkedList(int[] arr) {
