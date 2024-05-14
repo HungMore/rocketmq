@@ -42,3 +42,59 @@ private boolean isMatch(char left, char right) {
     return (left == '[' && right == ']') || (left == '(' && right == ')') || (left == '{' && right == '}');
 }
 ```
+
+###### 问题150：evaluate reverse polish notation
+
+给你一个字符串数组tokens，表示一个根据逆波兰表示法表示的算术表达式。
+请你计算该表达式。返回一个表示表达式值的整数。
+注意：
+有效的算符为'+'、'-'、'*'和'/'。
+每个操作数（运算对象）都可以是一个整数或者另一个表达式。
+两个整数之间的除法总是向零截断。
+表达式中不含除零运算。
+输入是一个根据逆波兰表示法表示的算术表达式。
+答案及所有中间计算结果可以用32位整数表示。
+示例 1：
+输入：tokens = ["2","1","+","3","*"]
+输出：9
+解释：该算式转化为常见的中缀算术表达式为：((2 + 1) * 3) = 9
+```java
+public int evalRPN(String[] tokens);
+```
+
+这题也不难啦，使用栈数据结构可以解决。
+遍历字符串数组，如果当前字符串是数字，将数字压入栈；如果当前字符串是算术运算符，从栈中弹出两个元素，进行算术运算，并将结果压入栈中。
+遍历完数组，栈中剩下的元素就是最终结果。
+代码：
+```java
+public int evalRPN(String[] tokens) {
+    Deque<Integer> stack = new LinkedList<>();
+    for (String token : tokens) {
+        if (token.equals("+")) {
+            Integer num2 = stack.pop();
+            Integer num1 = stack.pop();
+            stack.push(num1 + num2);
+        } else if (token.equals("-")) {
+            Integer num2 = stack.pop();
+            Integer num1 = stack.pop();
+            stack.push(num1 - num2);
+        } else if (token.equals("*")) {
+            Integer num2 = stack.pop();
+            Integer num1 = stack.pop();
+            stack.push(num1 * num2);
+        } else if (token.equals("/")) {
+            Integer num2 = stack.pop();
+            Integer num1 = stack.pop();
+            stack.push(num1 / num2);
+        } else {
+            stack.push(Integer.parseInt(token));
+        }
+    }
+    return stack.pop();
+}
+```
+
+###### 问题71：simplify path
+
+
+6.2
