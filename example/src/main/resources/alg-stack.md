@@ -96,5 +96,66 @@ public int evalRPN(String[] tokens) {
 
 ###### 问题71：simplify path
 
+给你一个字符串path，表示指向某一文件或目录的Unix风格绝对路径（以'/'开头），请你将其转化为更加简洁的规范路径。
+在Unix风格的文件系统中，一个点（.）表示当前目录本身；此外，两个点（..）表示将目录切换到上一级（指向父目录）；两者都可以是复杂相对路径的组成部分。任意多个连续的斜杠（即，'//'）都被视为单个斜杠'/'。对于此问题，任何其他格式的点（例如，'...'）均被视为文件/目录名称。
+请注意，返回的规范路径必须遵循下述格式：
+始终以斜杠'/'开头。
+两个目录名之间必须只有一个斜杠'/'。
+最后一个目录名（如果存在）不能以'/'结尾。
+此外，路径仅包含从根目录到目标文件或目录的路径上的目录（即，不含'.'或'..'）。
+返回简化后得到的规范路径。
+示例 1：
+输入：path = "/home/"
+输出："/home"
+解释：注意，最后一个目录名后面没有斜杠。 
+示例 2：
+输入：path = "/../"
+输出："/"
+解释：从根目录向上一级是不可行的，因为根目录是你可以到达的最高级。
+示例 3：
+输入：path = "/home//foo/"
+输出："/home/foo"
+解释：在规范路径中，多个连续斜杠需要用一个斜杠替换。
+示例 4：
+输入：path = "/a/./b/../../c/"
+输出："/c"
+提示：
+1 <= path.length <= 3000
+path 由英文字母，数字，'.'，'/' 或 '_' 组成。
+path 是一个有效的 Unix 风格绝对路径。
+```java
+public String simplifyPath(String path);
+```
+
+这题也不难，使用栈数据结构可以解决（用栈存目录名）。
+首先我们使用'/'对path进行分割，分割得到字符串数据。
+遍历字符串数组，如果字符串为空串，直接跳过；如果字符串为'.'，直接跳过；如果字符串为'..'，我们从栈中弹出一个元素（如果栈为空就不弹）；否则将字符串压入栈。
+遍历完字符串，栈中留存的就是自底向上的目录名，每弹出一个元素，在目录名前拼接上'/'就是最终的结果。
+代码：
+```java
+public String simplifyPath(String path) {
+    Deque<String> stack = new LinkedList<>();
+    String[] split = path.split("/");
+    for (String s : split) {
+        if ("..".equals(s)) {
+            if (!stack.isEmpty()) {
+                stack.pop();
+            }
+        } else if (!"".equals(s) && !".".equals(s)) {
+            stack.push(s);
+        }
+    }
+    StringBuilder stringBuilder = new StringBuilder();
+    if (stack.isEmpty()) {
+        stringBuilder.append("/");
+    } else {
+        while (!stack.isEmpty()) {
+            stringBuilder.insert(0, "/" + stack.pop());
+        }
+    }
+    return stringBuilder.toString();
+}
+```
+其实这题用双端队列会好一点啦，后进先出规范化的时候使用栈，拼接最后的结果的时候，使用队列从前往后遍历会方便一点。
 
 6.2

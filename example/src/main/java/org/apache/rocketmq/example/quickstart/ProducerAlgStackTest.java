@@ -12,7 +12,7 @@ public class ProducerAlgStackTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgStackTest test = new ProducerAlgStackTest();
-        System.out.println(test.evalRPN(new String[]{"2", "1", "+", "3", "*"}));
+        System.out.println(test.simplifyPath("/home//foo/"));
 
 //        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
@@ -66,6 +66,29 @@ public class ProducerAlgStackTest {
             }
         }
         return stack.pop();
+    }
+
+    public String simplifyPath(String path) {
+        Deque<String> stack = new LinkedList<>();
+        String[] split = path.split("/");
+        for (String s : split) {
+            if ("..".equals(s)) {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            } else if (!"".equals(s) && !".".equals(s)) {
+                stack.push(s);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        if (stack.isEmpty()) {
+            stringBuilder.append("/");
+        } else {
+            while (!stack.isEmpty()) {
+                stringBuilder.insert(0, "/" + stack.pop());
+            }
+        }
+        return stringBuilder.toString();
     }
 
 }
