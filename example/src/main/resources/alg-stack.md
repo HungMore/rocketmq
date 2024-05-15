@@ -8,6 +8,10 @@ sonar给出的替换方案（不需要考虑线程安全问题的前提下）：
 - HashMap instead of Hashtable
 - StringBuilder instead of StringBuffer
 
+栈和递归的关系是很紧密的，通过做题要深刻理解它们两者的联系。
+我们可以使用栈数据结构来模拟系统的调用栈，进而写出非递归的程序。
+应该说栈是函数调用的基础，能想出栈的人，确实是很天才！
+
 ###### 问题20：valid parentheses
 
 给定一个只包括'('，')'，'{'，'}'，'['，']'的字符串s，判断字符串是否有效。
@@ -158,4 +162,8 @@ public String simplifyPath(String path) {
 ```
 其实这题用双端队列会好一点啦，后进先出规范化的时候使用栈，拼接最后的结果的时候，使用队列从前往后遍历会方便一点。
 
-6.2
+
+6.2 & 6.3
+
+###### 问题341：flatten nested list iterator
+
