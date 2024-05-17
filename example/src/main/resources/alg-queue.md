@@ -93,6 +93,7 @@ public List<List<Integer>> zigzagLevelOrder(TreeNode root);
 ``` 
 
 这题也和`问题102`差不多，只不过我们需要用一个布尔值保存当前层是从左到右还是从右到左，每遍历完一层就需要对该布尔值取反。
+另外，其实res.size就记录了当前是第几层！
 代码：
 ```java
 public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
