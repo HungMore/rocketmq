@@ -82,6 +82,48 @@ public List<List<Integer>> levelOrderBottom(TreeNode root) {
 }
 ```
 
-###### 问题107：binary tree zigzag level order traversal
+###### 问题103：binary tree zigzag level order traversal
+
+给你二叉树的根节点root，返回其节点值的锯齿形层序遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
+示例 1：
+输入：root = [3,9,20,null,null,15,7]
+输出：[[3],[20,9],[15,7]]
+```java
+public List<List<Integer>> zigzagLevelOrder(TreeNode root);
+``` 
+
+这题也和`问题102`差不多，只不过我们需要用一个布尔值保存当前层是从左到右还是从右到左，每遍历完一层就需要对该布尔值取反。
+代码：
+```java
+public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    List<List<Integer>> res = new LinkedList<>();
+    Queue<TreeNode> queue = new LinkedList<>();
+    if (root != null) {
+        queue.add(root);
+    }
+    boolean fromLeftToRight = true;
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        LinkedList<Integer> aLevelList = new LinkedList<>();
+        for (int i = 0; i < size; i++) {
+            TreeNode remove = queue.remove();
+            if (fromLeftToRight) {
+                aLevelList.add(remove.val);
+            } else {
+                aLevelList.addFirst(remove.val);
+            }
+            if (remove.left != null) {
+                queue.add(remove.left);
+            }
+            if (remove.right != null) {
+                queue.add(remove.right);
+            }
+        }
+        res.add(aLevelList);
+        fromLeftToRight = !fromLeftToRight;
+    }
+    return res;
+}
+```
  
 ###### 问题199：binary tree right side view 

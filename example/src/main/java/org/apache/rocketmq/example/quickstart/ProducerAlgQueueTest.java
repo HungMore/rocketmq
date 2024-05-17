@@ -73,6 +73,37 @@ public class ProducerAlgQueueTest {
         }
         return res;
     }
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if (root != null) {
+            queue.add(root);
+        }
+        boolean fromLeftToRight = true;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            LinkedList<Integer> aLevelList = new LinkedList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode remove = queue.remove();
+                if (fromLeftToRight) {
+                    aLevelList.add(remove.val);
+                } else {
+                    aLevelList.addFirst(remove.val);
+                }
+                if (remove.left != null) {
+                    queue.add(remove.left);
+                }
+                if (remove.right != null) {
+                    queue.add(remove.right);
+                }
+            }
+            res.add(aLevelList);
+            fromLeftToRight = !fromLeftToRight;
+        }
+        return res;
+    }
+
 }
 
 class TreeNode {
