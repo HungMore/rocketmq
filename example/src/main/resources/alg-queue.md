@@ -170,3 +170,5 @@ public List<Integer> rightSideView(TreeNode root) {
     return res;
 }
 ```
+
+6.5
