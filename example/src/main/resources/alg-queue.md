@@ -96,6 +96,7 @@ public List<List<Integer>> zigzagLevelOrder(TreeNode root);
 代码：
 ```java
 public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    // 另外，其实我们也不需要定义变量来保存当前属于第几层了，res.size 就可以记录当前是第几层
     List<List<Integer>> res = new LinkedList<>();
     Queue<TreeNode> queue = new LinkedList<>();
     if (root != null) {
