@@ -49,6 +49,30 @@ public class ProducerAlgQueueTest {
         }
         return res;
     }
+
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        LinkedList<List<Integer>> res = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if (root != null) {
+            queue.add(root);
+        }
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> aLevelList = new LinkedList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode remove = queue.remove();
+                aLevelList.add(remove.val);
+                if (remove.left != null) {
+                    queue.add(remove.left);
+                }
+                if (remove.right != null) {
+                    queue.add(remove.right);
+                }
+            }
+            res.addFirst(aLevelList);
+        }
+        return res;
+    }
 }
 
 class TreeNode {

@@ -43,3 +43,45 @@ public List<List<Integer>> levelOrder(TreeNode root) {
     return res;
 }
 ```
+
+###### 问题107：binary tree level order traversal ii
+
+给你二叉树的根节点root，返回其节点值自底向上的层序遍历。（即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
+示例 1：
+输入：root = [3,9,20,null,null,15,7]
+输出：[[15,7],[9,20],[3]]
+```java
+public List<List<Integer>> levelOrderBottom(TreeNode root);
+```
+
+这题和`问题102`是一模一样的，我们只需要修改`res.add(aLevelList)`为`res.addFirst(aLevelList)`即可。
+代码：
+```java
+public List<List<Integer>> levelOrderBottom(TreeNode root) {
+    LinkedList<List<Integer>> res = new LinkedList<>();
+    Queue<TreeNode> queue = new LinkedList<>();
+    if (root != null) {
+        queue.add(root);
+    }
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        List<Integer> aLevelList = new LinkedList<>();
+        for (int i = 0; i < size; i++) {
+            TreeNode remove = queue.remove();
+            aLevelList.add(remove.val);
+            if (remove.left != null) {
+                queue.add(remove.left);
+            }
+            if (remove.right != null) {
+                queue.add(remove.right);
+            }
+        }
+        res.addFirst(aLevelList);
+    }
+    return res;
+}
+```
+
+###### 问题107：binary tree zigzag level order traversal
+ 
+###### 问题199：binary tree right side view 
