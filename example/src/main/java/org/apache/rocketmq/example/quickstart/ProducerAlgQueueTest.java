@@ -104,6 +104,35 @@ public class ProducerAlgQueueTest {
         return res;
     }
 
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> res = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if (root != null) {
+            queue.add(root);
+        }
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 1; i < size; i++) {
+                TreeNode remove = queue.remove();
+                if (remove.left != null) {
+                    queue.add(remove.left);
+                }
+                if (remove.right != null) {
+                    queue.add(remove.right);
+                }
+            }
+            TreeNode remove = queue.remove();
+            res.add(remove.val);
+            if (remove.left != null) {
+                queue.add(remove.left);
+            }
+            if (remove.right != null) {
+                queue.add(remove.right);
+            }
+        }
+        return res;
+    }
+
 }
 
 class TreeNode {

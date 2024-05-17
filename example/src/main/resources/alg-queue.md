@@ -129,3 +129,44 @@ public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
 ```
  
 ###### 问题199：binary tree right side view 
+
+给定一个二叉树的根节点root，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+示例 1:
+输入: [1,2,3,null,5,null,4]
+输出: [1,3,4]
+```java
+public List<Integer> rightSideView(TreeNode root);
+```
+
+第一反应是不断获取根节点的右子节点就可以了，但是仔细一想右子节点可能为空的。所以这题其实就是要求每一层最右侧的节点，我们还是可以使用层次遍历，然后拿到层次遍历中每一层的最右边的节点就可以了。
+代码：
+```java
+public List<Integer> rightSideView(TreeNode root) {
+    List<Integer> res = new LinkedList<>();
+    Queue<TreeNode> queue = new LinkedList<>();
+    if (root != null) {
+        queue.add(root);
+    }
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        for (int i = 1; i < size; i++) {
+            TreeNode remove = queue.remove();
+            if (remove.left != null) {
+                queue.add(remove.left);
+            }
+            if (remove.right != null) {
+                queue.add(remove.right);
+            }
+        }
+        TreeNode remove = queue.remove();
+        res.add(remove.val);
+        if (remove.left != null) {
+            queue.add(remove.left);
+        }
+        if (remove.right != null) {
+            queue.add(remove.right);
+        }
+    }
+    return res;
+}
+```
