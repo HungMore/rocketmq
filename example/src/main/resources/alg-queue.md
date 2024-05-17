@@ -1,0 +1,45 @@
+## 队列相关问题
+
+队列的基本应用：广度优先遍历
+- 树：层次遍历
+- 图：无权图的最短路径
+
+###### 问题102：binary tree level order traversal
+
+给你二叉树的根节点root，返回其节点值的层序遍历。（即逐层地，从左到右访问所有节点）。
+示例 1：
+输入：root = [3,9,20,null,null,15,7]
+输出：[[3],[9,20],[15,7]]
+```java
+public List<List<Integer>> levelOrder(TreeNode root);
+```
+
+树的层次遍历相当于图的广度优先遍历，使用的是队列数据结构。
+首先我们将根节点添加到队列中，然后遍历队列中的节点，将节点的非空左右子节点添加到队列当中。
+需要注意的是，我们在遍历队列的过程中，每一层的节点要单独放到一个List中，所以我们需要每次记录当前层的节点数目，分层次进行循环遍历。
+代码：
+```java
+public List<List<Integer>> levelOrder(TreeNode root) {
+    List<List<Integer>> res = new LinkedList<>();
+    Queue<TreeNode> queue = new LinkedList<>();
+    if (root != null) {
+        queue.add(root);
+    }
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        List<Integer> aLevelList = new LinkedList<>();
+        for (int i = 0; i < size; i++) {
+            TreeNode remove = queue.remove();
+            aLevelList.add(remove.val);
+            if (remove.left != null) {
+                queue.add(remove.left);
+            }
+            if (remove.right != null) {
+                queue.add(remove.right);
+            }
+        }
+        res.add(aLevelList);
+    }
+    return res;
+}
+```
