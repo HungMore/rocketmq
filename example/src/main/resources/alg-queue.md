@@ -127,7 +127,7 @@ public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
     return res;
 }
 ```
- 
+
 ###### 问题199：binary tree right side view 
 
 给定一个二叉树的根节点root，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
@@ -171,4 +171,14 @@ public List<Integer> rightSideView(TreeNode root) {
 }
 ```
 
-6.5
+6.5 这一节讲的都是通过无权图的广度优先遍历寻找最短路径的问题，后面单独看bobo老师的图论课程吧。`todo`
+
+###### 问题279：perfect squares
+
+查看了我对这题的题解记录，用动态规划会更简单！
+
+###### 问题127：word ladder
+
+###### 问题126：word ladder ii
+
+

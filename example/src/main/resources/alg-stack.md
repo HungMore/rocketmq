@@ -163,7 +163,7 @@ public String simplifyPath(String path) {
 其实这题用双端队列会好一点啦，后进先出规范化的时候使用栈，拼接最后的结果的时候，使用队列从前往后遍历会方便一点。
 
 
-6.2 & 6.3
+6.2 & 6.3 `todo`
 
 ###### 问题341：flatten nested list iterator
 
