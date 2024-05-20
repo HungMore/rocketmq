@@ -134,23 +134,50 @@ public class ProducerAlgPriorityQueueTest {
         return res;
     }
 
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode temp = null;
+        for (int i = 0; i < lists.length; i++) {
+            temp = mergeTwoLists(temp, lists[i]);
+        }
+        return temp;
+    }
 
-    public static class TreeNode {
+    private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode tail = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        if (l1 != null) {
+            tail.next = l1;
+        }
+        if (l2 != null) {
+            tail.next = l2;
+        }
+        return dummy.next;
+    }
+
+    public static class ListNode {
         int val;
-        TreeNode left;
-        TreeNode right;
+        ListNode next;
 
-        TreeNode() {
+        ListNode() {
         }
 
-        TreeNode(int val) {
+        ListNode(int val) {
             this.val = val;
         }
 
-        TreeNode(int val, TreeNode left, TreeNode right) {
+        ListNode(int val, ListNode next) {
             this.val = val;
-            this.left = left;
-            this.right = right;
+            this.next = next;
         }
     }
 

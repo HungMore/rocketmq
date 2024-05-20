@@ -107,6 +107,9 @@ public static class PairWithHeapBetter implements Comparable<PairWithHeapBetter>
     }
 }
 ```
+这个解法还有可以优化的点：如果k趋近于n，那么整体复杂度就接近于nlogn。其实，在k趋近于n的时候，我们可以反向保存：使用大顶堆保存n-k个低频的元素！
+当堆的大小已经达到n-k，我们就判断准备入堆的元素的频次是否小于堆顶元素，如果是，将堆顶出堆并加入到返回值，并将当前元素入堆；如果不是，将当前元素加入返回值。
+综合两者思路，如果k远小于n，我们就维持k个元素的小顶堆，保存高频元素；如果k趋近于n，我们就维持n-k个元素的大顶堆，保存低频元素！）
 
 再使用桶排序的思想做一遍。
 首先和前面的解法一样，我们先遍历一遍数组，将数字及其出现次数存入HashMap中，并在遍历过程中记录频次的最大值和最小值（用作后续构建桶）。
@@ -147,5 +150,57 @@ public int[] topKFrequent(int[] nums, int k) {
         }
     }
     return res;
+}
+```
+
+###### 问题23：merge k sorted lists
+
+给你一个链表数组，每个链表都已经按升序排列。
+请你将所有链表合并到一个升序链表中，返回合并后的链表。
+示例 1：
+输入：lists = [[1,4,5],[1,3,4],[2,6]]
+输出：[1,1,2,3,4,4,5,6]
+解释：链表数组如下：
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+将它们合并到一个有序链表中得到。1->1->2->3->4->4->5->6。
+```java
+public ListNode mergeKLists(ListNode[] lists);
+```
+
+之前写的归并都是二分的，这题也同样可以转化为二分归并：链表1先和链表2归并，归并的结果再和链表3归并，然后再和链表4归并······直至归并完所有链表。
+代码：
+```java
+public ListNode mergeKLists(ListNode[] lists) {
+    ListNode temp = null;
+    for (int i = 0; i < lists.length; i++) {
+        temp = mergeTwoLists(temp, lists[i]);
+    }
+    return temp;
+}
+
+private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(-1);
+    ListNode tail = dummy;
+    while (l1 != null && l2 != null) {
+        if (l1.val <= l2.val) {
+            tail.next = l1;
+            l1 = l1.next;
+        } else {
+            tail.next = l2;
+            l2 = l2.next;
+        }
+        tail = tail.next;
+    }
+    if (l1 != null) {
+        tail.next = l1;
+    }
+    if (l2 != null) {
+        tail.next = l2;
+    }
+    return dummy.next;
 }
 ```
