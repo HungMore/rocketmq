@@ -22,10 +22,10 @@ public int[] topKFrequent(int[] nums, int k);
 
 这题有点类似于`问题451`，也是按频次降序排序，但是这题只需要排前k个，`问题451`要排全部。
 我们首先使用`问题451`的解法来做一遍。（更快速的方法可能是类似于TOP K问题的快排或者桶排序）。
-我们定义Pair类，包含数字及其出现次数两个属性，定义Pair的比较器：次数大的Pair对象更大。
+我们定义Pair类，包含数字及其出现次数两个属性，定义Pair的比较器：次数大的Pair对象更大（大顶堆）。
 遍历一遍数组，将数组及其次数存入HashMap。
 然后遍历HashMap，将entry转化为Pair对象，并存入优先队列中。
-从优先队列中弹出k个元素即为频次最高的k个元素。
+从优先队列中弹出k个元素即为频次最高的k个元素（大顶堆）。
 整体复杂度为O(nlogn)。
 代码：
 ```java
@@ -34,6 +34,7 @@ public int[] topKFrequent(int[] nums, int k) {
     for (int num : nums) {
         num2Times.merge(num, 1, Integer::sum);
     }
+    // 大顶堆，堆顶元素次数最大
     PriorityQueue<Pair> priorityQueue = new PriorityQueue<>();
     for (Map.Entry<Integer, Integer> entry : num2Times.entrySet()) {
         priorityQueue.add(new Pair(entry.getKey(), entry.getValue()));
@@ -57,6 +58,52 @@ public static class Pair implements Comparable<Pair> {
     @Override
     public int compareTo(Pair o) {
         return o.times - this.times;
+    }
+}
+```
+以上的优先队列解法我们还可以优化下，我们不需要对全部频次都进行排序，我们只需要前k个高频次，所以我们可以将优先队列的大小保持在k。
+当优先队列的大小已经达到k，我们就判断下堆中的最小频次和准备入堆的频次哪个更小（所以要用小顶堆），如果堆中的最小频次更小，就将其出堆并将当前元素入堆；否则不对堆进行操作。
+整体复杂度就为O(nlogk)。
+代码：
+```java
+public int[] topKFrequent(int[] nums, int k) {
+    HashMap<Integer, Integer> num2Times = new HashMap<>();
+    for (int num : nums) {
+        num2Times.merge(num, 1, Integer::sum);
+    }
+    // 小顶堆
+    PriorityQueue<PairWithHeapBetter> priorityQueue = new PriorityQueue<>();
+    for (Map.Entry<Integer, Integer> entry : num2Times.entrySet()) {
+        if (priorityQueue.size() < k) {
+            priorityQueue.add(new PairWithHeapBetter(entry.getKey(), entry.getValue()));
+        } else {
+            PairWithHeapBetter peek = priorityQueue.peek();
+            if (peek.times < entry.getValue()) {
+                priorityQueue.poll();
+                priorityQueue.add(new PairWithHeapBetter(entry.getKey(), entry.getValue()));
+            }
+        }
+
+    }
+    int[] res = new int[k];
+    for (int i = 0; i < k; i++) {
+        res[i] = priorityQueue.poll().num;
+    }
+    return res;
+}
+
+public static class PairWithHeapBetter implements Comparable<PairWithHeapBetter> {
+    int num;
+    int times;
+
+    public PairWithHeapBetter(int num, int times) {
+        this.num = num;
+        this.times = times;
+    }
+
+    @Override
+    public int compareTo(PairWithHeapBetter o) {
+        return this.times - o.times;
     }
 }
 ```

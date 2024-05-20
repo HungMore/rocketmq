@@ -58,6 +58,47 @@ public class ProducerAlgPriorityQueueTest {
         }
     }
 
+    public int[] topKFrequentWithHeapBetter(int[] nums, int k) {
+        HashMap<Integer, Integer> num2Times = new HashMap<>();
+        for (int num : nums) {
+            num2Times.merge(num, 1, Integer::sum);
+        }
+        // 小顶堆
+        PriorityQueue<PairWithHeapBetter> priorityQueue = new PriorityQueue<>();
+        for (Map.Entry<Integer, Integer> entry : num2Times.entrySet()) {
+            if (priorityQueue.size() < k) {
+                priorityQueue.add(new PairWithHeapBetter(entry.getKey(), entry.getValue()));
+            } else {
+                PairWithHeapBetter peek = priorityQueue.peek();
+                if (peek.times < entry.getValue()) {
+                    priorityQueue.poll();
+                    priorityQueue.add(new PairWithHeapBetter(entry.getKey(), entry.getValue()));
+                }
+            }
+
+        }
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            res[i] = priorityQueue.poll().num;
+        }
+        return res;
+    }
+
+    public static class PairWithHeapBetter implements Comparable<PairWithHeapBetter> {
+        int num;
+        int times;
+
+        public PairWithHeapBetter(int num, int times) {
+            this.num = num;
+            this.times = times;
+        }
+
+        @Override
+        public int compareTo(PairWithHeapBetter o) {
+            return this.times - o.times;
+        }
+    }
+
     public int[] topKFrequentWithBucket(int[] nums, int k) {
         HashMap<Integer, Integer> num2Times = new HashMap<>();
         int max = Integer.MIN_VALUE;
