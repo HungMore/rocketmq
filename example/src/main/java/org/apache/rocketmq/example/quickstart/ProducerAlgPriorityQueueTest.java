@@ -164,6 +164,27 @@ public class ProducerAlgPriorityQueueTest {
         return dummy.next;
     }
 
+    public ListNode mergeKListsWithHeap(ListNode[] lists) {
+        // 小顶堆
+        PriorityQueue<ListNode> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(l -> l.val));
+        for (ListNode list : lists) {
+            if (list != null) {
+                priorityQueue.add(list);
+            }
+        }
+        ListNode dummy = new ListNode(-1);
+        ListNode tail = dummy;
+        while (!priorityQueue.isEmpty()) {
+            ListNode poll = priorityQueue.poll();
+            tail.next = poll;
+            tail = tail.next;
+            if (poll.next != null) {
+                priorityQueue.add(poll.next);
+            }
+        }
+        return dummy.next;
+    }
+
     public static class ListNode {
         int val;
         ListNode next;

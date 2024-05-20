@@ -204,3 +204,29 @@ private ListNode mergeTwoLists(ListNode l1, ListNode l2) {
     return dummy.next;
 }
 ```
+
+这题也可以用小顶堆来做。我们假设链表一共有k个。我们定义一个小顶堆，将k个链表的第一个元素都加入到小顶堆中，那么堆顶的元素就是当前的最小元素，
+我们将堆顶元素出堆并连接到结果链表的末尾，然后将堆顶元素的下一个节点加入到堆中，如此不断循环直至小顶堆为空（也就是k个链表都遍历到结尾）。
+代码：
+```java
+public ListNode mergeKLists(ListNode[] lists) {
+    // 小顶堆
+    PriorityQueue<ListNode> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(l -> l.val));
+    for (ListNode list : lists) {
+        if (list != null) {
+            priorityQueue.add(list);
+        }
+    }
+    ListNode dummy = new ListNode(-1);
+    ListNode tail = dummy;
+    while (!priorityQueue.isEmpty()) {
+        ListNode poll = priorityQueue.poll();
+        tail.next = poll;
+        tail = tail.next;
+        if (poll.next != null) {
+            priorityQueue.add(poll.next);
+        }
+    }
+    return dummy.next;
+}
+```
