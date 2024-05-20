@@ -60,3 +60,45 @@ public static class Pair implements Comparable<Pair> {
     }
 }
 ```
+
+再使用桶排序的思想做一遍。
+首先和前面的解法一样，我们先遍历一遍数组，将数字及其出现次数存入HashMap中，并在遍历过程中记录频次的最大值和最小值（用作后续构建桶）。
+然后我们构建从频次最小值到频次最大值的多个桶，其中每个桶表示频次，桶中存该频次数字，我们可以使用二维数组来保存桶，一维下标表示频次（由于我们只需要找前k个高频数字，所以二维的长度设置为k就可以了）。
+整体的复杂度为O(n)（但是放到leetcode上运行，它的执行速度反而更慢。。。）
+代码：
+```java
+public int[] topKFrequent(int[] nums, int k) {
+    HashMap<Integer, Integer> num2Times = new HashMap<>();
+    int max = Integer.MIN_VALUE;
+    int min = Integer.MAX_VALUE;
+    for (int num : nums) {
+        Integer times = num2Times.getOrDefault(num, 0);
+        times++;
+        num2Times.put(num, times);
+        max = Integer.max(max, times);
+        min = Integer.min(min, times);
+    }
+    int len = max - min + 1;
+    ArrayList<Integer>[] bucket = new ArrayList[len];
+    for (Map.Entry<Integer, Integer> entry : num2Times.entrySet()) {
+        int index = entry.getValue() - min;
+        if (bucket[index] == null) {
+            bucket[index] = new ArrayList<>(k);
+        }
+        if (bucket[index].size() < k) {
+            bucket[index].add(entry.getKey());
+        }
+    }
+    int count = 0;
+    int[] res = new int[k];
+    for (int i = len - 1; i >= 0 && count < k; i--) {
+        if (bucket[i] == null) {
+            continue;
+        }
+        for (int j = 0; j < bucket[i].size() && count < k; j++) {
+            res[count++] = bucket[i].get(j);
+        }
+    }
+    return res;
+}
+```

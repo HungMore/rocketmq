@@ -1,8 +1,6 @@
 package org.apache.rocketmq.example.quickstart;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * @author mo
@@ -15,6 +13,8 @@ public class ProducerAlgPriorityQueueTest {
         ProducerAlgPriorityQueueTest test = new ProducerAlgPriorityQueueTest();
         System.out.println();
         PriorityQueue<String> priorityQueue = new PriorityQueue<>();
+        int[] ints = test.topKFrequentWithBucket(new int[]{1, 1, 1, 2, 2, 3}, 2);
+        System.out.println(Arrays.toString(ints));
 
 //        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
@@ -56,6 +56,41 @@ public class ProducerAlgPriorityQueueTest {
         public int compareTo(Pair o) {
             return o.times - this.times;
         }
+    }
+
+    public int[] topKFrequentWithBucket(int[] nums, int k) {
+        HashMap<Integer, Integer> num2Times = new HashMap<>();
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        for (int num : nums) {
+            Integer times = num2Times.getOrDefault(num, 0);
+            times++;
+            num2Times.put(num, times);
+            max = Integer.max(max, times);
+            min = Integer.min(min, times);
+        }
+        int len = max - min + 1;
+        ArrayList<Integer>[] bucket = new ArrayList[len];
+        for (Map.Entry<Integer, Integer> entry : num2Times.entrySet()) {
+            int index = entry.getValue() - min;
+            if (bucket[index] == null) {
+                bucket[index] = new ArrayList<>(k);
+            }
+            if (bucket[index].size() < k) {
+                bucket[index].add(entry.getKey());
+            }
+        }
+        int count = 0;
+        int[] res = new int[k];
+        for (int i = len - 1; i >= 0 && count < k; i--) {
+            if (bucket[i] == null) {
+                continue;
+            }
+            for (int j = 0; j < bucket[i].size() && count < k; j++) {
+                res[count++] = bucket[i].get(j);
+            }
+        }
+        return res;
     }
 
 
