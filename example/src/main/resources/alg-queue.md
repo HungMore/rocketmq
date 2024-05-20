@@ -171,7 +171,7 @@ public List<Integer> rightSideView(TreeNode root) {
 }
 ```
 
-6.5 这一节讲的都是通过无权图的广度优先遍历寻找最短路径的问题，后面单独看bobo老师的图论课程吧。`todo`
+6.5 这一节讲的都是通过无权图的广度优先遍历寻找最短路径的问题，后面单独看bobo老师的图论课程吧。（或者看看labuladong的图论特辑吧）`todo`
 
 ###### 问题279：perfect squares
 
