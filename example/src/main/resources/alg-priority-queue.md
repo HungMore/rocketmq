@@ -54,14 +54,14 @@ public static class Pair implements Comparable<Pair> {
         this.num = num;
         this.times = times;
     }
-
+    // 大顶堆，所以按逆序来
     @Override
     public int compareTo(Pair o) {
         return o.times - this.times;
     }
 }
 ```
-以上的优先队列解法我们还可以优化下，我们不需要对全部频次都进行排序，我们只需要前k个高频次，所以我们可以将优先队列的大小保持在k。
+以上的优先队列解法我们还可以优化下，我们不需要对全部频次都进行排序，我们只需要前k个高频次，所以我们可以将优先队列的容量保持在k。
 当优先队列的大小已经达到k，我们就判断下堆中的最小频次和准备入堆的频次哪个更小（所以要用小顶堆），如果堆中的最小频次更小，就将其出堆并将当前元素入堆；否则不对堆进行操作。
 整体复杂度就为O(nlogk)。
 代码：
@@ -100,7 +100,7 @@ public static class PairWithHeapBetter implements Comparable<PairWithHeapBetter>
         this.num = num;
         this.times = times;
     }
-
+    // 小顶堆，所以按顺序来
     @Override
     public int compareTo(PairWithHeapBetter o) {
         return this.times - o.times;
