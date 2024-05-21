@@ -22,6 +22,12 @@ public class ProducerAlgBinaryTreeTest {
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
     }
 
+    public int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+    }
 
 
     public static class TreeNode {
