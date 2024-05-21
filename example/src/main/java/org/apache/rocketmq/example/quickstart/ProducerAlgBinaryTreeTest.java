@@ -49,6 +49,17 @@ public class ProducerAlgBinaryTreeTest {
         return 1 + Math.min(minDepth(root.left), minDepth(root.right));
     }
 
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) {
+            return root;
+        }
+        TreeNode newLeft = invertTree(root.left);
+        TreeNode newRight = invertTree(root.right);
+        root.left = newRight;
+        root.right = newLeft;
+        return root;
+    }
+
 
     public static class TreeNode {
         int val;

@@ -105,4 +105,29 @@ private boolean isTarget(TreeNode node) {
 }
 ```
 
-7.2
+###### 问题226：invert binary tree
+
+给你一棵二叉树的根节点root，翻转这棵二叉树，并返回其根节点。
+```java
+public TreeNode invertTree(TreeNode root);
+```
+
+这题用递归就可以做了吧。
+递归终止条件：如果根节点为空，直接返回当前根节点。
+递归逻辑：将左子树、右子树翻转，然后将根节点的左子节点指向翻转后的右子树，将根节点的右子节点指向翻转后的左子树。（整体逻辑就是在后序遍历[自底向上]的框架中处理）
+代码：
+```java
+public TreeNode invertTree(TreeNode root) {
+    if (root == null) {
+        return root;
+    }
+    TreeNode newLeft = invertTree(root.left);
+    TreeNode newRight = invertTree(root.right);
+    root.left = newRight;
+    root.right = newLeft;
+    return root;
+}
+```
+
+
+7.3
