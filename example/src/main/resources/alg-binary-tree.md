@@ -66,6 +66,43 @@ public int minDepth(TreeNode root) {
     return 1 + Math.min(minDepth(root.left), minDepth(root.right));
 }
 ```
-
+看我的提交记录，我还写过一个层序遍历（即BFS）的解法，可以参考下：
+```java
+/**
+ * 使用 labuladong的BFS思路来做做看
+ *
+ * @param root
+ * @return
+ */
+public int minDepth(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.add(root);
+    int step = 1;
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        for (int i = 0; i < size; i++) {
+            TreeNode remove = queue.remove();
+            if (isTarget(remove)) {
+                return step;
+            }
+            if (remove.left != null) {
+                queue.add(remove.left);
+            }
+            if (remove.right != null) {
+                queue.add(remove.right);
+            }
+        }
+        step++;
+    }
+    throw new RuntimeException("unreachable!");
+}
+// 判读是否是叶子节点
+private boolean isTarget(TreeNode node) {
+    return node != null && node.left == null && node.right == null;
+}
+```
 
 7.2
