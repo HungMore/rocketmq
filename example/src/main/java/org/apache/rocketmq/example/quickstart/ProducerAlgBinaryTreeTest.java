@@ -29,6 +29,26 @@ public class ProducerAlgBinaryTreeTest {
         return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
     }
 
+    public int minDepthWrong(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + Math.min(minDepthWrong(root.left), minDepthWrong(root.right));
+    }
+
+    public int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null) {
+            return 1 + minDepth(root.right);
+        }
+        if (root.right == null) {
+            return 1 + minDepth(root.left);
+        }
+        return 1 + Math.min(minDepth(root.left), minDepth(root.right));
+    }
+
 
     public static class TreeNode {
         int val;
