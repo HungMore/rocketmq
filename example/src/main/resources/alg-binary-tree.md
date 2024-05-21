@@ -128,6 +128,20 @@ public TreeNode invertTree(TreeNode root) {
     return root;
 }
 ```
+也用先序遍历（自顶向下）的框架做一遍：
+```java
+public TreeNode invertTreePreorder(TreeNode root) {
+    if (root == null) {
+        return root;
+    }
+    TreeNode left = root.left;
+    root.left = root.right;
+    root.right = left;
+    invertTree(root.left);
+    invertTree(root.right);
+    return root;
+}
+```
 
 
 7.3
