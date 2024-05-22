@@ -264,5 +264,28 @@ private int isBalancedHeight(TreeNode root) {
 }
 ```
 
+###### 问题112：path sum
 
-7.3
+给你二叉树的根节点root和一个表示目标和的整数targetSum。判断该树中是否存在根节点到叶子节点的路径，这条路径上所有节点值相加等于目标和targetSum。如果存在，返回true；否则，返回false。
+叶子节点是指没有子节点的节点。
+```java
+public boolean hasPathSum(TreeNode root, int targetSum);
+```
+
+这题第一想法是用深度优先遍历的思想来做，但仔细想想感觉不好写。反而用递归就很好做。
+递归终止条件：当前节点是叶子节点，如果节点的值等于target，返回真；如果不等于，返回false。
+递归逻辑：hasPathSum(root, target) = hasPathSum(root.left, target-root.val) || hasPathSum(root.right, target-root.val).
+代码：
+```java
+public boolean hasPathSum(TreeNode root, int targetSum) {
+    if (root == null) {
+        return false;
+    }
+    if (root.left == null && root.right == null) {
+        return targetSum == root.val;
+    }
+    return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
+}
+```
+
+7.4
