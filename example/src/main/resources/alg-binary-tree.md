@@ -167,6 +167,34 @@ public boolean isSameTree(TreeNode p, TreeNode q) {
 
 ###### 问题101：symmetric tree
 
+给你一个二叉树的根节点root，检查它是否轴对称。
+```java
+public boolean isSymmetric(TreeNode root);
+```
+
+编写一个辅助函数，用以判断两棵树是否是对称的，然后调用该辅助函数判断根节点的左右子树是否对称。
+辅助函数可以使用递归的方式编写
+递归逻辑：如果p、q两棵树都不为空，判断p、q的值是否相等，如果相等，递归判断p的左子树和q的右子树是否对称以及p的右子树和q的左子树是否对称；如果不相等，返回false；
+如果p、q都为空，返回true，只有其中一个为空返回false。
+代码：
+```java
+public boolean isSymmetric(TreeNode root) {
+    if (root == null) {
+        return true;
+    }
+    return isSymmetric(root.left, root.right);
+}
+
+private boolean isSymmetric(TreeNode p, TreeNode q) {
+    if (p != null && q != null) {
+        return p.val == q.val && isSymmetric(p.left, q.right) && isSymmetric(p.right, q.left);
+    } else {
+        return p == q;
+    }
+}
+```
+
+
 ###### 问题222：count complete tree nodes
 
 ###### 问题110：balanced binary tree
