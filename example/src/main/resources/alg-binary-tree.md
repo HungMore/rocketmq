@@ -194,8 +194,26 @@ private boolean isSymmetric(TreeNode p, TreeNode q) {
 }
 ```
 
-
 ###### 问题222：count complete tree nodes
+
+给你一棵完全二叉树的根节点root，求出该树的节点个数。
+完全二叉树的定义如下：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第h层，则该层包含1~2h个节点。
+```java
+public int countNodes(TreeNode root);
+```
+
+这题用二叉树的任意一种遍历方式都可以做（比如前、中、后、层次遍历等）。
+用前序遍历做一下吧。
+```java
+public int countNodes(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+    return 1 + countNodes(root.left) + countNodes(root.right);
+}
+```
+这题还有更优的解法，可以充分利用完全二叉树的特性，具体可参考leetcode的官方解答。
+
 
 ###### 问题110：balanced binary tree
 
