@@ -217,5 +217,52 @@ public int countNodes(TreeNode root) {
 
 ###### 问题110：balanced binary tree
 
+给定一个二叉树，判断它是否是平衡二叉树。
+平衡二叉树：左右子树都是平衡二叉树且左右子树的高度差不超过1。
+树的高度：根节点到叶子节点的最大长度。
+```java
+public boolean isBalanced(TreeNode root);
+```
+
+平衡二叉树的定义其实就是一个递归关系：
+1. 空树是一颗二叉树（递归终止条件）
+2. 左右子树都是一颗平衡二叉树，且左右子树的高度差不超过1。（递归逻辑）
+根据定义，我们很容易想到要使用后序遍历的框架，先判断左右子树是否是平衡二叉树，再判断它们的高度差。
+如果我们单独写一个获取二叉树高度的函数，那么整体的复杂度就会很高（因为自底向上每往上走一层，都要重新自顶向下计算一遍当前高度【参考问题104的代码】，存在大量重复计算）。
+其实一棵树的高度就等于1+max(左子树的高度, 右子树的高度)，所以我们完全可以在后序遍历的过程中，让递归函数顺带返回子树的高度。
+综上，我们可以定义这样一个辅助函数：判断二叉树是否是平衡二叉树，如果不是，返回-1，如果是，返回其高度。
+那么这题就转化为辅助函数的结果是否等于-1。
+而这个辅助函数使用递归也是很好实现的：
+递归终止条件：空树是一颗平衡二叉树，且高度为0，所以直接返回0
+递归逻辑：如果左右子树其中一个是非平衡二叉树（返回值为-1），那么当前二叉树就是非平衡二叉树（返回-1）；
+如果左右子树都是平衡二叉树（返回值为其高度），那么判断高度差是否不超过1，如果超过，当前二叉树是非平衡二叉树（返回-1）；如果没超过，当前二叉树的高度=1+max(左右子树的高度)
+代码：
+```java
+public boolean isBalanced(TreeNode root) {
+    return isBalancedHeight(root) != -1;
+}
+
+/**
+ * 辅助函数，判断二叉树是否是平衡二叉树，如果不是，返回-1，如果是，返回其高度
+ *
+ * @param root
+ * @return -1 不是平衡二叉树
+ */
+private int isBalancedHeight(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+    int balancedHeightLeft = isBalancedHeight(root.left);
+    int balancedHeightRight = isBalancedHeight(root.right);
+    if (balancedHeightLeft == -1 || balancedHeightRight == -1) {
+        return -1;
+    } else if (Math.abs(balancedHeightLeft - balancedHeightRight) <= 1) {
+        return 1 + Math.max(balancedHeightLeft, balancedHeightRight);
+    } else {
+        return -1;
+    }
+}
+```
+
 
 7.3

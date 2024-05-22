@@ -102,6 +102,31 @@ public class ProducerAlgBinaryTreeTest {
         return 1 + countNodes(root.left) + countNodes(root.right);
     }
 
+    public boolean isBalanced(TreeNode root) {
+        return isBalancedHeight(root) != -1;
+    }
+
+    /**
+     * 辅助函数，判断二叉树是否是平衡二叉树，如果不是，返回-1，如果是，返回其高度
+     *
+     * @param root
+     * @return -1 不是平衡二叉树
+     */
+    private int isBalancedHeight(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int balancedHeightLeft = isBalancedHeight(root.left);
+        int balancedHeightRight = isBalancedHeight(root.right);
+        if (balancedHeightLeft == -1 || balancedHeightRight == -1) {
+            return -1;
+        } else if (Math.abs(balancedHeightLeft - balancedHeightRight) <= 1) {
+            return 1 + Math.max(balancedHeightLeft, balancedHeightRight);
+        } else {
+            return -1;
+        }
+    }
+
 
     public static class TreeNode {
         int val;
