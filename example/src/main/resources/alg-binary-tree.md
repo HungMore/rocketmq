@@ -317,6 +317,7 @@ private int sumOfLeftLeavesHelper(TreeNode root, boolean isFromLeft) {
     }
 }
 ```
+我这个解法和官方解答等主流方法都不一样哦，可以了解下官方的解法，多扩展下思维！感觉我又遗忘了DFS\BFS的代码框架了······
 
 
 7.4
