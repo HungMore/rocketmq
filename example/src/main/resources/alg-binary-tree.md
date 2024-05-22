@@ -145,6 +145,26 @@ public TreeNode invertTreePreorder(TreeNode root) {
 
 ###### 问题100：same tree
 
+给你两棵二叉树的根节点p和q，编写一个函数来检验这两棵树是否相同。
+如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。
+```java
+public boolean isSameTree(TreeNode p, TreeNode q);
+```
+
+这题用递归很好做啦！
+递归终止条件：如果p和q都是空，返回真
+递归逻辑：如果p和q的节点值不相等或者p、q中其中一个为空另一个不为空，返回false；否则递归判断p的左子树和q的左子树是否相同以及p的右子树和q的右子树是否相同。
+代码：
+```java
+public boolean isSameTree(TreeNode p, TreeNode q) {
+    if (p != null && q != null) {
+        return p.val == q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    } else {
+        return p == q;
+    }
+}
+```
+
 ###### 问题101：symmetric tree
 
 ###### 问题222：count complete tree nodes
