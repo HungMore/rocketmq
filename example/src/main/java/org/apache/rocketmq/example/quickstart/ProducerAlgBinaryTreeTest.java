@@ -137,6 +137,21 @@ public class ProducerAlgBinaryTreeTest {
         return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
     }
 
+    public int sumOfLeftLeaves(TreeNode root) {
+        return sumOfLeftLeavesHelper(root.left, true) + sumOfLeftLeavesHelper(root.right, false);
+    }
+
+    private int sumOfLeftLeavesHelper(TreeNode root, boolean isFromLeft) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return isFromLeft ? root.val : 0;
+        } else {
+            return sumOfLeftLeavesHelper(root.left, true) + sumOfLeftLeavesHelper(root.right, false);
+        }
+    }
+
 
     public static class TreeNode {
         int val;

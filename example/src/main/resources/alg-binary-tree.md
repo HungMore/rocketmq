@@ -295,7 +295,28 @@ public boolean hasPathSum(TreeNode root, int targetSum) {
 public int sumOfLeftLeaves(TreeNode root);
 ```
 
-糟糕了，这题不会做，没有思路~~
+对于当前节点，我们需要判断它是不是叶子节点，不是叶子节点就跳过往下继续查找；如果是叶子节点，还要判断它是否是左节点，是左节点才参与求和。
+所以我们需要一个辅助函数，入参不仅有当前节点，还得有它是否是左节点的标记。辅助函数的功能是求出以当前节点为根的左叶子之和。
+该辅助函数的递归实现：
+递归终止条件：如果当前节点为空，返回0；如果当前不为空，且为叶子节点，判断是否是左叶子，是的话参与求和，返回它的val，如果是右叶子，返回0
+递归关系：如果当前节点不是叶子节点，往下递归它的左右子树，并按实际情况设置入参。
+代码：
+```java
+public int sumOfLeftLeaves(TreeNode root) {
+    return sumOfLeftLeavesHelper(root.left, true) + sumOfLeftLeavesHelper(root.right, false);
+}
+
+private int sumOfLeftLeavesHelper(TreeNode root, boolean isFromLeft) {
+    if (root == null) {
+        return 0;
+    }
+    if (root.left == null && root.right == null) {
+        return isFromLeft ? root.val : 0;
+    } else {
+        return sumOfLeftLeavesHelper(root.left, true) + sumOfLeftLeavesHelper(root.right, false);
+    }
+}
+```
 
 
 7.4
