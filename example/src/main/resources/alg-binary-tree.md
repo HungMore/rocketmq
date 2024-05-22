@@ -288,4 +288,14 @@ public boolean hasPathSum(TreeNode root, int targetSum) {
 }
 ```
 
+###### 问题404：sum of left leaves
+
+给定二叉树的根节点root，返回所有左叶子之和。
+```java
+public int sumOfLeftLeaves(TreeNode root);
+```
+
+糟糕了，这题不会做，没有思路~~
+
+
 7.4
