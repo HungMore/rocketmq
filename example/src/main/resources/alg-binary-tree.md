@@ -319,5 +319,38 @@ private int sumOfLeftLeavesHelper(TreeNode root, boolean isFromLeft) {
 ```
 我这个解法和官方解答等主流方法都不一样哦，可以了解下官方的解法，多扩展下思维！感觉我又遗忘了DFS\BFS的代码框架了······
 
+###### 问题257：binary tree paths
 
-7.4
+给你一个二叉树的根节点root，按任意顺序，返回所有从根节点到叶子节点的路径。
+叶子节点是指没有子节点的节点。
+```java
+public List<String> binaryTreePaths(TreeNode root);
+```
+
+这题没有思路，看了bobo老师的讲解，才明白递归思路的推导过程。
+首先我们要找根节点A到叶子节点的路径，就等于找A的左右子节点到它们的叶子节点的路径，然后分别都在前面拼接上A就行了。
+所以递归结构定义如下：
+1. 递归逻辑：binaryTreePaths(A) =  (A + foreach(binaryTreePaths(A.left))) + (A + foreach(binaryTreePaths(A.right)))
+2. 递归终止条件：如果A是叶子节点，返回它自己即可，如果A为空，返回空。
+代码：
+```java
+public List<String> binaryTreePaths(TreeNode root) {
+    if (root == null) {
+        return Collections.emptyList();
+    }
+    if (root.left == null && root.right == null) {
+        return Collections.singletonList(String.valueOf(root.val));
+    }
+    List<String> leftPaths = binaryTreePaths(root.left);
+    List<String> rightPaths = binaryTreePaths(root.right);
+    List<String> res = new ArrayList<>(leftPaths.size() + rightPaths.size());
+    leftPaths.forEach(path -> res.add(root.val + "->" + path));
+    rightPaths.forEach(path -> res.add(root.val + "->" + path));
+    return res;
+}
+```
+
+这个解法只击败了9%的用户，估计还有更好的解法吧。
+
+
+7.5

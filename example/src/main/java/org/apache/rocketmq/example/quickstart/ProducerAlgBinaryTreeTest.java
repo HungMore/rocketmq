@@ -1,5 +1,9 @@
 package org.apache.rocketmq.example.quickstart;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author mo
  * @Description 生产者测试
@@ -20,6 +24,14 @@ public class ProducerAlgBinaryTreeTest {
 //                "key1",
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
+        TreeNode t1 = new TreeNode(1);
+        TreeNode t2 = new TreeNode(2);
+        TreeNode t3 = new TreeNode(3);
+        TreeNode t5 = new TreeNode(5);
+        t1.left = t2;
+        t1.right = t3;
+        t2.right = t5;
+        System.out.println(test.binaryTreePaths(t1));
     }
 
     public int maxDepth(TreeNode root) {
@@ -150,6 +162,21 @@ public class ProducerAlgBinaryTreeTest {
         } else {
             return sumOfLeftLeavesHelper(root.left, true) + sumOfLeftLeavesHelper(root.right, false);
         }
+    }
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        if (root == null) {
+            return Collections.emptyList();
+        }
+        if (root.left == null && root.right == null) {
+            return Collections.singletonList(String.valueOf(root.val));
+        }
+        List<String> leftPaths = binaryTreePaths(root.left);
+        List<String> rightPaths = binaryTreePaths(root.right);
+        List<String> res = new ArrayList<>(leftPaths.size() + rightPaths.size());
+        leftPaths.forEach(path -> res.add(root.val + "->" + path));
+        rightPaths.forEach(path -> res.add(root.val + "->" + path));
+        return res;
     }
 
 
