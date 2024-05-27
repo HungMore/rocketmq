@@ -353,4 +353,47 @@ public List<String> binaryTreePaths(TreeNode root) {
 这个解法只击败了9%的用户，估计还有更好的解法吧。
 
 
+###### 问题113：path sum ii
+
+给你二叉树的根节点root和一个整数目标和targetSum，找出所有从根节点到叶子节点路径总和等于给定目标和的路径。
+叶子节点是指没有子节点的节点。
+```java
+public List<List<Integer>> pathSum(TreeNode root, int targetSum);
+```
+
+这题和`问题112`类似，所以同样可以使用递归来做啦，但是我们还需要一个变量来保存前面的路径，所以用深度优先遍历的框架来做。
+```java
+public List<List<Integer>> pathSumII(TreeNode root, int targetSum) {
+    List<List<Integer>> res = new LinkedList<>();
+    pathSumIIHelper(root, targetSum, new LinkedList<>(), res);
+    return res;
+}
+
+private void pathSumIIHelper(TreeNode root, int targetSum, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (root == null) {
+        return;
+    }
+    pre.addLast(root.val);
+    targetSum = targetSum - root.val;
+    if (root.left == null && root.right == null) {
+        if (targetSum == 0) {
+            res.add(cloneList(pre));
+        }
+        pre.removeLast();
+        return;
+    }
+    pathSumIIHelper(root.left, targetSum, pre, res);
+    pathSumIIHelper(root.right, targetSum, pre, res);
+    pre.removeLast();
+}
+
+private List<Integer> cloneList(LinkedList<Integer> pre) {
+    ArrayList<Integer> res = new ArrayList<>(pre.size());
+    res.addAll(pre);
+    return res;
+}
+```
+
+###### 问题129：sum root to leaf numbers
+
 7.5

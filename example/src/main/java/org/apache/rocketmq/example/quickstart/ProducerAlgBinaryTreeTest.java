@@ -2,6 +2,7 @@ package org.apache.rocketmq.example.quickstart;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -179,6 +180,36 @@ public class ProducerAlgBinaryTreeTest {
         return res;
     }
 
+
+    public List<List<Integer>> pathSumII(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new LinkedList<>();
+        pathSumIIHelper(root, targetSum, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void pathSumIIHelper(TreeNode root, int targetSum, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (root == null) {
+            return;
+        }
+        pre.addLast(root.val);
+        targetSum = targetSum - root.val;
+        if (root.left == null && root.right == null) {
+            if (targetSum == 0) {
+                res.add(cloneList(pre));
+            }
+            pre.removeLast();
+            return;
+        }
+        pathSumIIHelper(root.left, targetSum, pre, res);
+        pathSumIIHelper(root.right, targetSum, pre, res);
+        pre.removeLast();
+    }
+
+    private List<Integer> cloneList(LinkedList<Integer> pre) {
+        ArrayList<Integer> res = new ArrayList<>(pre.size());
+        res.addAll(pre);
+        return res;
+    }
 
     public static class TreeNode {
         int val;
