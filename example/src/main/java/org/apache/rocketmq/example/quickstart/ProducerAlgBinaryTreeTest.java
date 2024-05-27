@@ -235,6 +235,26 @@ public class ProducerAlgBinaryTreeTest {
         return res;
     }
 
+    public int sumNumbersWithDFS(TreeNode root) {
+        List<Integer> res = new LinkedList<>();
+        res.add(0);
+        sumNumbersWithDFSHelper(root, 0, res);
+        return res.get(0);
+    }
+
+    private void sumNumbersWithDFSHelper(TreeNode root, int pre, List<Integer> res) {
+        if (root == null) {
+            return;
+        }
+        pre = pre * 10 + root.val;
+        if (root.left == null && root.right == null) {
+            res.set(0, res.get(0) + pre);
+        } else {
+            sumNumbersWithDFSHelper(root.left, pre, res);
+            sumNumbersWithDFSHelper(root.right, pre, res);
+        }
+    }
+
     public static class TreeNode {
         int val;
         TreeNode left;
