@@ -396,4 +396,50 @@ private List<Integer> cloneList(LinkedList<Integer> pre) {
 
 ###### 问题129：sum root to leaf numbers
 
+给你一个二叉树的根节点root，树中每个节点都存放有一个0到9之间的数字。
+每条从根节点到叶节点的路径都代表一个数字：
+例如，从根节点到叶节点的路径1->2->3表示数字123。
+计算从根节点到叶节点生成的所有数字之和。
+叶节点是指没有子节点的节点。
+示例 1：
+输入：root = [1,2,3]
+输出：25
+解释：
+从根到叶子节点路径 1->2 代表数字 12
+从根到叶子节点路径 1->3 代表数字 13
+因此，数字总和 = 12 + 13 = 25
+```java
+public int sumNumbers(TreeNode root);
+```
+
+这题用`问题257`或者`问题113`的思路都可以解决啦，用问题257的递归来做吧，然后把字符串转数字。
+代码：
+```java
+public int sumNumbers(TreeNode root) {
+    List<String> stringList = binaryTreePathsForSumNumbers(root);
+    int mySum = 0;
+    for (String s : stringList) {
+        mySum += Integer.parseInt(s);
+    }
+    return mySum;
+}
+
+private List<String> binaryTreePathsForSumNumbers(TreeNode root) {
+    if (root == null) {
+        return Collections.emptyList();
+    }
+    if (root.left == null && root.right == null) {
+        return Collections.singletonList(String.valueOf(root.val));
+    }
+    List<String> leftPaths = binaryTreePathsForSumNumbers(root.left);
+    List<String> rightPaths = binaryTreePathsForSumNumbers(root.right);
+    List<String> res = new ArrayList<>(leftPaths.size() + rightPaths.size());
+    leftPaths.forEach(path -> res.add(root.val + path));
+    rightPaths.forEach(path -> res.add(root.val + path));
+    return res;
+}
+```
+这个解法只击败了5%的用户，等下用深度优先搜索做一做。
+
+
 7.5

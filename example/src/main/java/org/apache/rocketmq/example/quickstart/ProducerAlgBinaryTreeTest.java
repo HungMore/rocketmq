@@ -211,6 +211,30 @@ public class ProducerAlgBinaryTreeTest {
         return res;
     }
 
+    public int sumNumbers(TreeNode root) {
+        List<String> stringList = binaryTreePathsForSumNumbers(root);
+        int mySum = 0;
+        for (String s : stringList) {
+            mySum += Integer.parseInt(s);
+        }
+        return mySum;
+    }
+
+    private List<String> binaryTreePathsForSumNumbers(TreeNode root) {
+        if (root == null) {
+            return Collections.emptyList();
+        }
+        if (root.left == null && root.right == null) {
+            return Collections.singletonList(String.valueOf(root.val));
+        }
+        List<String> leftPaths = binaryTreePathsForSumNumbers(root.left);
+        List<String> rightPaths = binaryTreePathsForSumNumbers(root.right);
+        List<String> res = new ArrayList<>(leftPaths.size() + rightPaths.size());
+        leftPaths.forEach(path -> res.add(root.val + path));
+        rightPaths.forEach(path -> res.add(root.val + path));
+        return res;
+    }
+
     public static class TreeNode {
         int val;
         TreeNode left;
