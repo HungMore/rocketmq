@@ -527,5 +527,8 @@ private int pathSumHelper(TreeNode root, long target, boolean includeParentNode)
     }
 }
 ```
+看leetcode的官方题解，还有一个使用前缀和思想的O(n)复杂度解法。`todo`后面再学习一下吧，和这题的前缀和类似的还有`问题560 和为K的子数组`等。
+
+
 
 7.6
