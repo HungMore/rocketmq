@@ -462,5 +462,70 @@ private void sumNumbersWithDFSHelper(TreeNode root, int pre, List<Integer> res) 
 }
 ```
 
+###### 问题437：path sum iii
 
-7.5
+给定一个二叉树的根节点root，和一个整数targetSum，求该二叉树里节点值之和等于targetSum的路径的数目。
+路径不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
+```java
+public int pathSum(TreeNode root, int targetSum);
+```
+
+这题可以使用递归求解。
+对于当前根节点，路径可以包含根节点，也可以不包含根节点。
+对于包含根节点的情况，找pathSum(root, target)就转化为了找pathSum(roo.left, target-root.val) + pathSum(roo.right, target-root.val)；特别地，如果target等于root.val，当前根节点就可以构成一个路径，结果+1
+对于不包含根节点的情况，找pathSum(root, target)就转化为了找pathSum(roo.left, target) + pathSum(roo.right, target)。
+综上，递归关系定义：
+1. 递归逻辑：pathSum(root, target) = pathSum(roo.left, target-root.val) + pathSum(roo.right, target-root.val) + pathSum(roo.left, target) + pathSum(roo.right, target) + (root.val == target ? 1 : 0)。
+2. 递归终止条件：当root为空时，返回0
+代码：
+```java
+public int pathSum(TreeNode root, int targetSum) {
+    if (root == null) {
+        return 0;
+    }
+    int sum = root.val == targetSum ? 1 : 0;
+    return sum
+            + pathSum(root.left, targetSum - root.val)
+            + pathSum(root.right, targetSum - root.val)
+            + pathSum(root.left, targetSum)
+            + pathSum(root.right, targetSum);
+}
+```
+以上代码并没有成功AC！
+因为递归关系找错了，对于包含根节点的情况，在子树中找target-root.val也必须要包含根节点，这样才能构成一条连续的路径，所以我们可以构造一个辅助函数pathSumHelper(TreeNode root, int targetSum, boolean includeParentNode)。
+那么当前函数pathSum(root, target)就等于pathSumHelper(root, target, false)
+pathSumHelper(root, targetSum, includeParentNode) 的递归关系就转化为：
+pathSumHelper(root, targetSum, true) = pathSumHelper(root.left, target-root.val, true) 
+    + pathSumHelper(root.right, target-root.val, true) 
+    + (root.val == target ? 1 : 0)
+pathSumHelper(root, targetSum, false) = pathSumHelper(root.left, target-root.val, true) 
+    + pathSumHelper(root.right, target-root.val, true) 
+    + pathSumHelper(root.left, target, false) 
+    + pathSumHelper(root.right, target, false) 
+    + (root.val == target ? 1 : 0)
+代码：
+```java
+public int pathSum(TreeNode root, int targetSum) {
+    return pathSumHelper(root, targetSum, false);
+}
+
+// 用long是避免溢出
+private int pathSumHelper(TreeNode root, long target, boolean includeParentNode) {
+    if (root == null) {
+        return 0;
+    }
+    if (includeParentNode) {
+        return (root.val == target ? 1 : 0)
+                + pathSumHelper(root.left, target - root.val, true)
+                + pathSumHelper(root.right, target - root.val, true);
+    } else {
+        return (root.val == target ? 1 : 0)
+                + pathSumHelper(root.left, target - root.val, true)
+                + pathSumHelper(root.right, target - root.val, true)
+                + pathSumHelper(root.left, target, false)
+                + pathSumHelper(root.right, target, false);
+    }
+}
+```
+
+7.6

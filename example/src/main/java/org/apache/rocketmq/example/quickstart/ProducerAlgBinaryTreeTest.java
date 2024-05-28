@@ -25,14 +25,24 @@ public class ProducerAlgBinaryTreeTest {
 //                "key1",
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
-        TreeNode t1 = new TreeNode(1);
-        TreeNode t2 = new TreeNode(2);
-        TreeNode t3 = new TreeNode(3);
+        TreeNode t10 = new TreeNode(10);
         TreeNode t5 = new TreeNode(5);
-        t1.left = t2;
-        t1.right = t3;
-        t2.right = t5;
-        System.out.println(test.binaryTreePaths(t1));
+        TreeNode tn3 = new TreeNode(-3);
+        TreeNode t3_1 = new TreeNode(3);
+        TreeNode t2 = new TreeNode(2);
+        TreeNode t11 = new TreeNode(11);
+        TreeNode t3_2 = new TreeNode(3);
+        TreeNode tn2 = new TreeNode(-2);
+        TreeNode t1 = new TreeNode(1);
+        t10.left = t5;
+        t10.right = tn3;
+        t5.left = t3_1;
+        t5.right = t2;
+        tn3.right = t11;
+        t3_1.left = t3_2;
+        t3_1.right = tn2;
+        t2.right = t1;
+        System.out.println(test.pathSum(t10, 8));
     }
 
     public int maxDepth(TreeNode root) {
@@ -252,6 +262,28 @@ public class ProducerAlgBinaryTreeTest {
         } else {
             sumNumbersWithDFSHelper(root.left, pre, res);
             sumNumbersWithDFSHelper(root.right, pre, res);
+        }
+    }
+
+    public int pathSum(TreeNode root, int targetSum) {
+        return pathSumHelper(root, targetSum, false);
+    }
+
+    // 用long是避免溢出
+    private int pathSumHelper(TreeNode root, long target, boolean includeParentNode) {
+        if (root == null) {
+            return 0;
+        }
+        if (includeParentNode) {
+            return (root.val == target ? 1 : 0)
+                    + pathSumHelper(root.left, target - root.val, true)
+                    + pathSumHelper(root.right, target - root.val, true);
+        } else {
+            return (root.val == target ? 1 : 0)
+                    + pathSumHelper(root.left, target - root.val, true)
+                    + pathSumHelper(root.right, target - root.val, true)
+                    + pathSumHelper(root.left, target, false)
+                    + pathSumHelper(root.right, target, false);
         }
     }
 
