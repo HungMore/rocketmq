@@ -2,7 +2,21 @@
 
 递归结构的两部分：
 1. 递归终止条件
-2. 递归过程
+2. 递归过程（递归逻辑）
+
+二分搜索树（binary search tree，BST）：
+1. 每个节点的键值大于左孩子
+2. 每个节点的键值小于右孩子
+3. 以左右孩子为根的子树仍为二分搜索树
+从定义上看，BST是满足递归函数定义的。
+BST在最坏的情况下会退化成一个链表，所以引申出了AVL树。
+
+AVL树：自平衡二叉搜索树。
+AVL树的命名来自于它的发明者`G.M.Adelson-Velsky`和`E.M.Landis`，AVL三个字母取自其发明者的名称首字母。
+AVL是严格的平衡二叉树，也就是说左右子树的高度差不会超过1。维持树的平衡要通过旋转操作来达成，旋转操作是非常耗时的，所以AVL树适合插入删除操作较少、查找操作较多的情况。
+
+红黑树：弱平衡的二叉搜索树。
+红黑树不是严格的平衡二叉树，它不符合平衡二叉树的定义。它使用非严格平衡来换取更高效的删除、插入操作。它的实现虽然更复杂，但是它在最坏的情况下效率也是非常高的，所以它的使用很广泛。Java中的TreeMap就是使用红黑树进行实现。
 
 ###### 问题104：maximum depth of binary tree
 
@@ -527,8 +541,29 @@ private int pathSumHelper(TreeNode root, long target, boolean includeParentNode)
     }
 }
 ```
-看leetcode的官方题解，还有一个使用前缀和思想的O(n)复杂度解法。`todo`后面再学习一下吧，和这题的前缀和类似的还有`问题560 和为K的子数组`等。
+看leetcode的官方题解，还有一个使用前缀和思想的O(n)复杂度解法。`todo`后面再学习一下吧，和这题的前缀和类似的还有`问题560 和为K的子数组`等，到时候再按照`前缀和`这个分类来刷吧。
 
+###### 问题235：lowest common ancestor of a binary search tree
 
+给定一个二叉搜索树,找到该树中两个指定节点的最近公共祖先。
+百度百科中最近公共祖先的定义为：“对于有根树T的两个结点p、q，最近公共祖先表示为一个结点x，满足x是p、q的祖先且x的深度尽可能大（一个节点也可以是它自己的祖先）。”
+例如，给定如下二叉搜索树: root = [6,2,8,0,4,7,9,null,null,3,5]，节点2和节点8的最近公共祖先是6。
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q);
+```
+
+因为是在二叉搜索树上，所以这题也比较好做。如果a、b两个节点都比根节点小，说明都在左子树上，递归向左子树中查找；如果a、b都比根节点大，说明都在右子树上，递归向右子树中查找；如果a、b一个比根节点大另一个比根节点小亦或者a、b中有一个节点等于根节点，那么根节点就是最近的祖先。
+代码：
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (p.val < root.val && q.val < root.val) {
+        return lowestCommonAncestor(root.left, p, q);
+    }
+    if (p.val > root.val && q.val > root.val) {
+        return lowestCommonAncestor(root.right, p, q);
+    }
+    return root;
+}
+```
 
 7.6
