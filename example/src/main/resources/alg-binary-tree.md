@@ -227,6 +227,7 @@ public int countNodes(TreeNode root) {
 }
 ```
 这题还有更优的解法，可以充分利用完全二叉树的特性，具体可参考leetcode的官方解答。
+感觉就是二分搜索的思想，可以和`问题230`类比下。
 
 
 ###### 问题110：balanced binary tree
@@ -566,4 +567,17 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 }
 ```
 
-7.6
+###### 问题98：validate binary search tree 
+
+###### 问题450：delete node in a BST
+
+###### 问题108：convert sorted array to binary search tree
+
+###### 问题230：kth smallest element in a BST
+
+###### 问题236：lowest common ancestor of a binary tree
+
+感觉这个可以用到后序遍历。bobo老师说这是著名的`LCA`问题，可以查阅下相关资料博客。
+
+
+
