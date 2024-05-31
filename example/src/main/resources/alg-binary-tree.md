@@ -758,7 +758,68 @@ public int kthSmallest(TreeNode root, int k) {
 
 ###### 问题236：lowest common ancestor of a binary tree
 
-感觉这个可以用到后序遍历。bobo老师说这是著名的`LCA`问题，可以查阅下相关资料博客。
+给定一个二叉树，找到该树中两个指定节点的最近公共祖先。
+百度百科中最近公共祖先的定义为：“对于有根树T的两个节点p、q，最近公共祖先表示为一个节点x，满足x是p、q的祖先且x的深度尽可能大（一个节点也可以是它自己的祖先）。”
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q);
+```
+
+这题可以用深度优先遍历来做，深度优先遍历获取到p、q两个节点的遍历路径，然后从遍历路径中取最后一个共同节点就可以了。
+代码：
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    LinkedList<TreeNode> pPath = new LinkedList<>();
+    int pRes = dfs(root, p, pPath);
+    LinkedList<TreeNode> qPath = new LinkedList<>();
+    int qRes = dfs(root, q, qPath);
+    if (pRes == -1 || qRes == -1) {
+        return null;
+    }
+    Iterator<TreeNode> pIterator = pPath.iterator();
+    Iterator<TreeNode> qIterator = qPath.iterator();
+    TreeNode res = null;
+    while (pIterator.hasNext() && qIterator.hasNext()) {
+        TreeNode pNext = pIterator.next();
+        TreeNode qNext = qIterator.next();
+        if (pNext == qNext) {
+            res = pNext;
+        } else {
+            break;
+        }
+    }
+    return res;
+}
+
+/**
+ * 深度优先遍历
+ *
+ * @param root
+ * @param target
+ * @param prePath
+ * @return 1 表示已经找到，-1 表示未找到
+ */
+private int dfs(TreeNode root, TreeNode target, LinkedList<TreeNode> prePath) {
+    if (root == null) {
+        return -1;
+    }
+    prePath.addLast(root);
+    if (root.val == target.val) {
+        return 1;
+    }
+    int left = dfs(root.left, target, prePath);
+    if (left == 1) {
+        return 1;
+    }
+    int right = dfs(root.right, target, prePath);
+    if (right == 1) {
+        return 1;
+    }
+    prePath.removeLast();
+    return -1;
+}
+```
+这个解法只击败了12%的用户，今晚看看官解看看有没有更好的办法。
+感觉这个可以用到后序遍历以及先序遍历。bobo老师说这是著名的`LCA`问题，可以查阅下相关资料博客。
 
 
 

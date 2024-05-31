@@ -1,9 +1,6 @@
 package org.apache.rocketmq.example.quickstart;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author mo
@@ -281,12 +278,12 @@ public class ProducerAlgBinaryTreeTest {
         }
     }
 
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    public TreeNode lowestCommonAncestorInBST(TreeNode root, TreeNode p, TreeNode q) {
         if (p.val < root.val && q.val < root.val) {
-            return lowestCommonAncestor(root.left, p, q);
+            return lowestCommonAncestorInBST(root.left, p, q);
         }
         if (p.val > root.val && q.val > root.val) {
-            return lowestCommonAncestor(root.right, p, q);
+            return lowestCommonAncestorInBST(root.right, p, q);
         }
         return root;
     }
@@ -386,6 +383,57 @@ public class ProducerAlgBinaryTreeTest {
             return root.val;
         }
         return kthSmallest(root.right, k);
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        LinkedList<TreeNode> pPath = new LinkedList<>();
+        int pRes = dfs(root, p, pPath);
+        LinkedList<TreeNode> qPath = new LinkedList<>();
+        int qRes = dfs(root, q, qPath);
+        if (pRes == -1 || qRes == -1) {
+            return null;
+        }
+        Iterator<TreeNode> pIterator = pPath.iterator();
+        Iterator<TreeNode> qIterator = qPath.iterator();
+        TreeNode res = null;
+        while (pIterator.hasNext() && qIterator.hasNext()) {
+            TreeNode pNext = pIterator.next();
+            TreeNode qNext = qIterator.next();
+            if (pNext == qNext) {
+                res = pNext;
+            } else {
+                break;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 深度优先遍历
+     *
+     * @param root
+     * @param target
+     * @param prePath
+     * @return 1 表示已经找到，-1 表示未找到
+     */
+    private int dfs(TreeNode root, TreeNode target, LinkedList<TreeNode> prePath) {
+        if (root == null) {
+            return -1;
+        }
+        prePath.addLast(root);
+        if (root.val == target.val) {
+            return 1;
+        }
+        int left = dfs(root.left, target, prePath);
+        if (left == 1) {
+            return 1;
+        }
+        int right = dfs(root.right, target, prePath);
+        if (right == 1) {
+            return 1;
+        }
+        prePath.removeLast();
+        return -1;
     }
 
     public static class TreeNode {
