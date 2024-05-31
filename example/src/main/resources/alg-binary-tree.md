@@ -609,6 +609,97 @@ private boolean isValidBSTHelper(TreeNode root, Integer upperBound, Integer lowe
 
 ###### 问题450：delete node in a BST
 
+给定一个二叉搜索树的根节点root和一个值key，删除二叉搜索树中的key对应的节点，并保证二叉搜索树的性质不变。返回二叉搜索树（有可能被更新）的根节点的引用。
+一般来说，删除节点可分为两个步骤：
+1. 首先找到需要删除的节点；
+2. 如果找到了，删除它。
+```java
+public TreeNode deleteNode(TreeNode root, int key);
+```
+
+由于有可能删除掉根节点，所以我们可以类似于链表的虚拟头节点一样，定义一个最大的虚拟根节点，然后返回虚拟根的左子节点。
+然后删除指定节点的具体操作如下：
+1. 如果被删除的节点是叶子节点，直接将其从树上摘下即可
+2. 如果被删除的节点只有单边的子树，使用单边子树的根节点代替它即可
+3. 如果被删除的节点有左右两颗子树，取左子树的最大节点A代替它，并将左子树的最大节点A的左子节点代替A它自身（相当于删除左子树的最大节点）。
+在这个删除的过程中，我们需要不断地操作被删除节点的父节点的指针，所以我们在遍历的过程中，对于当前遍历的节点，我们要判断的是它的子节点的值。
+```java
+public TreeNode deleteNode(TreeNode root, int key) {
+    TreeNode dummy = new TreeNode(Integer.MAX_VALUE, root, null);
+    TreeNode temp = dummy;
+    while (temp != null) {
+        if (temp.left != null && temp.left.val == key) {
+            temp.left = deleteNode(temp.left);
+            temp = null;
+        } else if (temp.right != null && temp.right.val == key) {
+            temp.right = deleteNode(temp.right);
+            temp = null;
+        } else {
+            temp = key > temp.val ? temp.right : temp.left;
+        }
+    }
+    return dummy.left;
+}
+
+public TreeNode deleteNode(TreeNode node) {
+    if (node == null) {
+        return null;
+    }
+    if (node.left == null) {
+        return node.right;
+    }
+    if (node.right == null) {
+        return node.left;
+    }
+    TreeNode closestFather = node;
+    TreeNode closest = node.left;
+    while (closest.right != null) {
+        closestFather = closest;
+        closest = closest.right;
+    }
+    if (closestFather != node) {
+        closestFather.right = closest.left;
+        closest.left = node.left;
+    }
+    closest.right = node.right;
+    return closest;
+}
+```
+看了官方的解答和我以前的提交记录，感觉以前的代码写得更简洁一些。但是现在的这个解答空间复杂度更低，使用迭代的方式，是常数级别的空间复杂度。
+贴上以前提交的解答作参考：
+```java
+public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) {
+        return null;
+    } else if (root.val == key) {
+        if (root.left == null) {
+            root = root.right;
+        } else if (root.right == null) {
+            root = root.left;
+        } else {
+            TreeNode replaceOne = getRightClosest(root.right);
+            // 太牛批了，再次递归
+            replaceOne.right = deleteNode(root.right, replaceOne.val);
+            replaceOne.left = root.left;
+            root = replaceOne;
+        }
+    } else if (root.val < key) {
+        root.right = deleteNode(root.right, key);
+    } else {
+        root.left = deleteNode(root.left, key);
+    }
+    return root;
+}
+
+private TreeNode getRightClosest(TreeNode node) {
+    assert node != null;
+    while (node.left != null) {
+        node = node.left;
+    }
+    return node;
+}
+```
+
 ###### 问题108：convert sorted array to binary search tree
 
 ###### 问题230：kth smallest element in a BST

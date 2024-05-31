@@ -25,24 +25,18 @@ public class ProducerAlgBinaryTreeTest {
 //                "key1",
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
-        TreeNode t10 = new TreeNode(10);
         TreeNode t5 = new TreeNode(5);
-        TreeNode tn3 = new TreeNode(-3);
-        TreeNode t3_1 = new TreeNode(3);
+        TreeNode t3 = new TreeNode(3);
+        TreeNode t6 = new TreeNode(6);
         TreeNode t2 = new TreeNode(2);
-        TreeNode t11 = new TreeNode(11);
-        TreeNode t3_2 = new TreeNode(3);
-        TreeNode tn2 = new TreeNode(-2);
-        TreeNode t1 = new TreeNode(1);
-        t10.left = t5;
-        t10.right = tn3;
-        t5.left = t3_1;
-        t5.right = t2;
-        tn3.right = t11;
-        t3_1.left = t3_2;
-        t3_1.right = tn2;
-        t2.right = t1;
-        System.out.println(test.pathSum(t10, 8));
+        TreeNode t4 = new TreeNode(4);
+        TreeNode t7 = new TreeNode(7);
+        t5.left = t3;
+        t5.right = t6;
+        t3.left= t2;
+        t3.right = t4;
+        t6.right = t7;
+        System.out.println(test.deleteNode(t5, 3));
     }
 
     public int maxDepth(TreeNode root) {
@@ -320,6 +314,48 @@ public class ProducerAlgBinaryTreeTest {
         return isValidBSTHelper(root.left, root.val, lowerBound)
                 && isValidBSTHelper(root.right, upperBound, root.val);
     }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode dummy = new TreeNode(Integer.MAX_VALUE, root, null);
+        TreeNode temp = dummy;
+        while (temp != null) {
+            if (temp.left != null && temp.left.val == key) {
+                temp.left = deleteNode(temp.left);
+                temp = null;
+            } else if (temp.right != null && temp.right.val == key) {
+                temp.right = deleteNode(temp.right);
+                temp = null;
+            } else {
+                temp = key > temp.val ? temp.right : temp.left;
+            }
+        }
+        return dummy.left;
+    }
+
+    public TreeNode deleteNode(TreeNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.left == null) {
+            return node.right;
+        }
+        if (node.right == null) {
+            return node.left;
+        }
+        TreeNode closestFather = node;
+        TreeNode closest = node.left;
+        while (closest.right != null) {
+            closestFather = closest;
+            closest = closest.right;
+        }
+        if (closestFather != node) {
+            closestFather.right = closest.left;
+            closest.left = node.left;
+        }
+        closest.right = node.right;
+        return closest;
+    }
+
 
     public static class TreeNode {
         int val;
