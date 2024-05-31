@@ -729,6 +729,33 @@ private TreeNode sortedArrayToBST(int[] nums, int left, int right) {
 
 ###### 问题230：kth smallest element in a BST
 
+给定一个二叉搜索树的根节点root，和一个整数k，请你设计一个算法查找其中第k个最小元素（从1开始计数）。
+```java
+public int kthSmallest(TreeNode root, int k);
+```
+
+二叉搜索树的中序遍历结果就是一个有序的集合，所以这题可以用中序遍历来做。
+代码：
+```java
+int count = 0;
+
+public int kthSmallest(TreeNode root, int k) {
+    if (root == null) {
+        return -1;
+    }
+    int left = kthSmallest(root.left, k);
+    if (left != -1) {
+        return left;
+    }
+    count++;
+    if (count == k) {
+        return root.val;
+    }
+    return kthSmallest(root.right, k);
+}
+```
+
+
 ###### 问题236：lowest common ancestor of a binary tree
 
 感觉这个可以用到后序遍历。bobo老师说这是著名的`LCA`问题，可以查阅下相关资料博客。
