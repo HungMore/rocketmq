@@ -702,6 +702,31 @@ private TreeNode getRightClosest(TreeNode node) {
 
 ###### 问题108：convert sorted array to binary search tree
 
+给你一个整数数组nums，其中元素已经按升序排列，请你将其转换为一棵平衡二叉搜索树。
+```java
+public TreeNode sortedArrayToBST(int[] nums);
+```
+
+这题很简单啦，取数组的中间元素为根节点，然后左右两边的元素继续递归地构造平衡二叉搜索树就可以啦。
+定义一个辅助函数`sortedArrayToBST(int[] nums, int left, int right)`。当`[left, right]`区间中没有元素时，返回空。
+代码：
+```java
+public TreeNode sortedArrayToBST(int[] nums) {
+    return sortedArrayToBST(nums, 0, nums.length - 1);
+}
+
+private TreeNode sortedArrayToBST(int[] nums, int left, int right) {
+    if (left > right) {
+        return null;
+    }
+    int mid = left + (right - left) / 2;
+    TreeNode root = new TreeNode(nums[mid]);
+    root.left = sortedArrayToBST(nums, left, mid - 1);
+    root.right = sortedArrayToBST(nums, mid + 1, right);
+    return root;
+}
+```
+
 ###### 问题230：kth smallest element in a BST
 
 ###### 问题236：lowest common ancestor of a binary tree

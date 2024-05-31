@@ -33,7 +33,7 @@ public class ProducerAlgBinaryTreeTest {
         TreeNode t7 = new TreeNode(7);
         t5.left = t3;
         t5.right = t6;
-        t3.left= t2;
+        t3.left = t2;
         t3.right = t4;
         t6.right = t7;
         System.out.println(test.deleteNode(t5, 3));
@@ -356,6 +356,20 @@ public class ProducerAlgBinaryTreeTest {
         return closest;
     }
 
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayToBST(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode sortedArrayToBST(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int mid = left + (right - left) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = sortedArrayToBST(nums, left, mid - 1);
+        root.right = sortedArrayToBST(nums, mid + 1, right);
+        return root;
+    }
 
     public static class TreeNode {
         int val;
