@@ -569,6 +569,44 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 
 ###### 问题98：validate binary search tree 
 
+给你一个二叉树的根节点root，判断其是否是一个有效的二叉搜索树。
+有效二叉搜索树定义如下：
+1. 节点的左子树只包含小于当前节点的数。
+2. 节点的右子树只包含大于当前节点的数。
+3. 所有左子树和右子树自身必须也是二叉搜索树。
+```java
+public boolean isValidBST(TreeNode root);
+```
+
+二叉搜索树的定义就是很典型的递归定义啦，所以用递归就可以做。
+由于左子树的所有节点都要小于当前节点，所以我们需要一个辅助递归函数，记录节点的上界与下界。
+代码：
+```java
+public boolean isValidBST(TreeNode root) {
+    return isValidBSTHelper(root, null, null);
+}
+
+private boolean isValidBSTHelper(TreeNode root, Integer upperBound, Integer lowerBound) {
+    if (root == null) {
+        return true;
+    }
+    if (upperBound != null && root.val >= upperBound) {
+        return false;
+    }
+    if (lowerBound != null && root.val <= lowerBound) {
+        return false;
+    }
+    if (root.left != null && root.left.val >= root.val) {
+        return false;
+    }
+    if (root.right != null && root.right.val <= root.val) {
+        return false;
+    }
+    return isValidBSTHelper(root.left, root.val, lowerBound)
+            && isValidBSTHelper(root.right, upperBound, root.val);
+}
+```
+
 ###### 问题450：delete node in a BST
 
 ###### 问题108：convert sorted array to binary search tree

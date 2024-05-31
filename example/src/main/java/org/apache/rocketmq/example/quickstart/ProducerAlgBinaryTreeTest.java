@@ -297,6 +297,30 @@ public class ProducerAlgBinaryTreeTest {
         return root;
     }
 
+    public boolean isValidBST(TreeNode root) {
+        return isValidBSTHelper(root, null, null);
+    }
+
+    private boolean isValidBSTHelper(TreeNode root, Integer upperBound, Integer lowerBound) {
+        if (root == null) {
+            return true;
+        }
+        if (upperBound != null && root.val >= upperBound) {
+            return false;
+        }
+        if (lowerBound != null && root.val <= lowerBound) {
+            return false;
+        }
+        if (root.left != null && root.left.val >= root.val) {
+            return false;
+        }
+        if (root.right != null && root.right.val <= root.val) {
+            return false;
+        }
+        return isValidBSTHelper(root.left, root.val, lowerBound)
+                && isValidBSTHelper(root.right, upperBound, root.val);
+    }
+
     public static class TreeNode {
         int val;
         TreeNode left;
