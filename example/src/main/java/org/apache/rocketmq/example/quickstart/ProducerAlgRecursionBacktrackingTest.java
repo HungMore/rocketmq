@@ -42,8 +42,10 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
         List<Character> myLetters = getMyLetters(digits.charAt(digitIndex));
         for (Character myLetter : myLetters) {
+            // 拼接上字母
             pre.append(myLetter);
             combinations(digits, digitIndex + 1, pre, res);
+            // 回溯的关键：去掉拼接的字母
             pre.deleteCharAt(digitIndex);
         }
     }

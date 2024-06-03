@@ -34,8 +34,8 @@ public List<String> letterCombinations(String digits);
 digits表示数字字符串
 digitIndex表示当前遍历的数字在digits中的下标
 pre表示在digitIndex前的数字获取到字符串
-res表示结果集
-该递归函数的递归结果：
+res表示结果集  
+该递归函数的递归结构：
 1. 递归终止条件：当digitIndex来到digits字符串的末尾的时候，说明已经遍历完所有的数字，将pre加入到res结果集中，返回
 2. 递归逻辑：对于当前的`digits[digitIndex]`，我们获取到它映射的多个字母x，分别向下递归`combinations(digits, digitIndex + 1, pre + x, res)`
 代码：
@@ -55,8 +55,10 @@ private void combinations(String digits, int digitIndex, StringBuilder pre, List
     }
     List<Character> myLetters = getMyLetters(digits.charAt(digitIndex));
     for (Character myLetter : myLetters) {
+        // 拼接上字母
         pre.append(myLetter);
         combinations(digits, digitIndex + 1, pre, res);
+        // 回溯的关键：去掉拼接的字母
         pre.deleteCharAt(digitIndex);
     }
 }
