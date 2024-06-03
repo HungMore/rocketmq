@@ -819,7 +819,7 @@ private int dfs(TreeNode root, TreeNode target, LinkedList<TreeNode> prePath) {
 }
 ```
 这个解法只击败了12%的用户，今晚看看官解看看有没有更好的办法。
-感觉这个可以用到后序遍历以及先序遍历。bobo老师说这是著名的`LCA`问题，可以查阅下相关资料博客。
+感觉这个可以用到后序遍历以及先序遍历。bobo老师说这是著名的`LCA`问题，可以查阅下相关资料博客。`todo`
 
 
 
