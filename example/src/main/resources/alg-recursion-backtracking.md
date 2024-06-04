@@ -172,6 +172,83 @@ private boolean isValidSegment(String segment) {
 
 ###### 问题131：palindrome partitioning
 
+给你一个字符串s，请你将s分割成一些子串，使每个子串都是回文串。返回s所有可能的分割方案。
+示例 1：
+输入：s = "aab"
+输出：[["a","a","b"],["aa","b"]]
+示例 2：
+输入：s = "a"
+输出：[["a"]]
+```java
+public List<List<String>> partition(String s);
+```
 
+首先我们需要一个函数来判断是否是回文串，这个很简单，用头尾双指针就行了。
+代码：
+```java
+private boolean isPalindrome(String s) {
+    if (s == null || s.length() == 0) {
+        return false;
+    }
+    int i = 0, j = s.length() - 1;
+    while (i < j) {
+        if (s.charAt(i) == s.charAt(j)) {
+            i++;
+            j--;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+```
+然后我们就可以用回溯法来不断遍历各种分割方案了。首先我们定义这个的辅助函数：`private void partitionHelper(String s, int index, List<String> pre, List<List<String>> res)`
+其中：
+1. s表示字符串s
+2. index表示当前遍历的s的第index个字符
+3. pre表示前面的s[0...index-1]构成的回文子串集合
+4. res表示结果集
+以这个辅助函数来定义递归关系：
+1. 当index到达s的末尾，表示遍历完成，将pre加入res，返回
+2. 如果index不等于s.length，循环判断`s[index...i]`（i<s.length）能否构成回文串，如何不可以，跳过，遍历下一个i，如果可以，递归往下遍历。
+代码：
+```java
+public List<List<String>> partition(String s) {
+    List<List<String>> res = new LinkedList<>();
+    partitionHelper(s, 0, new LinkedList<>(), res);
+    return res;
+}
+
+private void partitionHelper(String s, int index, LinkedList<String> pre, List<List<String>> res) {
+    if (index == s.length()) {
+        res.add(new ArrayList<>(pre));
+        return;
+    }
+    for (int i = index + 1; i <= s.length(); i++) {
+        String substring = s.substring(index, i);
+        if (isPalindrome(substring)) {
+            pre.addLast(substring);
+            partitionHelper(s, i, pre, res);
+            pre.removeLast();
+        }
+    }
+}
+
+private boolean isPalindrome(String s) {
+    if (s == null || s.length() == 0) {
+        return false;
+    }
+    int i = 0, j = s.length() - 1;
+    while (i < j) {
+        if (s.charAt(i) == s.charAt(j)) {
+            i++;
+            j--;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+```
 
 8.3

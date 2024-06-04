@@ -1,5 +1,6 @@
 package org.apache.rocketmq.example.quickstart;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,6 +106,43 @@ public class ProducerAlgRecursionBacktrackingTest {
             int i = Integer.parseInt(segment);
             return i >= 0 && i <= 255;
         }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new LinkedList<>();
+        partitionHelper(s, 0, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void partitionHelper(String s, int index, LinkedList<String> pre, List<List<String>> res) {
+        if (index == s.length()) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        for (int i = index + 1; i <= s.length(); i++) {
+            String substring = s.substring(index, i);
+            if (isPalindrome(substring)) {
+                pre.addLast(substring);
+                partitionHelper(s, i, pre, res);
+                pre.removeLast();
+            }
+        }
+    }
+
+    private boolean isPalindrome(String s) {
+        if (s == null || s.length() == 0) {
+            return false;
+        }
+        int i = 0, j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) == s.charAt(j)) {
+                i++;
+                j--;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
 
