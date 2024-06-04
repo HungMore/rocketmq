@@ -317,6 +317,7 @@ public List<List<String>> partitionDPString(String s) {
 }
 ```
 这样也还是只击败了5%的用户，可能是s的长度太小了吧，我们可以随机生成一些更长的字符串来测试下。
+随机生成了长度为200的字符串，这个方法确实是更快的！`partitionDPString` > `partitionDP` > `partition` ！
 有空看看官解以及其他的解吧`todo`
 
 8.3
