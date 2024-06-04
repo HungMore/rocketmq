@@ -1,9 +1,6 @@
 package org.apache.rocketmq.example.quickstart;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author mo
@@ -15,8 +12,9 @@ public class ProducerAlgRecursionBacktrackingTest {
     public static void main(String[] args) throws Exception {
         ProducerAlgRecursionBacktrackingTest test = new ProducerAlgRecursionBacktrackingTest();
         System.out.println();
-        List<String> stringList = test.restoreIpAddresses("101023");
-        System.out.println(stringList);
+//        List<String> stringList = test.restoreIpAddresses("101023");
+//        System.out.println(stringList);
+        System.out.println(test.partitionDP("aab"));
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -143,6 +141,60 @@ public class ProducerAlgRecursionBacktrackingTest {
             }
         }
         return true;
+    }
+
+    public List<List<String>> partitionDP(String s) {
+        if (s == null || s.length() == 0) {
+            return Collections.emptyList();
+        }
+        List<List<String>>[] dp = new List[s.length() + 1];
+        dp[0] = Collections.singletonList(Collections.emptyList());
+        dp[1] = Collections.singletonList(Collections.singletonList(s.substring(0, 1)));
+        for (int i = 2; i <= s.length(); i++) {
+            dp[i] = new LinkedList<>();
+            for (int j = 0; j <= i - 1; j++) {
+                String substring = s.substring(j, i);
+                if (isPalindrome(substring)) {
+                    List<List<String>> pre = dp[j];
+                    for (List<String> list : pre) {
+                        List<String> clone = new ArrayList<>(list);
+                        clone.add(substring);
+                        dp[i].add(clone);
+                    }
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+
+    public List<List<String>> partitionDPString(String s) {
+        if (s == null || s.length() == 0) {
+            return Collections.emptyList();
+        }
+        List<String>[] dp = new List[s.length() + 1];
+        dp[0] = Collections.singletonList("");
+        dp[1] = Collections.singletonList(s.substring(0, 1));
+        for (int i = 2; i <= s.length(); i++) {
+            dp[i] = new LinkedList<>();
+            for (int j = 0; j <= i - 1; j++) {
+                String substring = s.substring(j, i);
+                if (isPalindrome(substring)) {
+                    List<String> pre = dp[j];
+                    for (String anAnswer : pre) {
+                        dp[i].add(anAnswer + "," + substring);
+                    }
+                }
+            }
+        }
+        List<List<String>> res = new ArrayList<>(dp[s.length()].size());
+        for (String anAnswer : dp[s.length()]) {
+            if (anAnswer.startsWith(",")) {
+                res.add(Arrays.asList(anAnswer.substring(1).split(",")));
+            } else {
+                res.add(Arrays.asList(anAnswer.split(",")));
+            }
+        }
+        return res;
     }
 
 

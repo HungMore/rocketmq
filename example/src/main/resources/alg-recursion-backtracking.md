@@ -210,7 +210,7 @@ private boolean isPalindrome(String s) {
 4. res表示结果集
 以这个辅助函数来定义递归关系：
 1. 当index到达s的末尾，表示遍历完成，将pre加入res，返回
-2. 如果index不等于s.length，循环判断`s[index...i]`（i<s.length）能否构成回文串，如何不可以，跳过，遍历下一个i，如果可以，递归往下遍历。
+2. 如果index不等于s.length，循环判断`s[index...i]`（i<s.length）能否构成回文串，如何不可以，跳过，遍历下一个i，如果可以，递归往下遍历。（其实递归判断就是寻找子串`s[index...s.length-1]`的分割方案，会存在大量的重复计算！）
 代码：
 ```java
 public List<List<String>> partition(String s) {
@@ -250,5 +250,73 @@ private boolean isPalindrome(String s) {
     return true;
 }
 ```
+很明显，这题存在子树重复计算的问题（很多种情况都可以递归到同一个index，这些就是重复计算），所以我们可以用记忆化搜索来优化。
+然后回溯法+记忆化搜索，就等于动态规划啦！
+所以我们可以定义动态规划的状态转移方程：
+dp[index]表示s[0...index)构成的结果集。这题的答案就等于dp[s.length]
+dp[index] = dp[i] + s[i...index)，0<=i<=index-1,s[i...index)为回文子串
+dp[0] = [[]]
+dp[1] = [[s[0,1)]]
+代码：
+```java
+public List<List<String>> partitionDP(String s) {
+    if (s == null || s.length() == 0) {
+        return Collections.emptyList();
+    }
+    List<List<String>>[] dp = new List[s.length() + 1];
+    dp[0] = Collections.singletonList(Collections.emptyList());
+    dp[1] = Collections.singletonList(Collections.singletonList(s.substring(0, 1)));
+    for (int i = 2; i <= s.length(); i++) {
+        dp[i] = new LinkedList<>();
+        for (int j = 0; j <= i - 1; j++) {
+            String substring = s.substring(j, i);
+            if (isPalindrome(substring)) {
+                List<List<String>> pre = dp[j];
+                for (List<String> list : pre) {
+                    List<String> clone = new ArrayList<>(list);
+                    clone.add(substring);
+                    dp[i].add(clone);
+                }
+            }
+        }
+    }
+    return dp[s.length()];
+}
+```
+但是这样只击败了5%的用户，主要是集合需要重复不断地拷贝，很消耗性能。
+我们可以考虑不使用集合来存储一个分割方案，而是将其“序列化”成字符串，比如`["aa","b"]`这一个方案我们就序列化成"aa,b"，使用逗号将其隔开。操作字符串的消耗就很小了，代码如下：
+```java
+public List<List<String>> partitionDPString(String s) {
+    if (s == null || s.length() == 0) {
+        return Collections.emptyList();
+    }
+    List<String>[] dp = new List[s.length() + 1];
+    dp[0] = Collections.singletonList("");
+    dp[1] = Collections.singletonList(s.substring(0, 1));
+    for (int i = 2; i <= s.length(); i++) {
+        dp[i] = new LinkedList<>();
+        for (int j = 0; j <= i - 1; j++) {
+            String substring = s.substring(j, i);
+            if (isPalindrome(substring)) {
+                List<String> pre = dp[j];
+                for (String anAnswer : pre) {
+                    dp[i].add(anAnswer + "," + substring);
+                }
+            }
+        }
+    }
+    List<List<String>> res = new ArrayList<>(dp[s.length()].size());
+    for (String anAnswer : dp[s.length()]) {
+        if (anAnswer.startsWith(",")) {
+            res.add(Arrays.asList(anAnswer.substring(1).split(",")));
+        } else {
+            res.add(Arrays.asList(anAnswer.split(",")));
+        }
+    }
+    return res;
+}
+```
+这样也还是只击败了5%的用户，可能是s的长度太小了吧，我们可以随机生成一些更长的字符串来测试下。
+
 
 8.3
