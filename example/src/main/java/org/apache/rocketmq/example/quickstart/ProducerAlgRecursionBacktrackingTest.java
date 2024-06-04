@@ -14,6 +14,8 @@ public class ProducerAlgRecursionBacktrackingTest {
     public static void main(String[] args) throws Exception {
         ProducerAlgRecursionBacktrackingTest test = new ProducerAlgRecursionBacktrackingTest();
         System.out.println();
+        List<String> stringList = test.restoreIpAddresses("101023");
+        System.out.println(stringList);
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -71,5 +73,39 @@ public class ProducerAlgRecursionBacktrackingTest {
             throw new RuntimeException("unsupported digit:" + digit);
         }
     }
+
+    public List<String> restoreIpAddresses(String s) {
+        LinkedList<String> res = new LinkedList<>();
+        ip(s, 0, 0, "", res);
+        return res;
+    }
+
+    private void ip(String s, int index, int segmentNumber, String pre, List<String> res) {
+        if (index == s.length() || segmentNumber == 4) {
+            if (index == s.length() && segmentNumber == 4) {
+                res.add(pre.substring(0, pre.length() - 1));
+            }
+            return;
+        }
+        for (int i = 1, endIndex; i < 4 && (endIndex = index + i) <= s.length(); i++) {
+            String segment = s.substring(index, endIndex);
+            if (isValidSegment(segment)) {
+                ip(s, endIndex, segmentNumber + 1, pre + segment + ".", res);
+            } else {
+                // 提前剪枝
+                break;
+            }
+        }
+    }
+
+    private boolean isValidSegment(String segment) {
+        if (segment.startsWith("0")) {
+            return "0".equals(segment);
+        } else {
+            int i = Integer.parseInt(segment);
+            return i >= 0 && i <= 255;
+        }
+    }
+
 
 }

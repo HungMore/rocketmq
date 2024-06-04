@@ -110,6 +110,66 @@ private List<Character> getMyLetters(char digit) {
 
 ###### 问题93：restore ip address
 
+有效IP地址正好由四个整数（每个整数位于0到255之间组成，且不能含有前导0），整数之间用'.'分隔。
+例如："0.1.2.201"和"192.168.1.1"是有效IP地址，但是"0.011.255.245"、"192.168.1.312"和"192.168@1.1"是无效IP地址。
+给定一个只包含数字的字符串s，用以表示一个IP地址，返回所有可能的有效IP地址，这些地址可以通过在s中插入'.'来形成。你不能重新排序或删除s中的任何数字。你可以按任何顺序返回答案。
+示例1：
+输入：s = "25525511135"
+输出：["255.255.11.135","255.255.111.35"]
+示例 2：
+输入：s = "0000"
+输出：["0.0.0.0"]
+示例 3：
+输入：s = "101023"
+输出：["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+```java
+public List<String> restoreIpAddresses(String s);
+```
+
+这题可以用回溯法来做。我们可以定义这样的一个辅助函数：`private void ip(String s, int index, int segmentNumber)`
+其中：
+1. s表示字符串s
+2. index表示当前遍历的s的第index个字符
+3. segmentNumber表示当前ip地址有多少个segment
+以这个辅助函数来定义递归关系：
+1. 当index等于s.length或者segmentNumber等于4，表示已经遍历完s的所有字符或者凑够ip地址所需的四个segment，这时我们判断是否index等于s.length且segmentNumber等于4，如果是，将ip加入结果集并返回，否则，此路走不通，直接返回。
+2. 如果index不等于s.length且segmentNumber不等于4，说明还有字符需要分割，我们需要判断s[index...index]\s[index...index+1]\s[index...index+2]能否构成一个合法的segment，如果可以，递归往下遍历，如果不可以，跳过。
+代码：
+```java
+public List<String> restoreIpAddresses(String s) {
+    LinkedList<String> res = new LinkedList<>();
+    ip(s, 0, 0, "", res);
+    return res;
+}
+
+private void ip(String s, int index, int segmentNumber, String pre, List<String> res) {
+    if (index == s.length() || segmentNumber == 4) {
+        if (index == s.length() && segmentNumber == 4) {
+            res.add(pre.substring(0, pre.length() - 1));
+        }
+        return;
+    }
+    for (int i = 1, endIndex; i < 4 && (endIndex = index + i) <= s.length(); i++) {
+        String segment = s.substring(index, endIndex);
+        if (isValidSegment(segment)) {
+            ip(s, endIndex, segmentNumber + 1, pre + segment + ".", res);
+        } else {
+            // 提前剪枝
+            break;
+        }
+    }
+}
+
+private boolean isValidSegment(String segment) {
+    if (segment.startsWith("0")) {
+        return "0".equals(segment);
+    } else {
+        int i = Integer.parseInt(segment);
+        return i >= 0 && i <= 255;
+    }
+}
+```
+
 ###### 问题131：palindrome partitioning
 
 
