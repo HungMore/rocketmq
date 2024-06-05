@@ -362,6 +362,7 @@ private void dfs(Queue<Integer> numQueue, LinkedList<Integer> pre, List<List<Int
         Integer remove = numQueue.remove();
         pre.addLast(remove);
         dfs(numQueue, pre, res);
+        // 回溯的重点：恢复状态
         pre.removeLast();
         numQueue.add(remove);
     }
@@ -399,5 +400,8 @@ private void dfs(LinkedList<Integer> nums, LinkedList<Integer> pre) {
     }
 }
 ```
+印象中labuladong有使用数组位置交换的方式来替代numberList的，可以看看。`todo`
+
+###### 问题47：permutations ii
 
 8.4
