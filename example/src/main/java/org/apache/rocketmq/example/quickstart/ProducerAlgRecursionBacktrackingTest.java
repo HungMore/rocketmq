@@ -26,9 +26,9 @@ public class ProducerAlgRecursionBacktrackingTest {
             long l3 = System.currentTimeMillis();
             test.partitionDPString(s);
             long l4 = System.currentTimeMillis();
-            t1 += l2-l1;
-            t2 += l3-l2;
-            t3 += l4-l3;
+            t1 += l2 - l1;
+            t2 += l3 - l2;
+            t3 += l4 - l3;
         }
         System.out.println(t1);
         System.out.println(t2);
@@ -213,6 +213,30 @@ public class ProducerAlgRecursionBacktrackingTest {
             }
         }
         return res;
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        Queue<Integer> numQueue = new LinkedList<>();
+        for (int num : nums) {
+            numQueue.add(num);
+        }
+        dfs(numQueue, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void dfs(Queue<Integer> numQueue, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (numQueue.isEmpty()) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        for (int i = 0; i < numQueue.size(); i++) {
+            Integer remove = numQueue.remove();
+            pre.addLast(remove);
+            dfs(numQueue, pre, res);
+            pre.removeLast();
+            numQueue.add(remove);
+        }
     }
 
 

@@ -26,6 +26,10 @@
 
 自己理解：回溯和DFS都可以很方便地用递归的方式进行代码实现。回溯用到了DFS的思想（或者DFS用到了回溯的思想，两者都是自顶向下的遍历思想）。DFS可以用在树、图的搜索上；回溯不局限于具体的数据结构，只要能解析成树形问题，都可以使用回溯法。回溯法可以更广义地理解为一种算法思想，和动态规划、分治、贪心等思想同等级别。
 
+回溯法的常见应用场景：
+1. 排列问题
+2. 组合问题
+
 ###### 问题17：letter combinations of phone number
 
 给定一个仅包含数字2-9的字符串，返回所有它能表示的字母组合。答案可以按任意顺序返回。
@@ -320,4 +324,80 @@ public List<List<String>> partitionDPString(String s) {
 随机生成了长度为200的字符串，这个方法确实是更快的！`partitionDPString` > `partitionDP` > `partition` ！
 有空看看官解以及其他的解吧`todo`
 
-8.3
+###### 问题46：permutations
+
+给定一个不含重复数字的数组nums，返回其所有可能的全排列。你可以按任意顺序返回答案。
+示例 1：
+输入：nums = [1,2,3]
+输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+```java
+public List<List<Integer>> permute(int[] nums);
+```
+
+这题其实就是一个典型的树形问题：
+
+[问题46的分析树](./img/recursion-backtracking/q46_tree.png)
+
+我们可以使用回溯法来解决这道题。
+首先我们将数组存入到一个链表中，这样就很方便我们拿取其中的一个元素，并且拿取（弹出）了该元素以后，遍历完以该元素开头的全排列以后，重新将其放回到链表的末尾，又可以处理不以该元素开头的全排列，真的很方便！这一步也是解决排列问题的关键！
+代码：
+```java
+public List<List<Integer>> permute(int[] nums) {
+    List<List<Integer>> res = new LinkedList<>();
+    Queue<Integer> numQueue = new LinkedList<>();
+    for (int num : nums) {
+        numQueue.add(num);
+    }
+    dfs(numQueue, new LinkedList<>(), res);
+    return res;
+}
+
+private void dfs(Queue<Integer> numQueue, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (numQueue.isEmpty()) {
+        res.add(new ArrayList<>(pre));
+        return;
+    }
+    // 这里更稳妥的办法是将size存入变量中。毕竟在循环中会往numQueue中增删元素。这里一增一删刚好抵消。
+    for (int i = 0; i < numQueue.size(); i++) {
+        Integer remove = numQueue.remove();
+        pre.addLast(remove);
+        dfs(numQueue, pre, res);
+        pre.removeLast();
+        numQueue.add(remove);
+    }
+}
+```
+看了我以前提交的答案，注释得更明确一些：
+```java
+private List<List<Integer>> res;
+
+public List<List<Integer>> permute(int[] nums) {
+    res = new LinkedList<>();
+    LinkedList<Integer> numberList = new LinkedList<>();
+    for (int num : nums) {
+        numberList.add(num);
+    }
+    dfs(numberList, new LinkedList<>());
+    return res;
+}
+
+private void dfs(LinkedList<Integer> nums, LinkedList<Integer> pre) {
+    if (nums.isEmpty()) {
+        res.add(new LinkedList<>(pre));
+        return;
+    }
+    int size = nums.size();
+    for (int i = 0; i < size; i++) {
+        // 拿出第一个元素
+        Integer first = nums.removeFirst();
+        pre.addLast(first);
+        dfs(nums, pre);
+        // 回溯
+        pre.removeLast();
+        // 将第一个元素放到尾部，这样在 0--size-1 的循环中，就不会再遇到这个元素了
+        nums.addLast(first);
+    }
+}
+```
+
+8.4
