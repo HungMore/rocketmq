@@ -239,5 +239,35 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
     }
 
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        // 避免排序带来的副作用，copy一份数组
+        int[] copyOf = Arrays.copyOf(nums, nums.length);
+        Arrays.sort(copyOf);
+        LinkedList<Integer> numList = new LinkedList<>();
+        for (int i : copyOf) {
+            numList.addLast(i);
+        }
+        List<List<Integer>> res = new LinkedList<>();
+        dfsUnique(numList, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void dfsUnique(LinkedList<Integer> numList, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (numList.isEmpty()) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        int size = numList.size();
+        for (int i = 0; i < size; i++) {
+            Integer removeFirst = numList.removeFirst();
+            if (i == 0 || !removeFirst.equals(numList.peekLast())) {
+                pre.addLast(removeFirst);
+                dfsUnique(numList, pre, res);
+                pre.removeLast();
+            }
+            numList.addLast(removeFirst);
+        }
+    }
+
 
 }
