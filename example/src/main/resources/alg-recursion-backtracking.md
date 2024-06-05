@@ -418,7 +418,35 @@ public List<List<Integer>> permuteUnique(int[] nums);
 这题和问题46是类似的，区别就是该题可能包含重复元素。我们可以先对数组进行排序，然后使用和问题46一样的套路去解决，需要额外处理的是如果以元素A开头的全排列已经处理过，以下一个A开头的全排列就可以跳过了（也就是当i不等于0时，判断下当前元素是否等于前一个元素，如果是的话，跳过）。
 代码：
 ```java
+public List<List<Integer>> permuteUnique(int[] nums) {
+    // 避免排序带来的副作用，copy一份数组
+    int[] copyOf = Arrays.copyOf(nums, nums.length);
+    Arrays.sort(copyOf);
+    LinkedList<Integer> numList = new LinkedList<>();
+    for (int i : copyOf) {
+        numList.addLast(i);
+    }
+    List<List<Integer>> res = new LinkedList<>();
+    dfsUnique(numList, new LinkedList<>(), res);
+    return res;
+}
 
+private void dfsUnique(LinkedList<Integer> numList, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (numList.isEmpty()) {
+        res.add(new ArrayList<>(pre));
+        return;
+    }
+    int size = numList.size();
+    for (int i = 0; i < size; i++) {
+        Integer removeFirst = numList.removeFirst();
+        if (i == 0 || !removeFirst.equals(numList.peekLast())) {
+            pre.addLast(removeFirst);
+            dfsUnique(numList, pre, res);
+            pre.removeLast();
+        }
+        numList.addLast(removeFirst);
+    }
+}
 ```
 
 8.4
