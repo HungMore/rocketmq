@@ -534,4 +534,16 @@ private void dfs(int begin, int end, int k, LinkedList<Integer> pre) {
 }
 ```
 
-8.5
+###### 问题39：combination sum
+
+###### 问题40：combination sum ii
+
+###### 问题216：combination sum iii
+
+###### 问题78：subsets
+
+###### 问题90：subsets ii
+
+###### 问题401：binary watch
+
+8.6
