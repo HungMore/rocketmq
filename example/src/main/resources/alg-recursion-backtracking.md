@@ -502,5 +502,36 @@ private void combineHelper(int n, int k, LinkedList<Integer> pre, List<List<Inte
     }
 }
 ```
+看来我的提交记录，以前写的一个解也还可以（整体的复杂度是一样的，主要是思考的方向略有一点点差别），可以参考下：
+```java
+private List<List<Integer>> res;
+
+public List<List<Integer>> combine(int n, int k) {
+    res = new LinkedList<>();
+    dfs(1, n, k, new LinkedList<>());
+    return res;
+}
+
+/**
+ * 在 [begin, end] 的区间找 k 个数字
+ *
+ * @param begin
+ * @param end
+ * @param k
+ * @param pre
+ */
+private void dfs(int begin, int end, int k, LinkedList<Integer> pre) {
+    if (k == 0) {
+        res.add((LinkedList<Integer>) pre.clone());
+        return;
+    }
+    // 优化，i 不需要从 begin 到 end，从 begin 到 end - k + 1，就行，不然区间太短，无解
+    for (int i = begin; i <= end - k + 1; i++) {
+        pre.addLast(i);
+        dfs(i + 1, end, k - 1, pre);
+        pre.removeLast();
+    }
+}
+```
 
 8.5
