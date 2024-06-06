@@ -1,7 +1,5 @@
 package org.apache.rocketmq.example.quickstart;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.util.*;
 
 /**
@@ -35,7 +33,9 @@ public class ProducerAlgRecursionBacktrackingTest {
 //        System.out.println(t2);
 //        System.out.println(t3);
 
-        System.out.println(test.combine(4, 2));
+//        System.out.println(test.combine(4, 2));
+
+        System.out.println(test.combinationSum(new int[]{2, 3, 6, 7}, 7));
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -290,6 +290,27 @@ public class ProducerAlgRecursionBacktrackingTest {
         pre.removeLast();
         if (n > k) {
             combineHelper(n - 1, k, pre, res);
+        }
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new LinkedList<>();
+        combinationSumHelper(candidates, 0, target, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void combinationSumHelper(int[] candidates, int startIndex, int target, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (target < 0) {
+            return;
+        }
+        if (target == 0) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        for (int i = startIndex; i < candidates.length; i++) {
+            pre.addLast(candidates[i]);
+            combinationSumHelper(candidates, i, target - candidates[i], pre, res);
+            pre.removeLast();
         }
     }
 
