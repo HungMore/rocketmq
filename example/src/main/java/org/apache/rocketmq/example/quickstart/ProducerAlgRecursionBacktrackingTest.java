@@ -16,23 +16,26 @@ public class ProducerAlgRecursionBacktrackingTest {
         System.out.println();
 //        List<String> stringList = test.restoreIpAddresses("101023");
 //        System.out.println(stringList);
-        long t1 = 0, t2 = 0, t3 = 0;
-        for (int i = 0; i < 100; i++) {
-            String s = RandomStringUtils.randomAscii(200);
-            long l1 = System.currentTimeMillis();
-            test.partition(s);
-            long l2 = System.currentTimeMillis();
-            test.partitionDP(s);
-            long l3 = System.currentTimeMillis();
-            test.partitionDPString(s);
-            long l4 = System.currentTimeMillis();
-            t1 += l2 - l1;
-            t2 += l3 - l2;
-            t3 += l4 - l3;
-        }
-        System.out.println(t1);
-        System.out.println(t2);
-        System.out.println(t3);
+
+//        long t1 = 0, t2 = 0, t3 = 0;
+//        for (int i = 0; i < 100; i++) {
+//            String s = RandomStringUtils.randomAscii(200);
+//            long l1 = System.currentTimeMillis();
+//            test.partition(s);
+//            long l2 = System.currentTimeMillis();
+//            test.partitionDP(s);
+//            long l3 = System.currentTimeMillis();
+//            test.partitionDPString(s);
+//            long l4 = System.currentTimeMillis();
+//            t1 += l2 - l1;
+//            t2 += l3 - l2;
+//            t3 += l4 - l3;
+//        }
+//        System.out.println(t1);
+//        System.out.println(t2);
+//        System.out.println(t3);
+
+        System.out.println(test.combine(4, 2));
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -269,5 +272,25 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
     }
 
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> res = new LinkedList<>();
+        if (n >= k) {
+            combineHelper(n, k, new LinkedList<>(), res);
+        }
+        return res;
+    }
+
+    private void combineHelper(int n, int k, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (k == 0) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        pre.addLast(n);
+        combineHelper(n - 1, k - 1, pre, res);
+        pre.removeLast();
+        if (n > k) {
+            combineHelper(n - 1, k, pre, res);
+        }
+    }
 
 }

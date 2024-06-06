@@ -27,8 +27,8 @@
 自己理解：回溯和DFS都可以很方便地用递归的方式进行代码实现。回溯用到了DFS的思想（或者DFS用到了回溯的思想，两者都是自顶向下的遍历思想）。DFS可以用在树、图的搜索上；回溯不局限于具体的数据结构，只要能解析成树形问题，都可以使用回溯法。回溯法可以更广义地理解为一种算法思想，和动态规划、分治、贪心等思想同等级别。
 
 回溯法的常见应用场景：
-1. 排列问题
-2. 组合问题
+1. 排列问题（问题46、47）
+2. 组合问题（问题77）
 
 ###### 问题17：letter combinations of phone number
 
@@ -449,4 +449,58 @@ private void dfsUnique(LinkedList<Integer> numList, LinkedList<Integer> pre, Lis
 }
 ```
 
-8.4
+###### 问题77：combinations
+
+给定两个整数n和k，返回范围[1, n]中所有可能的k个数的组合。
+你可以按任何顺序返回答案。
+示例 1：
+输入：n = 4, k = 2
+输出：
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+```java
+public List<List<Integer>> combine(int n, int k);
+```
+
+组合问题有个公式，就很符合递归函数的定义：`C(n,k) = C(n-1,k) + C(n-1,k-1)`（相当于分两种情况：包含某个元素以及不包含某个元素）。
+利用这个公式，我们可以定义递归辅助函数`combineHelper(int n, int k, List<Integer> pre)`
+其中：
+1. n表示数字的可选范围[1,n]
+2. k表示组合的数字个数
+3. pre表示递归前一步的临时结果
+递归关系定义如下：
+1. 递归终止条件：当k等于0时，表明pre已经凑够组合所需的数组个数，将pre加入结果集，返回
+2. 递归关系：递归关系分两部分：
+2.1 组合内包含数字n。将n接入到pre集合中，递归`C(n-1,k-1)`。（记得回溯状态，将n从pre中移除）
+2.2 组合内不包含数字n。直接递归`C(n-1,k)`。这里递归需要注意：`n-1`要大于等于`k`才往下递归！
+综上，代码如下：
+```java
+public List<List<Integer>> combine(int n, int k) {
+    List<List<Integer>> res = new LinkedList<>();
+    if (n >= k) {
+        combineHelper(n, k, new LinkedList<>(), res);
+    }
+    return res;
+}
+
+private void combineHelper(int n, int k, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (k == 0) {
+        res.add(new ArrayList<>(pre));
+        return;
+    }
+    pre.addLast(n);
+    combineHelper(n - 1, k - 1, pre, res);
+    pre.removeLast();
+    if (n > k) {
+        combineHelper(n - 1, k, pre, res);
+    }
+}
+```
+
+8.5
