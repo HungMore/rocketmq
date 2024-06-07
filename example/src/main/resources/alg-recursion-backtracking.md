@@ -897,5 +897,25 @@ private String transform2Time(List<Integer> indexList) {
     return hourInt + ":" + (minuteInt < 10 ? "0" : "") + minuteInt;
 }
 ```
+leetcode官解直接使用了枚举这样的“流氓”方法，也挺有意思，所以面对小的数据集，我们完全可以枚举所有的可能性来求解！代码还是讲究一个kiss原则！
+```java
+/**
+ * 看官方答案，直接枚举出来
+ *
+ * @param turnedOn
+ * @return
+ */
+public List<String> readBinaryWatch(int turnedOn) {
+    LinkedList<String> res = new LinkedList<>();
+    for (int hour = 0; hour < 12; hour++) {
+        for (int minute = 0; minute < 60; minute++) {
+            if (Integer.bitCount(hour) + Integer.bitCount(minute) == turnedOn) {
+                res.add(hour + ":" + String.format("%02d", minute));
+            }
+        }
+    }
+    return res;
+}
+```
 
 8.6
