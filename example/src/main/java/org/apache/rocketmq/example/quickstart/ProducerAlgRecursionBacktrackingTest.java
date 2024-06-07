@@ -412,4 +412,42 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
     }
 
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        int[] copyOf = Arrays.copyOf(nums, nums.length);
+        Arrays.sort(copyOf);
+        List<List<Integer>> res = new LinkedList<>();
+        for (int i = 0; i <= nums.length; i++) {
+            res.addAll(subsetsWithDup(copyOf, i));
+        }
+        return res;
+    }
+
+    /**
+     * C(n,k)
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    private List<List<Integer>> subsetsWithDup(int[] nums, int k) {
+        List<List<Integer>> res = new LinkedList<>();
+        subsetsWithDupHelper(nums, 0, k, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void subsetsWithDupHelper(int[] nums, int startIndex, int k, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (k == 0) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        for (int i = startIndex; i <= nums.length - k; i++) {
+            if (i != startIndex && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            pre.addLast(nums[i]);
+            subsetsWithDupHelper(nums, i + 1, k - 1, pre, res);
+            pre.removeLast();
+        }
+    }
+
 }

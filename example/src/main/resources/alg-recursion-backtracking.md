@@ -778,6 +778,57 @@ private void combine(int[] nums, int n, int checkIndex, LinkedList<Integer> pre)
 
 ###### 问题90：subsets ii
 
+给你一个整数数组nums，其中可能包含重复元素，请你返回该数组所有可能的子集（幂集）。
+解集不能包含重复的子集。返回的解集中，子集可以按任意顺序排列。
+示例 1：
+输入：nums = [1,2,2]
+输出：[[],[1],[1,2],[1,2,2],[2],[2,2]]
+```java
+public List<List<Integer>> subsetsWithDup(int[] nums);
+```
+
+这题和问题78基本一样，不同点就是这题允许数组存在重复元素，还是使用老套路，存在重复元素就先排序，然后如果元素A已经遍历过，下一个A就不需要继续判断。
+代码：
+```java
+public List<List<Integer>> subsetsWithDup(int[] nums) {
+    int[] copyOf = Arrays.copyOf(nums, nums.length);
+    Arrays.sort(copyOf);
+    List<List<Integer>> res = new LinkedList<>();
+    for (int i = 0; i <= nums.length; i++) {
+        res.addAll(subsetsWithDup(copyOf, i));
+    }
+    return res;
+}
+
+/**
+ * C(n,k)
+ *
+ * @param nums
+ * @param k
+ * @return
+ */
+private List<List<Integer>> subsetsWithDup(int[] nums, int k) {
+    List<List<Integer>> res = new LinkedList<>();
+    subsetsWithDupHelper(nums, 0, k, new LinkedList<>(), res);
+    return res;
+}
+
+private void subsetsWithDupHelper(int[] nums, int startIndex, int k, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (k == 0) {
+        res.add(new ArrayList<>(pre));
+        return;
+    }
+    for (int i = startIndex; i <= nums.length - k; i++) {
+        if (i != startIndex && nums[i] == nums[i - 1]) {
+            continue;
+        }
+        pre.addLast(nums[i]);
+        subsetsWithDupHelper(nums, i + 1, k - 1, pre, res);
+        pre.removeLast();
+    }
+}
+```
+
 ###### 问题401：binary watch
 
 8.6
