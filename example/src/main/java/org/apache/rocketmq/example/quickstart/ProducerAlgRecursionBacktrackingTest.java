@@ -40,7 +40,9 @@ public class ProducerAlgRecursionBacktrackingTest {
 
 //        System.out.println(test.combinationSum(new int[]{2, 3, 6, 7}, 7));
 
-        System.out.println(test.combinationSum2(new int[]{1, 1, 1, 3, 3, 5}, 8));
+//        System.out.println(test.combinationSum2(new int[]{1, 1, 1, 3, 3, 5}, 8));
+
+        System.out.println(test.readBinaryWatch(9));
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -448,6 +450,56 @@ public class ProducerAlgRecursionBacktrackingTest {
             subsetsWithDupHelper(nums, i + 1, k - 1, pre, res);
             pre.removeLast();
         }
+    }
+
+    public List<String> readBinaryWatch(int turnedOn) {
+        List<String> res = new LinkedList<>();
+        readBinaryWatchHelper(0, turnedOn, new LinkedList<>(), res);
+        return res;
+    }
+
+    /**
+     * 从 [start, 9] 中亮起 turnedOn 个灯泡
+     *
+     * @param start
+     * @param turnedOn
+     * @param pre
+     * @param res
+     */
+    private void readBinaryWatchHelper(int start, int turnedOn, LinkedList<Integer> pre, List<String> res) {
+        if (turnedOn == 0) {
+            String time = transform2Time(pre);
+            if (time != null) {
+                res.add(time);
+            }
+            return;
+        }
+        for (int i = start; i < 10; i++) {
+            pre.addLast(i);
+            readBinaryWatchHelper(i + 1, turnedOn - 1, pre, res);
+            pre.removeLast();
+        }
+    }
+
+    /**
+     * 将亮的灯泡转换为时间
+     *
+     * @param indexList 亮的灯泡的下标，0~9
+     * @return
+     */
+    private String transform2Time(List<Integer> indexList) {
+        char[] base = new char[]{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
+        for (Integer index : indexList) {
+            base[index] = '1';
+        }
+        String hour = new String(base, 0, 4);
+        String minute = new String(base, 4, 6);
+        int hourInt = Integer.parseInt(hour, 2);
+        int minuteInt = Integer.parseInt(minute, 2);
+        if (hourInt > 11 || minuteInt > 59) {
+            return null;
+        }
+        return hourInt + ":" + (minuteInt < 10 ? "0" : "") + minuteInt;
     }
 
 }

@@ -831,4 +831,71 @@ private void subsetsWithDupHelper(int[] nums, int startIndex, int k, LinkedList<
 
 ###### 问题401：binary watch
 
+二进制手表顶部有4个LED代表小时（0-11），底部的6个LED代表分钟（0-59）。每个LED代表一个0或1，最低位在右侧。
+给你一个整数turnedOn，表示当前亮着的LED的数量，返回二进制手表可以表示的所有可能时间。你可以按任意顺序返回答案。
+小时不会以零开头：
+例如，"01:00"是无效的时间，正确的写法应该是"1:00"。
+分钟必须由两位数组成，可能会以零开头：
+例如，"10:2" 是无效的时间，正确的写法应该是"10:02"。
+示例 1：
+输入：turnedOn = 1
+输出：["0:01","0:02","0:04","0:08","0:16","0:32","1:00","2:00","4:00","8:00"]
+```java
+public List<String> readBinaryWatch(int turnedOn);
+```
+
+这题其实也不难，就是找出`C(10, turnedOn)`的所有组合情况，然后将组合转换为时间的格式。
+代码：
+```java
+public List<String> readBinaryWatch(int turnedOn) {
+    List<String> res = new LinkedList<>();
+    readBinaryWatchHelper(0, turnedOn, new LinkedList<>(), res);
+    return res;
+}
+
+/**
+ * 从 [start, 9] 中亮起 turnedOn 个灯泡
+ *
+ * @param start
+ * @param turnedOn
+ * @param pre
+ * @param res
+ */
+private void readBinaryWatchHelper(int start, int turnedOn, LinkedList<Integer> pre, List<String> res) {
+    if (turnedOn == 0) {
+        String time = transform2Time(pre);
+        if (time != null) {
+            res.add(time);
+        }
+        return;
+    }
+    for (int i = start; i < 10; i++) {
+        pre.addLast(i);
+        readBinaryWatchHelper(i + 1, turnedOn - 1, pre, res);
+        pre.removeLast();
+    }
+}
+
+/**
+ * 将亮的灯泡转换为时间
+ *
+ * @param indexList 亮的灯泡的下标，0~9
+ * @return
+ */
+private String transform2Time(List<Integer> indexList) {
+    char[] base = new char[]{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
+    for (Integer index : indexList) {
+        base[index] = '1';
+    }
+    String hour = new String(base, 0, 4);
+    String minute = new String(base, 4, 6);
+    int hourInt = Integer.parseInt(hour, 2);
+    int minuteInt = Integer.parseInt(minute, 2);
+    if (hourInt > 11 || minuteInt > 59) {
+        return null;
+    }
+    return hourInt + ":" + (minuteInt < 10 ? "0" : "") + minuteInt;
+}
+```
+
 8.6
