@@ -403,7 +403,9 @@ public class ProducerAlgRecursionBacktrackingTest {
             res.add(new ArrayList<>(pre));
             return;
         }
-        for (int i = startIndex; i < nums.length && nums.length - i >= k; i++) {
+        // 这个长度判断可以优化下
+//        for (int i = startIndex; i < nums.length && nums.length - i >= k; i++) {
+        for (int i = startIndex; i <= nums.length - k; i++) {
             pre.addLast(nums[i]);
             subsetsHelper(nums, i + 1, k - 1, pre, res);
             pre.removeLast();
