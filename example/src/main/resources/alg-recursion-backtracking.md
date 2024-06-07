@@ -579,6 +579,68 @@ private void combinationSumHelper(int[] candidates, int startIndex, int target, 
 
 ###### 问题40：combination sum ii
 
+给定一个候选人编号的集合candidates和一个目标数target，找出candidates中所有可以使数字和为target的组合。
+candidates中的每个数字在每个组合中只能使用一次。
+注意：解集不能包含重复的组合。
+示例 1:
+输入: candidates = [10,1,2,7,6,1,5], target = 8,
+输出:
+[
+[1,1,6],
+[1,2,5],
+[1,7],
+[2,6]
+]
+```java
+public List<List<Integer>> combinationSum2(int[] candidates, int target);
+```
+
+这题和问题39不同的是：
+1. candidates可能包含重复的元素
+2. 每个数字只能使用一次
+对于可能包含重复元素的情况，我们还是沿用老套路：对数组进行排序。（问题47也是这个套路）。
+定义递归辅助函数：`combinationSum2Helper(int[] candidates, int startIndex, int target, List<Integer> pre)`
+其中：
+1. candidates为candidates数组
+2. startIndex表示当前遍历candidates数组元素的下标
+3. target表示所需的和
+4. pre表示当前已使用的数字集合
+定义递归关系：
+1. 递归终止条件：当target等于0时，表示已凑够，将pre加入结果集，返回；当startIndex到达数组末尾，表示无元素可使用，此路不通，返回；如果candidates[startIndex]大于target，由于数组已排序，所以表示此路不通，返回
+2. 递归关系：文字描述就比较复杂了，看代码吧。
+代码：
+```java
+public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    // 为避免函数副作用，使用拷贝去排序
+    int[] copyOf = Arrays.copyOf(candidates, candidates.length);
+    Arrays.sort(copyOf);
+    List<List<Integer>> res = new LinkedList<>();
+    combinationSum2Helper(copyOf, 0, target, new LinkedList<>(), res);
+    return res;
+}
+
+private void combinationSum2Helper(int[] candidates, int startIndex, int target, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (target == 0) {
+        res.add(new ArrayList<>(pre));
+        return;
+    }
+    /// 这一句可以去掉，下面的for循环会判断 i < candidates.length
+//        if (startIndex == candidates.length) {
+//            return;
+//        }
+    for (int i = startIndex; i < candidates.length && candidates[i] <= target; i++) {
+        // 包含相同元素的已经遍历过，跳过
+        if (i != startIndex && candidates[i] == candidates[i - 1]) {
+            continue;
+        }
+        pre.addLast(candidates[i]);
+        combinationSum2Helper(candidates, i + 1, target - candidates[i], pre, res);
+        pre.removeLast();
+    }
+}
+```
+
+
 ###### 问题216：combination sum iii
 
 ###### 问题78：subsets

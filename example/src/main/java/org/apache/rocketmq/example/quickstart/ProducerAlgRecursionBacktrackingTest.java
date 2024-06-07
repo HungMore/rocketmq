@@ -1,5 +1,7 @@
 package org.apache.rocketmq.example.quickstart;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
 
 /**
@@ -7,6 +9,7 @@ import java.util.*;
  * @Description 生产者测试
  * @createTime 2024年06月03日 09:58
  */
+@Slf4j
 public class ProducerAlgRecursionBacktrackingTest {
 
     public static void main(String[] args) throws Exception {
@@ -35,7 +38,9 @@ public class ProducerAlgRecursionBacktrackingTest {
 
 //        System.out.println(test.combine(4, 2));
 
-        System.out.println(test.combinationSum(new int[]{2, 3, 6, 7}, 7));
+//        System.out.println(test.combinationSum(new int[]{2, 3, 6, 7}, 7));
+
+        System.out.println(test.combinationSum2(new int[]{1, 1, 1, 3, 3, 5}, 8));
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -310,6 +315,35 @@ public class ProducerAlgRecursionBacktrackingTest {
         for (int i = startIndex; i < candidates.length; i++) {
             pre.addLast(candidates[i]);
             combinationSumHelper(candidates, i, target - candidates[i], pre, res);
+            pre.removeLast();
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        // 为避免函数副作用，使用拷贝去排序
+        int[] copyOf = Arrays.copyOf(candidates, candidates.length);
+        Arrays.sort(copyOf);
+        List<List<Integer>> res = new LinkedList<>();
+        combinationSum2Helper(copyOf, 0, target, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void combinationSum2Helper(int[] candidates, int startIndex, int target, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (target == 0) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        /// 这一句可以去掉，下面的for循环会判断 i < candidates.length
+//        if (startIndex == candidates.length) {
+//            return;
+//        }
+        for (int i = startIndex; i < candidates.length && candidates[i] <= target; i++) {
+            // 包含相同元素的已经遍历过，跳过
+            if (i != startIndex && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            pre.addLast(candidates[i]);
+            combinationSum2Helper(candidates, i + 1, target - candidates[i], pre, res);
             pre.removeLast();
         }
     }
