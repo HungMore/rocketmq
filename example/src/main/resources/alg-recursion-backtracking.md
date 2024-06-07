@@ -751,6 +751,30 @@ private void subsetsHelper(int[] nums, int startIndex, int k, LinkedList<Integer
     }
 }
 ```
+看了我以前的一个提交，效率更高一些，它避免了`res.addAll(subsets(nums, i));`这一步不断地添加临时结果集，而是每找到一个子集就直接加入到最终结果集。
+```java
+private List<List<Integer>> res;
+
+public List<List<Integer>> subsets(int[] nums) {
+    res = new LinkedList<>();
+    for (int i = 0; i <= nums.length; i++) {
+        combine(nums, i, 0, new LinkedList<>());
+    }
+    return res;
+}
+
+private void combine(int[] nums, int n, int checkIndex, LinkedList<Integer> pre) {
+    if (n == 0) {
+        res.add((LinkedList<Integer>) pre.clone());
+        return;
+    }
+    for (int i = checkIndex; i < nums.length - n + 1; i++) {
+        pre.addLast(nums[i]);
+        combine(nums, n - 1, i + 1, pre);
+        pre.removeLast();
+    }
+}
+```
 
 ###### 问题90：subsets ii
 
