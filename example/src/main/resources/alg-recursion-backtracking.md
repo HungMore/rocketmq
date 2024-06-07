@@ -643,6 +643,61 @@ private void combinationSum2Helper(int[] candidates, int startIndex, int target,
 
 ###### 问题216：combination sum iii
 
+找出所有相加之和为n的k个数的组合，且满足下列条件：
+只使用数字1到9
+每个数字最多使用一次
+返回所有可能的有效组合的列表。该列表不能包含相同的组合两次，组合可以以任何顺序返回。
+示例 1:
+输入: k = 3, n = 7
+输出: [[1,2,4]]
+解释:
+1 + 2 + 4 = 7
+没有其他符合的组合了。
+示例 2:
+输入: k = 3, n = 9
+输出: [[1,2,6], [1,3,5], [2,3,4]]
+解释:
+1 + 2 + 6 = 9
+1 + 3 + 5 = 9
+2 + 3 + 4 = 9
+没有其他符合的组合了。
+```java
+public List<List<Integer>> combinationSum3(int k, int n);
+```
+
+这题也是回溯法可以做，直接写代码吧。
+代码：
+```java
+public List<List<Integer>> combinationSum3(int k, int n) {
+    List<List<Integer>> res = new LinkedList<>();
+    combinationSum3Helper(k, n, 1, new LinkedList<>(), res);
+    return res;
+}
+
+/**
+ * 从 [start, 9]找k个数字组成n
+ *
+ * @param k
+ * @param n
+ * @param start
+ * @param pre
+ * @param res
+ */
+private void combinationSum3Helper(int k, int n, int start, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (k == 0) {
+        if (n == 0) {
+            res.add(new ArrayList<>(pre));
+        }
+        return;
+    }
+    for (int i = start; i < 10 && i <= n; i++) {
+        pre.addLast(i);
+        combinationSum3Helper(k - 1, n - i, i + 1, pre, res);
+        pre.removeLast();
+    }
+}
+```
+
 ###### 问题78：subsets
 
 ###### 问题90：subsets ii

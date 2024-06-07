@@ -348,4 +348,33 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
     }
 
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> res = new LinkedList<>();
+        combinationSum3Helper(k, n, 1, new LinkedList<>(), res);
+        return res;
+    }
+
+    /**
+     * 从 [start, 9]找k个数字组成n
+     *
+     * @param k
+     * @param n
+     * @param start
+     * @param pre
+     * @param res
+     */
+    private void combinationSum3Helper(int k, int n, int start, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (k == 0) {
+            if (n == 0) {
+                res.add(new ArrayList<>(pre));
+            }
+            return;
+        }
+        for (int i = start; i < 10 && i <= n; i++) {
+            pre.addLast(i);
+            combinationSum3Helper(k - 1, n - i, i + 1, pre, res);
+            pre.removeLast();
+        }
+    }
+
 }
