@@ -377,4 +377,37 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
     }
 
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new LinkedList<>();
+        for (int i = 0; i <= nums.length; i++) {
+            res.addAll(subsets(nums, i));
+        }
+        return res;
+    }
+
+    /**
+     * C(n,k)
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    private List<List<Integer>> subsets(int[] nums, int k) {
+        List<List<Integer>> res = new LinkedList<>();
+        subsetsHelper(nums, 0, k, new LinkedList<>(), res);
+        return res;
+    }
+
+    private void subsetsHelper(int[] nums, int startIndex, int k, LinkedList<Integer> pre, List<List<Integer>> res) {
+        if (k == 0) {
+            res.add(new ArrayList<>(pre));
+            return;
+        }
+        for (int i = startIndex; i < nums.length && nums.length - i >= k; i++) {
+            pre.addLast(nums[i]);
+            subsetsHelper(nums, i + 1, k - 1, pre, res);
+            pre.removeLast();
+        }
+    }
+
 }

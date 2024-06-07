@@ -700,6 +700,56 @@ private void combinationSum3Helper(int k, int n, int start, LinkedList<Integer> 
 
 ###### 问题78：subsets
 
+给你一个整数数组nums，数组中的元素互不相同。返回该数组所有可能的子集（幂集）。
+解集不能包含重复的子集。你可以按任意顺序返回解集。
+示例 1：
+输入：nums = [1,2,3]
+输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+示例 2：
+输入：nums = [0]
+输出：[[],[0]]
+```java
+public List<List<Integer>> subsets(int[] nums);
+```
+
+这题可以用到问题77的解答。问题77是`C(n,k)`，这题是`C(n,0) + C(n,1) + ... + C(n,n)`。
+我们先写`C(n,k)`的解答，然后k从0到n循环调用`C(n,k)`。
+代码：
+```java
+public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> res = new LinkedList<>();
+    for (int i = 0; i <= nums.length; i++) {
+        res.addAll(subsets(nums, i));
+    }
+    return res;
+}
+
+/**
+ * C(n,k)
+ *
+ * @param nums
+ * @param k
+ * @return
+ */
+private List<List<Integer>> subsets(int[] nums, int k) {
+    List<List<Integer>> res = new LinkedList<>();
+    subsetsHelper(nums, 0, k, new LinkedList<>(), res);
+    return res;
+}
+
+private void subsetsHelper(int[] nums, int startIndex, int k, LinkedList<Integer> pre, List<List<Integer>> res) {
+    if (k == 0) {
+        res.add(new ArrayList<>(pre));
+        return;
+    }
+    for (int i = startIndex; i < nums.length && nums.length - i >= k; i++) {
+        pre.addLast(nums[i]);
+        subsetsHelper(nums, i + 1, k - 1, pre, res);
+        pre.removeLast();
+    }
+}
+```
+
 ###### 问题90：subsets ii
 
 ###### 问题401：binary watch
