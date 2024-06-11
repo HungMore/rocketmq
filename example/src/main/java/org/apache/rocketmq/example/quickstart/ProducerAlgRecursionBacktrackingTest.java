@@ -570,4 +570,47 @@ public class ProducerAlgRecursionBacktrackingTest {
         numIslandsFloodFill(grid, i, j + 1);
     }
 
+    public void solve(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            if (board[i][0] == 'O') {
+                solveFloodFill(board, i, 0);
+            }
+            if (board[i][board[0].length - 1] == 'O') {
+                solveFloodFill(board, i, board[0].length - 1);
+            }
+        }
+        for (int j = 0; j < board[0].length; j++) {
+            if (board[0][j] == 'O') {
+                solveFloodFill(board, 0, j);
+            }
+            if (board[board.length - 1][j] == 'O') {
+                solveFloodFill(board, board.length - 1, j);
+            }
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                // 复制为T表示被标记过，恢复为O
+                if (board[i][j] == 'T') {
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+
+    private void solveFloodFill(char[][] board, int i, int j) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+            return;
+        }
+        if (board[i][j] != 'O') {
+            return;
+        }
+        board[i][j] = 'T';
+        solveFloodFill(board, i + 1, j);
+        solveFloodFill(board, i - 1, j);
+        solveFloodFill(board, i, j + 1);
+        solveFloodFill(board, i, j - 1);
+    }
+
 }

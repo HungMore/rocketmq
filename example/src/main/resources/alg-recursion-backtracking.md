@@ -1042,6 +1042,70 @@ bobo老师有提到说有个观点认为上面这个解法并不是回溯法，�
 
 ###### 问题130：surrounded regions
 
+给你一个m x n的矩阵board，有若干字符'X'和'O'，找到所有被'X'围绕的区域，并将这些区域里所有的'O'用'X'填充。
+示例 1：
+输入：board = [
+["X","X","X","X"],
+["X","O","O","X"],
+["X","X","O","X"],
+["X","O","X","X"]]
+输出：[
+["X","X","X","X"],
+["X","X","X","X"],
+["X","X","X","X"],
+["X","O","X","X"]]
+解释：被围绕的区间不会存在于边界上，换句话说，任何边界上的'O'都不会被填充为'X'。任何不在边界上，或不与边界上的'O'相连的'O'最终都会被填充为'X'。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+```java
+public void solve(char[][] board);
+```
+
+题目中的解释给了我们很大的提示：任何不在边界上，或不与边界上的'O'相连的'O'最终都会被填充为'X'。所以我们可以进行反向“flood fill”：从边界上的'O'出发，将所有与边界上的'O'相连的'O'进行标记；然后遍历board，未被标记的'O'就填充为'X'。
+代码：
+```java
+public void solve(char[][] board) {
+    for (int i = 0; i < board.length; i++) {
+        if (board[i][0] == 'O') {
+            solveFloodFill(board, i, 0);
+        }
+        if (board[i][board[0].length - 1] == 'O') {
+            solveFloodFill(board, i, board[0].length - 1);
+        }
+    }
+    for (int j = 0; j < board[0].length; j++) {
+        if (board[0][j] == 'O') {
+            solveFloodFill(board, 0, j);
+        }
+        if (board[board.length - 1][j] == 'O') {
+            solveFloodFill(board, board.length - 1, j);
+        }
+    }
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            // 复制为T表示被标记过，恢复为O
+            if (board[i][j] == 'T') {
+                board[i][j] = 'O';
+            } else if (board[i][j] == 'O') {
+                board[i][j] = 'X';
+            }
+        }
+    }
+}
+
+private void solveFloodFill(char[][] board, int i, int j) {
+    if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+        return;
+    }
+    if (board[i][j] != 'O') {
+        return;
+    }
+    board[i][j] = 'T';
+    solveFloodFill(board, i + 1, j);
+    solveFloodFill(board, i - 1, j);
+    solveFloodFill(board, i, j + 1);
+    solveFloodFill(board, i, j - 1);
+}
+```
+
 ###### 问题417：pacific atlantic water flow
 
 
