@@ -963,5 +963,15 @@ private boolean existHelper(char[][] board, int i, int j, String word, int index
     return res;
 }
 ```
+bobo老师在这一题中提到了一个代码小技巧，使用一个for循环来实现向上、下、左、右四个方向移动：
+```java
+int x = 0, y = 0;
+// (x,y) 向四个方向移动的坐标偏移量
+int[][] d = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+for (int i = 0; i < d.length; i++) {
+    int newX = x + d[i][0];
+    int newY = y + d[i][1];
+}
+```
 
 8.7
