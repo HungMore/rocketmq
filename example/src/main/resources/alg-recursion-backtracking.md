@@ -1037,5 +1037,12 @@ private void numIslandsFloodFill(char[][] grid, int i, int j) {
     numIslandsFloodFill(grid, i, j + 1);
 }
 ```
+bobo老师有提到说有个观点认为上面这个解法并不是回溯法，因为它没有回溯回来重置（恢复）某个状态的过程，所以这只能算是一个DFS算法。
+其实这样理解也没问题，确实是没有恢复状态的过程，但是对于DFS递归算法来说，你只有在“后序遍历”框架里随便执行一条指令，也可以认为是回溯的过程。这里不用细究，DFS与回溯的关系本来就是你中有我我中有你。
+
+###### 问题130：surrounded regions
+
+###### 问题417：pacific atlantic water flow
+
 
 8.8
