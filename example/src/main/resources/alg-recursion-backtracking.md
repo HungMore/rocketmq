@@ -918,4 +918,50 @@ public List<String> readBinaryWatch(int turnedOn) {
 }
 ```
 
-8.6
+###### 问题79：word search 
+
+给定一个m x n二维字符网格board和一个字符串单词word。如果word存在于网格中，返回true；否则，返回false。
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+```java
+public boolean exist(char[][] board, String word);
+```
+
+这题就是典型的回溯法来遍历搜索啦，直接写代码吧。
+代码：
+```java
+public boolean exist(char[][] board, String word) {
+    boolean[][] used = new boolean[board.length][board[0].length];
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            if (existHelper(board, i, j, word, 0, used)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+private boolean existHelper(char[][] board, int i, int j, String word, int index, boolean[][] used) {
+    if (index == word.length()) {
+        return true;
+    }
+    if (i == -1 || i == board.length || j == -1 || j == board[0].length) {
+        return false;
+    }
+    if (used[i][j]) {
+        return false;
+    }
+    if (board[i][j] != word.charAt(index)) {
+        return false;
+    }
+    used[i][j] = true;
+    boolean res = existHelper(board, i - 1, j, word, index + 1, used) ||
+            existHelper(board, i + 1, j, word, index + 1, used) ||
+            existHelper(board, i, j - 1, word, index + 1, used) ||
+            existHelper(board, i, j + 1, word, index + 1, used);
+    used[i][j] = false;
+    return res;
+}
+```
+
+8.7

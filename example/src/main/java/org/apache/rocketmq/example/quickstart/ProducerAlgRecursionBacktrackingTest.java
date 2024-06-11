@@ -502,4 +502,38 @@ public class ProducerAlgRecursionBacktrackingTest {
         return hourInt + ":" + (minuteInt < 10 ? "0" : "") + minuteInt;
     }
 
+    public boolean exist(char[][] board, String word) {
+        boolean[][] used = new boolean[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (existHelper(board, i, j, word, 0, used)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean existHelper(char[][] board, int i, int j, String word, int index, boolean[][] used) {
+        if (index == word.length()) {
+            return true;
+        }
+        if (i == -1 || i == board.length || j == -1 || j == board[0].length) {
+            return false;
+        }
+        if (used[i][j]) {
+            return false;
+        }
+        if (board[i][j] != word.charAt(index)) {
+            return false;
+        }
+        used[i][j] = true;
+        boolean res = existHelper(board, i - 1, j, word, index + 1, used) ||
+                existHelper(board, i + 1, j, word, index + 1, used) ||
+                existHelper(board, i, j - 1, word, index + 1, used) ||
+                existHelper(board, i, j + 1, word, index + 1, used);
+        used[i][j] = false;
+        return res;
+    }
+
 }
