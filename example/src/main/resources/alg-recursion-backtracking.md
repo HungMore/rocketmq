@@ -28,7 +28,8 @@
 
 回溯法的常见应用场景：
 1. 排列问题（问题46、47）
-2. 组合问题（问题77）
+2. 组合问题（问题77等）
+3. flood-fill算法问题（问题200等）
 
 ###### 问题17：letter combinations of phone number
 
@@ -974,4 +975,67 @@ for (int i = 0; i < d.length; i++) {
 }
 ```
 
-8.7
+###### 问题200：number of islands
+
+给你一个由'1'（陆地）和'0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
+岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
+此外，你可以假设该网格的四条边均被水包围。
+示例 1：
+输入：grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]
+输出：1
+示例 2：
+输入：grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+输出：3
+```java
+public int numIslands(char[][] grid);
+```
+
+这题就是很典型的flood fill问题！我们不断地遍历二维网格，每找到一块陆地，就“flood fill”标记其他属于同一个岛屿的其他陆地。每当找到一个没有被标记过的陆地，就表示出现了一个新的岛屿，结果集加一。
+代码：
+```java
+public int numIslands(char[][] grid) {
+    int res = 0;
+    for (int i = 0; i < grid.length; i++) {
+        for (int j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] == '1') {
+                numIslandsFloodFill(grid, i, j);
+                res++;
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * 将 grid[i][j] 赋值为 2 表示已经标记过
+ *
+ * @param grid
+ * @param i
+ * @param j
+ */
+private void numIslandsFloodFill(char[][] grid, int i, int j) {
+    if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
+        return;
+    }
+    if (grid[i][j] == '0' || grid[i][j] == '2') {
+        return;
+    }
+    grid[i][j] = '2';
+    numIslandsFloodFill(grid, i - 1, j);
+    numIslandsFloodFill(grid, i + 1, j);
+    numIslandsFloodFill(grid, i, j - 1);
+    numIslandsFloodFill(grid, i, j + 1);
+}
+```
+
+8.8

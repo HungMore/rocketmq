@@ -536,4 +536,38 @@ public class ProducerAlgRecursionBacktrackingTest {
         return res;
     }
 
+    public int numIslands(char[][] grid) {
+        int res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '1') {
+                    numIslandsFloodFill(grid, i, j);
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 将 grid[i][j] 赋值为 2 表示已经标记过
+     *
+     * @param grid
+     * @param i
+     * @param j
+     */
+    private void numIslandsFloodFill(char[][] grid, int i, int j) {
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
+            return;
+        }
+        if (grid[i][j] == '0' || grid[i][j] == '2') {
+            return;
+        }
+        grid[i][j] = '2';
+        numIslandsFloodFill(grid, i - 1, j);
+        numIslandsFloodFill(grid, i + 1, j);
+        numIslandsFloodFill(grid, i, j - 1);
+        numIslandsFloodFill(grid, i, j + 1);
+    }
+
 }
