@@ -1333,3 +1333,58 @@ private List<String> serializeBoard(boolean[][] board) {
     return res;
 }
 ```
+看了bobo老师的讲解，其实有更高效的办法来判断新加入的(i,j)会不会和前面i-1行皇后产生冲突。
+从列、正斜线、反斜线三个方向分别进行优化。
+1. 对于列方向上，我们使用一个数组columnData[]来记录，如果第i列已经有皇后，我们就将columnData[i]标记为true。所以对于(i,j)，如果columnData[i]已经为true，表明i列已有皇后，会产生冲突。对于n皇后，columnData[]的长度等于n即可。
+2. 对于正斜线方向上，一个`n*n`的二维数组，它最多可以产生`2*n-1`条正斜线，而且每条正斜线上的点的横纵坐标之和各不相同，举例来说，(i,j)所在的正斜线上的所有点的横纵坐标之和都将是`i+j`，而(i-1,j)所在的正斜线上的所有点的横纵坐标之和都将是`i+j-1`。所以我们可以使用一个数组forwardSlash[]来记录，如果(i,j)所在的正斜线上存在皇后，就将forwardSlash[i+j]标记为true。对于n皇后，forwardSlash[]的长度为`2*n-1`即可。
+3. 对于反斜线方向上，一个`n*n`的二维数组，同样最多可以产生`2*n-1`条反斜线，而且每条反斜线上的点的横纵坐标之差各不相同，举例来说，(i,j)所在的反斜线上的所有点的横纵坐标之差都将是`i-j`，而(i-1,j)所在的反斜线上的所有点的横纵坐标之差都将是`i-1-j`。由于差值可能出现负数，而且最大的负数等于`-(n-1)`，我们在使用数组`backSlash[]`来记录反斜线上是否有皇后时，需要为下标加上一个偏移量`n-1`，比如，如果(i,j)所在的反斜线上存在皇后，就将backSlash[i-j+n-1]标记为true。对于n皇后，backSlash[]的长度为`2*n-1`即可。
+优化后的代码如下：
+```java
+public List<List<String>> solveNQueens(int n) {
+    List<List<String>> res = new LinkedList<>();
+    backTracking(n, 0, new boolean[n][n], new boolean[n], new boolean[2 * n - 1], new boolean[2 * n - 1], res);
+    return res;
+}
+
+private void backTracking(int n, int currentRow, boolean[][] board, boolean[] columnData, boolean[] forwardSlash, boolean[] backSlash, List<List<String>> res) {
+    if (currentRow == n) {
+        res.add(serializeBoard(board));
+        return;
+    }
+    for (int col = 0; col < n; col++) {
+        // 尝试将皇后放到col列
+        if (isQueensOkII(n, currentRow, col, columnData, forwardSlash, backSlash)) {
+            board[currentRow][col] = true;
+            columnData[col] = true;
+            forwardSlash[currentRow + col] = true;
+            backSlash[currentRow - col + n - 1] = true;
+            backTracking(n, currentRow + 1, board, columnData, forwardSlash, backSlash, res);
+            // 回溯
+            board[currentRow][col] = false;
+            columnData[col] = false;
+            forwardSlash[currentRow + col] = false;
+            backSlash[currentRow - col + n - 1] = false;
+        }
+    }
+}
+
+private boolean isQueensOkII(int n, int checkRow, int checkCol, boolean[] columnData, boolean[] forwardSlash, boolean[] backSlash) {
+    return !columnData[checkCol] && !forwardSlash[checkRow + checkCol] && !backSlash[checkRow - checkCol + n - 1];
+}
+
+private List<String> serializeBoard(boolean[][] board) {
+    List<String> res = new ArrayList<>(board.length);
+    for (boolean[] booleans : board) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (boolean aBoolean : booleans) {
+            if (aBoolean) {
+                stringBuilder.append("Q");
+            } else {
+                stringBuilder.append(".");
+            }
+        }
+        res.add(stringBuilder.toString());
+    }
+    return res;
+}
+```

@@ -676,6 +676,38 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
     }
 
+    public List<List<String>> solveNQueensII(int n) {
+        List<List<String>> res = new LinkedList<>();
+        backTrackingII(n, 0, new boolean[n][n], new boolean[n], new boolean[2 * n - 1], new boolean[2 * n - 1], res);
+        return res;
+    }
+
+    private void backTrackingII(int n, int currentRow, boolean[][] board, boolean[] columnData, boolean[] forwardSlash, boolean[] backSlash, List<List<String>> res) {
+        if (currentRow == n) {
+            res.add(serializeBoard(board));
+            return;
+        }
+        for (int col = 0; col < n; col++) {
+            // 尝试将皇后放到col列
+            if (isQueensOkII(n, currentRow, col, columnData, forwardSlash, backSlash)) {
+                board[currentRow][col] = true;
+                columnData[col] = true;
+                forwardSlash[currentRow + col] = true;
+                backSlash[currentRow - col + n - 1] = true;
+                backTrackingII(n, currentRow + 1, board, columnData, forwardSlash, backSlash, res);
+                // 回溯
+                board[currentRow][col] = false;
+                columnData[col] = false;
+                forwardSlash[currentRow + col] = false;
+                backSlash[currentRow - col + n - 1] = false;
+            }
+        }
+    }
+
+    private boolean isQueensOkII(int n, int checkRow, int checkCol, boolean[] columnData, boolean[] forwardSlash, boolean[] backSlash) {
+        return !columnData[checkCol] && !forwardSlash[checkRow + checkCol] && !backSlash[checkRow - checkCol + n - 1];
+    }
+
     /**
      * 这个函数是最繁琐的，判断前 checkRow 行是否有冲突
      * 我走进了一个误区！！！
