@@ -1106,7 +1106,54 @@ private void solveFloodFill(char[][] board, int i, int j) {
 }
 ```
 这题很容易陷入“从里面开始DFS到边界”的思维惯性，导致题解很复杂！很多时候我们要反转思路，“从外向里”搜索，找出反向的解，也就求得正向的解啦！
-`todo`也可以看看我以前提交的“从里到外”的低效的搜索方法，也有一定参考意义，可能可用于问题417的解答，今晚再细看。
+也可以看看我以前提交的“从里到外”的低的搜索方法，也有一定参考意义，可能可用于问题417的解答，代码如下：
+```java
+private boolean[][] isVisited;
+
+public void solve(char[][] board) {
+    isVisited = new boolean[board.length][board[0].length];
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            if (board[i][j] == 'O' && !isVisited[i][j] && isSurroundedByX(board, i, j)) {
+                floodFill(board, i, j);
+            }
+        }
+    }
+}
+
+private boolean isSurroundedByX(char[][] board, int row, int col) {
+    if (row < 0 || row == board.length || col < 0 || col == board[0].length) {
+        return false;
+    }
+    if (board[row][col] == 'X') {
+        return true;
+    }
+    // 这里断开了 A->B\B->A 这样的递归死循环，因为也不存在A通过B流出海洋且B通过A流出海洋这样的矛盾情况
+    if (isVisited[row][col]) {
+        return true;
+    }
+    isVisited[row][col] = true;
+    boolean r1 = isSurroundedByX(board, row - 1, col);
+    boolean r3 = isSurroundedByX(board, row + 1, col);
+    boolean r2 = isSurroundedByX(board, row, col - 1);
+    boolean r4 = isSurroundedByX(board, row, col + 1);
+    return r1 && r2 && r3 && r4; 
+}
+
+private void floodFill(char[][] board, int row, int col) {
+    if (row < 0 || row == board.length || col < 0 || col == board[0].length) {
+        return;
+    }
+    if (board[row][col] != 'O') {
+        return;
+    }
+    board[row][col] = 'X';
+    floodFill(board, row - 1, col);
+    floodFill(board, row + 1, col);
+    floodFill(board, row, col - 1);
+    floodFill(board, row, col + 1);
+}
+```
 
 ###### 问题417：pacific atlantic water flow
 
