@@ -764,4 +764,34 @@ public class ProducerAlgRecursionBacktrackingTest {
         return res;
     }
 
+    public int totalNQueens(int n) {
+        columnDate = new boolean[n];
+        forwardSlash = new boolean[2 * n - 1];
+        backSlash = new boolean[2 * n - 1];
+        return totalNQueensHelper(n, 0);
+    }
+
+    boolean[] columnDate;
+    boolean[] forwardSlash;
+    boolean[] backSlash;
+
+    private int totalNQueensHelper(int n, int currentRow) {
+        if (currentRow == n) {
+            return 1;
+        }
+        int res = 0;
+        for (int col = 0; col < n; col++) {
+            if (!columnDate[col] && !forwardSlash[currentRow + col] && !backSlash[currentRow - col + n - 1]) {
+                columnDate[col] = true;
+                forwardSlash[currentRow + col] = true;
+                backSlash[currentRow - col + n - 1] = true;
+                res += totalNQueensHelper(n, currentRow + 1);
+                columnDate[col] = false;
+                forwardSlash[currentRow + col] = false;
+                backSlash[currentRow - col + n - 1] = false;
+            }
+        }
+        return res;
+    }
+
 }

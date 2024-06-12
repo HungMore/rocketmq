@@ -30,7 +30,7 @@
 1. 排列问题（问题46、47）
 2. 组合问题（问题77等）
 3. flood-fill算法问题（问题200等）
-4. 回溯法也是经典（传统）人工智能的基础（问题51等）（但是现在的人工智能如机器学习之类的，基础就不是搜索了）
+4. 回溯法也是经典（传统）人工智能的基础（问题51等智力游戏问题）（但是现在的人工智能如机器学习之类的，基础就不是搜索了）
 
 ###### 问题17：letter combinations of phone number
 
@@ -1388,3 +1388,51 @@ private List<String> serializeBoard(boolean[][] board) {
     return res;
 }
 ```
+bobo老师说N皇后还有很多优化思路，可以网上查查看。`todo`
+
+###### 问题52：N-Queens II
+
+n皇后问题研究的是如何将n个皇后放置在n×n的棋盘上，并且使皇后彼此之间不能相互攻击。
+给你一个整数n，返回n皇后问题不同的解决方案的数量。
+示例 1：
+输入：n = 4
+输出：2
+```java
+public int totalNQueens(int n);
+```
+
+这题是问题51的简易版，只需要答案的个数，而不需要每个答案的摆放位置。直接写代码吧：
+```java
+public int totalNQueens(int n) {
+    columnDate = new boolean[n];
+    forwardSlash = new boolean[2 * n - 1];
+    backSlash = new boolean[2 * n - 1];
+    return totalNQueensHelper(n, 0);
+}
+
+boolean[] columnDate;
+boolean[] forwardSlash;
+boolean[] backSlash;
+
+private int totalNQueensHelper(int n, int currentRow) {
+    if (currentRow == n) {
+        return 1;
+    }
+    int res = 0;
+    for (int col = 0; col < n; col++) {
+        if (!columnDate[col] && !forwardSlash[currentRow + col] && !backSlash[currentRow - col + n - 1]) {
+            columnDate[col] = true;
+            forwardSlash[currentRow + col] = true;
+            backSlash[currentRow - col + n - 1] = true;
+            res += totalNQueensHelper(n, currentRow + 1);
+            columnDate[col] = false;
+            forwardSlash[currentRow + col] = false;
+            backSlash[currentRow - col + n - 1] = false;
+        }
+    }
+    return res;
+}
+```
+
+###### 问题37：sudoku solver
+
