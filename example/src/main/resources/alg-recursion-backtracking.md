@@ -1131,7 +1131,46 @@ public List<List<Integer>> pacificAtlantic(int[][] heights);
 对于上边界和左边界的单元格来说，我们反向“flood fill”搜索出能从当前边界单元格流出的所有内部单元格，进而求得所有可以流出太平洋的单元格。大西洋也是同理，从下边界和右边界进行“flood fill”搜索，进而综合求得问题的解。
 代码：
 ```java
+public List<List<Integer>> pacificAtlantic(int[][] heights) {
+    boolean[][] canFlow2Pacific = new boolean[heights.length][heights[0].length];
+    boolean[][] canFlow2Atlantic = new boolean[heights.length][heights[0].length];
+    for (int i = 0; i < heights.length; i++) {
+        oceanFloodFill(heights, i, 0, canFlow2Pacific);
+        oceanFloodFill(heights, i, heights[0].length - 1, canFlow2Atlantic);
+    }
+    for (int j = 0; j < heights[0].length; j++) {
+        oceanFloodFill(heights, 0, j, canFlow2Pacific);
+        oceanFloodFill(heights, heights.length - 1, j, canFlow2Atlantic);
+    }
+    List<List<Integer>> res = new LinkedList<>();
+    for (int i = 0; i < heights.length; i++) {
+        for (int j = 0; j < heights[0].length; j++) {
+            if (canFlow2Pacific[i][j] && canFlow2Atlantic[i][j]) {
+                ArrayList<Integer> integers = new ArrayList<>(2);
+                integers.add(i);
+                integers.add(j);
+                res.add(integers);
+            }
+        }
+    }
+    return res;
+}
 
+int[][] d = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+private void oceanFloodFill(int[][] heights, int i, int j, boolean[][] canFlow2Ocean) {
+    if (canFlow2Ocean[i][j]) {
+        return;
+    }
+    canFlow2Ocean[i][j] = true;
+    for (int[] ints : d) {
+        int newI = i + ints[0];
+        int newJ = j + ints[1];
+        if (newI >= 0 && newI < heights.length && newJ >= 0 && newJ < heights[0].length && heights[newI][newJ] >= heights[i][j]) {
+            oceanFloodFill(heights, newI, newJ, canFlow2Ocean);
+        }
+    }
+}
 ```
 
 
