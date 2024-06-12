@@ -30,6 +30,7 @@
 1. 排列问题（问题46、47）
 2. 组合问题（问题77等）
 3. flood-fill算法问题（问题200等）
+4. 回溯法也是经典（传统）人工智能的基础（问题51等）（但是现在的人工智能如机器学习之类的，基础就不是搜索了）
 
 ###### 问题17：letter combinations of phone number
 
@@ -1224,4 +1225,111 @@ private void oceanFloodFill(int[][] heights, int i, int j, boolean[][] canFlow2O
 遍历过程中可以使用访问标记位进行剪枝优化。
 但是这样对于每个(i,j)要判断的东西比较多（写下文字的当下都还没理清），复杂度比较高，还是“从外到里”更简单。
 
-8.8
+###### 问题51：N-Queens
+
+按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。
+n皇后问题研究的是如何将n个皇后放置在n×n的棋盘上，并且使皇后彼此之间不能相互攻击。
+给你一个整数n，返回所有不同的n皇后问题的解决方案。
+每一种解法包含一个不同的n皇后问题的棋子放置方案，该方案中'Q'和'.'分别代表了皇后和空位。
+示例 1：
+输入：n = 4
+输出：[
+[
+".Q..",
+"...Q",
+"Q...",
+"..Q."],
+[
+"..Q.",
+"Q...",
+"...Q",
+".Q.."]]
+解释：如上图所示，4皇后问题存在两个不同的解法。
+```java
+public List<List<String>> solveNQueens(int n);
+```
+
+这是个典型的利用回溯法进行暴力搜索的题。对于n个皇后，我们只能一个一个皇后地不断进行尝试。
+使用一个nxn的二维数组表示棋盘，然后我们一行一行地尝试。
+对于当前的第i行（也就是第i+1个皇后），我们尝试将其放在第j列，然后判断和前面的i-1行有没有冲突，如果没有，往下尝试第i+1行；如果有，往右尝试第j+1列
+如果第i行尝试了所有的列都存在冲突，回溯到第i-1行，重新摆放第i-1行的皇后，不断回溯、下探，直至n个皇后都放下或者第0行已经尝试过摆放在第n-1列。
+代码：
+```java
+public List<List<String>> solveNQueens(int n) {
+    List<List<String>> res = new LinkedList<>();
+    backTracking(n, 0, new boolean[n][n], res);
+    return res;
+}
+
+private void backTracking(int n, int currentRow, boolean[][] board, List<List<String>> res) {
+    if (currentRow == n) {
+        res.add(serializeBoard(board));
+        return;
+    }
+    for (int col = 0; col < n; col++) {
+        // 尝试将皇后放到col列
+        if (isQueensOk(board, currentRow, col)) {
+            board[currentRow][col] = true;
+            backTracking(n, currentRow + 1, board, res);
+            // 回溯
+            board[currentRow][col] = false;
+        }
+    }
+}
+
+/**
+ * 这个函数是最繁琐的，判断前 checkRow 行是否有冲突
+ * 我走进了一个误区！！！
+ * 其实前面 checkRow-1 行是肯定没有冲突的，完全不需要再判断
+ * 我只需要判断新加进来的第 checkRow 行这个元素和前面的有没有冲突就可以了，这样整个判断就简单很多了！
+ * 这个就类似于我做 问题200 的时候犯下的错误。。。不需要再判断已有元素，只需要判断当前新加入的元素对已有元素的影响
+ * <p>
+ * 所以现在我只需要从列，正斜线、反斜线三个方向判断就可以了
+ *
+ * @param board
+ * @param checkRow
+ * @return
+ */
+private boolean isQueensOk(boolean[][] board, int checkRow, int checkCol) {
+    for (int i = 0; i < checkRow; i++) {
+        if (board[i][checkCol]) {
+            return false;
+        }
+    }
+    int row = checkRow - 1;
+    int col = checkCol + 1;
+    while (row >= 0 && col < board[0].length) {
+        if (board[row][col]) {
+            return false;
+        }
+        row--;
+        col++;
+    }
+    row = checkRow - 1;
+    col = checkCol - 1;
+    while (row >= 0 && col >= 0) {
+        if (board[row][col]) {
+            return false;
+        }
+        row--;
+        col--;
+    }
+    return true;
+}
+
+private List<String> serializeBoard(boolean[][] board) {
+    List<String> res = new ArrayList<>(board.length);
+    for (boolean[] booleans : board) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (boolean aBoolean : booleans) {
+            if (aBoolean) {
+                stringBuilder.append("Q");
+            } else {
+                stringBuilder.append(".");
+            }
+        }
+        res.add(stringBuilder.toString());
+    }
+    return res;
+}
+```

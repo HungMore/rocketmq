@@ -654,4 +654,82 @@ public class ProducerAlgRecursionBacktrackingTest {
         }
     }
 
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new LinkedList<>();
+        backTracking(n, 0, new boolean[n][n], res);
+        return res;
+    }
+
+    private void backTracking(int n, int currentRow, boolean[][] board, List<List<String>> res) {
+        if (currentRow == n) {
+            res.add(serializeBoard(board));
+            return;
+        }
+        for (int col = 0; col < n; col++) {
+            // 尝试将皇后放到col列
+            if (isQueensOk(board, currentRow, col)) {
+                board[currentRow][col] = true;
+                backTracking(n, currentRow + 1, board, res);
+                // 回溯
+                board[currentRow][col] = false;
+            }
+        }
+    }
+
+    /**
+     * 这个函数是最繁琐的，判断前 checkRow 行是否有冲突
+     * 我走进了一个误区！！！
+     * 其实前面 checkRow-1 行是肯定没有冲突的，完全不需要再判断
+     * 我只需要判断新加进来的第 checkRow 行这个元素和前面的有没有冲突就可以了，这样整个判断就简单很多了！
+     * 这个就类似于我做 问题200 的时候犯下的错误。。。不需要再判断已有元素，只需要判断当前新加入的元素对已有元素的影响
+     * <p>
+     * 所以现在我只需要从列，正斜线、反斜线三个方向判断就可以了
+     *
+     * @param board
+     * @param checkRow
+     * @return
+     */
+    private boolean isQueensOk(boolean[][] board, int checkRow, int checkCol) {
+        for (int i = 0; i < checkRow; i++) {
+            if (board[i][checkCol]) {
+                return false;
+            }
+        }
+        int row = checkRow - 1;
+        int col = checkCol + 1;
+        while (row >= 0 && col < board[0].length) {
+            if (board[row][col]) {
+                return false;
+            }
+            row--;
+            col++;
+        }
+        row = checkRow - 1;
+        col = checkCol - 1;
+        while (row >= 0 && col >= 0) {
+            if (board[row][col]) {
+                return false;
+            }
+            row--;
+            col--;
+        }
+        return true;
+    }
+
+    private List<String> serializeBoard(boolean[][] board) {
+        List<String> res = new ArrayList<>(board.length);
+        for (boolean[] booleans : board) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (boolean aBoolean : booleans) {
+                if (aBoolean) {
+                    stringBuilder.append("Q");
+                } else {
+                    stringBuilder.append(".");
+                }
+            }
+            res.add(stringBuilder.toString());
+        }
+        return res;
+    }
+
 }
