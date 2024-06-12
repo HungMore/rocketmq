@@ -1436,3 +1436,5 @@ private int totalNQueensHelper(int n, int currentRow) {
 
 ###### 问题37：sudoku solver
 
+bobo老师说数独问题也有很多优化的思路，可以搜搜相关论文。
+关于经典人工智能领域对搜索树的剪枝优化，可以看看人工智能的书籍学习一下。`todo`
