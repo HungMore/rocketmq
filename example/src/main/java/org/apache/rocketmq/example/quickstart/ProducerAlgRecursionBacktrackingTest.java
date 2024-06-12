@@ -794,4 +794,73 @@ public class ProducerAlgRecursionBacktrackingTest {
         return res;
     }
 
+    boolean isFinished;
+    // 记录某个数字在某行是否已经使用
+    boolean[][] rowNumberUsed;
+    // 记录某个数字在某列是否已经使用
+    boolean[][] colNumberUsed;
+    // 记录某个数字在某个3x3的单元内是否已经使用
+    boolean[][] unitNumberUsed;
+    // 空格的点的坐标集合
+    Deque<int[]> dots;
+
+    public void solveSudoku(char[][] board) {
+        isFinished = false;
+        rowNumberUsed = new boolean[9][9];
+        colNumberUsed = new boolean[9][9];
+        unitNumberUsed = new boolean[9][9];
+        dots = new LinkedList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == '.') {
+                    dots.addLast(new int[]{i, j});
+                } else {
+                    rowNumberUsed[i][board[i][j] - '1'] = true;
+                    colNumberUsed[j][board[i][j] - '1'] = true;
+                    unitNumberUsed[calculateUnit(i, j)][board[i][j] - '1'] = true;
+                }
+            }
+        }
+        sudokuHelper(board);
+    }
+
+    // 通过横纵坐标计算属于哪个3x3的单元
+    private int calculateUnit(int row, int col) {
+        return row / 3 * 3 + col / 3;
+    }
+
+    private void sudokuHelper(char[][] board) {
+        if (dots.isEmpty()) {
+            isFinished = true;
+            return;
+        }
+        int[] dot = dots.removeFirst();
+        int i = dot[0];
+        int j = dot[1];
+        for (char number = '1'; number <= '9'; number++) {
+            if (sudokuMakeSense(i, j, number)) {
+                board[i][j] = number;
+                rowNumberUsed[i][number - '1'] = true;
+                colNumberUsed[j][number - '1'] = true;
+                unitNumberUsed[calculateUnit(i, j)][number - '1'] = true;
+                sudokuHelper(board);
+                if (isFinished) {
+                    return;
+                }
+                board[i][j] = '.';
+                rowNumberUsed[i][number - '1'] = false;
+                colNumberUsed[j][number - '1'] = false;
+                unitNumberUsed[calculateUnit(i, j)][number - '1'] = false;
+            }
+        }
+        dots.addFirst(dot);
+    }
+
+    private boolean sudokuMakeSense(int i, int j, char number) {
+        boolean rowUsed = rowNumberUsed[i][number - '1'];
+        boolean colUsed = colNumberUsed[j][number - '1'];
+        boolean unitUsed = unitNumberUsed[calculateUnit(i, j)][number - '1'];
+        return !rowUsed && !colUsed && !unitUsed;
+    }
+
 }

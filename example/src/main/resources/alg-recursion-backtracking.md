@@ -1436,5 +1436,89 @@ private int totalNQueensHelper(int n, int currentRow) {
 
 ###### 问题37：sudoku solver
 
+编写一个程序，通过填充空格来解决数独问题。
+数独的解法需遵循如下规则：
+数字 1-9 在每一行只能出现一次。
+数字 1-9 在每一列只能出现一次。
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+数独部分空格内已填入了数字，空白格用 '.' 表示。
+```java
+public void solveSudoku(char[][] board);
+```
+
+这题也是用回溯法暴力搜索咯。
+遍历数独，找到第一个空格，然后尝试在空格中填入1，如果make sense，往下找下一个空格继续尝试填入；否则填入2...一直尝试到9。直至数独中没有空格或者1~9都走不通。
+代码：
+```java
+boolean isFinished;
+// 记录某个数字在某行是否已经使用
+boolean[][] rowNumberUsed;
+// 记录某个数字在某列是否已经使用
+boolean[][] colNumberUsed;
+// 记录某个数字在某个3x3的单元内是否已经使用
+boolean[][] unitNumberUsed;
+// 空格的点的坐标集合
+Deque<int[]> dots;
+
+public void solveSudoku(char[][] board) {
+    isFinished = false;
+    rowNumberUsed = new boolean[9][9];
+    colNumberUsed = new boolean[9][9];
+    unitNumberUsed = new boolean[9][9];
+    dots = new LinkedList<>();
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            if (board[i][j] == '.') {
+                dots.addLast(new int[]{i, j});
+            } else {
+                rowNumberUsed[i][board[i][j] - '1'] = true;
+                colNumberUsed[j][board[i][j] - '1'] = true;
+                unitNumberUsed[calculateUnit(i, j)][board[i][j] - '1'] = true;
+            }
+        }
+    }
+    sudokuHelper(board);
+}
+
+// 通过横纵坐标计算属于哪个3x3的单元
+private int calculateUnit(int row, int col) {
+    return row / 3 * 3 + col / 3;
+}
+
+private void sudokuHelper(char[][] board) {
+    if (dots.isEmpty()) {
+        isFinished = true;
+        return;
+    }
+    int[] dot = dots.removeFirst();
+    int i = dot[0];
+    int j = dot[1];
+    for (char number = '1'; number <= '9'; number++) {
+        if (sudokuMakeSense(i, j, number)) {
+            board[i][j] = number;
+            rowNumberUsed[i][number - '1'] = true;
+            colNumberUsed[j][number - '1'] = true;
+            unitNumberUsed[calculateUnit(i, j)][number - '1'] = true;
+            sudokuHelper(board);
+            if (isFinished) {
+                return;
+            }
+            board[i][j] = '.';
+            rowNumberUsed[i][number - '1'] = false;
+            colNumberUsed[j][number - '1'] = false;
+            unitNumberUsed[calculateUnit(i, j)][number - '1'] = false;
+        }
+    }
+    dots.addFirst(dot);
+}
+
+private boolean sudokuMakeSense(int i, int j, char number) {
+    boolean rowUsed = rowNumberUsed[i][number - '1'];
+    boolean colUsed = colNumberUsed[j][number - '1'];
+    boolean unitUsed = unitNumberUsed[calculateUnit(i, j)][number - '1'];
+    return !rowUsed && !colUsed && !unitUsed;
+}
+```
+
 bobo老师说数独问题也有很多优化的思路，可以搜搜相关论文。
 关于经典人工智能领域对搜索树的剪枝优化，可以看看人工智能的书籍学习一下。`todo`
