@@ -2,8 +2,7 @@ package org.apache.rocketmq.example.quickstart;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author mo
@@ -26,12 +25,22 @@ public class ProducerAlgDynamicProgrammingTest {
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
 
-        test.fib(5);
-        System.out.println(test.count);
-
-        test.count = 0;
-        test.fibMemo(5);
-        System.out.println(test.count);
+//        test.fib(5);
+//        System.out.println(test.count);
+//
+//        test.count = 0;
+//        test.fibMemo(5);
+//        System.out.println(test.count);
+        Integer[] ints0 = {2};
+        Integer[] ints1 = {3, 4};
+        Integer[] ints2 = {6, 5, 7};
+        Integer[] ints3 = {4, 1, 8, 3};
+        LinkedList<List<Integer>> list = new LinkedList<>();
+        list.add(Arrays.asList(ints0));
+        list.add(Arrays.asList(ints1));
+        list.add(Arrays.asList(ints2));
+        list.add(Arrays.asList(ints3));
+        System.out.println(test.minimumTotal(list));
     }
 
     // 计算执行fib函数的次数
@@ -68,6 +77,34 @@ public class ProducerAlgDynamicProgrammingTest {
             dp[i] = dp[i - 1] + dp[i - 2];
         }
         return dp[n];
+    }
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int row = 0;
+        int[][] dp = new int[triangle.size()][triangle.size()];
+        for (List<Integer> rowList : triangle) {
+            int col = 0;
+            for (Integer i : rowList) {
+                if (col == 0) {
+                    if (row == 0) {
+                        dp[row][col] = i;
+                    } else {
+                        dp[row][col] = dp[row - 1][col] + i;
+                    }
+                } else if (col == row) {
+                    dp[row][col] = i + dp[row - 1][col - 1];
+                } else {
+                    dp[row][col] = i + Math.min(dp[row - 1][col], dp[row - 1][col - 1]);
+                }
+                col++;
+            }
+            row++;
+        }
+        int res = Integer.MAX_VALUE;
+        for (int temp : dp[dp.length - 1]) {
+            res = Math.min(res, temp);
+        }
+        return res;
     }
 
 }
