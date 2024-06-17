@@ -2,7 +2,9 @@ package org.apache.rocketmq.example.quickstart;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author mo
@@ -31,16 +33,20 @@ public class ProducerAlgDynamicProgrammingTest {
 //        test.count = 0;
 //        test.fibMemo(5);
 //        System.out.println(test.count);
-        Integer[] ints0 = {2};
-        Integer[] ints1 = {3, 4};
-        Integer[] ints2 = {6, 5, 7};
-        Integer[] ints3 = {4, 1, 8, 3};
-        LinkedList<List<Integer>> list = new LinkedList<>();
-        list.add(Arrays.asList(ints0));
-        list.add(Arrays.asList(ints1));
-        list.add(Arrays.asList(ints2));
-        list.add(Arrays.asList(ints3));
-        System.out.println(test.minimumTotal(list));
+
+//        Integer[] ints0 = {2};
+//        Integer[] ints1 = {3, 4};
+//        Integer[] ints2 = {6, 5, 7};
+//        Integer[] ints3 = {4, 1, 8, 3};
+//        LinkedList<List<Integer>> list = new LinkedList<>();
+//        list.add(Arrays.asList(ints0));
+//        list.add(Arrays.asList(ints1));
+//        list.add(Arrays.asList(ints2));
+//        list.add(Arrays.asList(ints3));
+//        System.out.println(test.minimumTotal(list));
+
+        System.out.println(test.integerBreak(10));
+        System.out.println(test.integerBreak(2));
     }
 
     // 计算执行fib函数的次数
@@ -123,6 +129,19 @@ public class ProducerAlgDynamicProgrammingTest {
             }
         }
         return dp[m - 1][n - 1];
+    }
+
+    public int integerBreak(int n) {
+        int[] dp = new int[n + 1];
+        for (int i = 2; i <= n; i++) {
+            int res = Integer.MIN_VALUE;
+            for (int j = 1; j < i; j++) {
+                int temp = Math.max(j * (i - j), j * dp[i - j]);
+                res = Math.max(temp, res);
+            }
+            dp[i] = res;
+        }
+        return dp[n];
     }
 
 }
