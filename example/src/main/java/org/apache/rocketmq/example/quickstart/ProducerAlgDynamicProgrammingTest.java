@@ -258,6 +258,20 @@ public class ProducerAlgDynamicProgrammingTest {
         return res;
     }
 
+    public int maxProfit(int[] prices) {
+        int[] dp = new int[prices.length + 1];
+        dp[0] = 0;
+        dp[1] = 0;
+        for (int i = 2; i <= prices.length; i++) {
+            int res = dp[i - 1];
+            for (int j = 0; j < i - 1; j++) {
+                res = Math.max(res, prices[i - 1] - prices[j] + (j >= 1 ? dp[j - 1] : 0));
+            }
+            dp[i] = res;
+        }
+        return dp[prices.length];
+    }
+
 
     public static class TreeNode {
         int val;
