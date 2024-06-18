@@ -225,4 +225,56 @@ public class ProducerAlgDynamicProgrammingTest {
         return Math.max(robI(Arrays.copyOf(nums, nums.length - 1)), robI(Arrays.copyOfRange(nums, 1, nums.length)));
     }
 
+    // memo1保存canRobRoot为true的子问题的解
+    private Map<TreeNode, Integer> memo1;
+    // memo2保存canRobRoot为false的子问题的解
+    private Map<TreeNode, Integer> memo2;
+
+    public int rob(TreeNode root) {
+        memo1 = new HashMap<>();
+        memo2 = new HashMap<>();
+        return robHelper(root, true);
+    }
+
+    private int robHelper(TreeNode root, boolean canRobRoot) {
+        if (root == null) {
+            return 0;
+        }
+        Integer res;
+        if (canRobRoot) {
+            res = memo1.get(root);
+            if (res == null) {
+                res = Math.max(root.val + robHelper(root.left, false) + robHelper(root.right, false),
+                        robHelper(root.left, true) + robHelper(root.right, true));
+            }
+            memo1.put(root, res);
+        } else {
+            res = memo2.get(root);
+            if (res == null) {
+                res = robHelper(root.left, true) + robHelper(root.right, true);
+            }
+            memo2.put(root, res);
+        }
+        return res;
+    }
+
+
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
 }
