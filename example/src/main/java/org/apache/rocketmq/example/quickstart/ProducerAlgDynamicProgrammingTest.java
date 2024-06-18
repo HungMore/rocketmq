@@ -2,6 +2,7 @@ package org.apache.rocketmq.example.quickstart;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,7 +201,7 @@ public class ProducerAlgDynamicProgrammingTest {
         return dp[m - 1][n - 1];
     }
 
-    public int rob(int[] nums) {
+    public int robI(int[] nums) {
         if (nums.length == 0) {
             return 0;
         }
@@ -211,6 +212,17 @@ public class ProducerAlgDynamicProgrammingTest {
             dp[i] = Math.max(nums[i - 1] + dp[i - 2], dp[i - 1]);
         }
         return dp[nums.length];
+    }
+
+    public int robII(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+
+        return Math.max(robI(Arrays.copyOf(nums, nums.length - 1)), robI(Arrays.copyOfRange(nums, 1, nums.length)));
     }
 
 }
