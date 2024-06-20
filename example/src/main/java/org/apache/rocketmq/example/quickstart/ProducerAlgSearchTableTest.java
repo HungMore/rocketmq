@@ -12,11 +12,11 @@ public class ProducerAlgSearchTableTest {
     public static void main(String[] args) throws Exception {
         ProducerAlgSearchTableTest producerAlgSearchTableTest = new ProducerAlgSearchTableTest();
         System.out.println(producerAlgSearchTableTest.containsNearbyAlmostDuplicate4(new int[]{-3, 3}, 2, 4));
-        System.out.println(-3/4);
-        System.out.println(-3.0/4);
-        System.out.println(Math.floor(-3.0/4));
-        System.out.println((int)Math.floor(-3.0/4));
-        System.out.println((int)(-3.0/4));
+        System.out.println(-3 / 4);
+        System.out.println(-3.0 / 4);
+        System.out.println(Math.floor(-3.0 / 4));
+        System.out.println((int) Math.floor(-3.0 / 4));
+        System.out.println((int) (-3.0 / 4));
 //        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -756,4 +756,77 @@ public class ProducerAlgSearchTableTest {
             return (num + 1) / (valueDiff + 1) - 1;
         }
     }
+
+
+    /**
+     * 直接暴力求解吧，两层循环，O(n^2)复杂度
+     *
+     * @param nums
+     * @return
+     */
+    public int countBeautifulPairs(int[] nums) {
+        int[][] firstNumberAndLastNumber = getNumberFirstNumberAndLastNumber(nums);
+        int[] firstNumber = firstNumberAndLastNumber[0];
+        int[] lastNumber = firstNumberAndLastNumber[1];
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (isPrime(firstNumber[i], lastNumber[j])) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+
+    private int[][] getNumberFirstNumberAndLastNumber(int[] nums) {
+        int[][] res = new int[2][nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            int temp = nums[i];
+            int lastNumber = temp % 10;
+            res[1][i] = lastNumber;
+            while (temp >= 10) {
+                temp /= 10;
+            }
+            res[0][i] = temp;
+        }
+        return res;
+    }
+
+    private boolean isPrime(int i, int j) {
+        int max, min;
+        if (i > j) {
+            max = i;
+            min = j;
+        } else {
+            max = j;
+            min = i;
+        }
+        if (min == 1) {
+            return true;
+        }
+        if (min == 2) {
+            return max == 3 || max == 5 || max == 7 || max == 9;
+        }
+        if (min == 3) {
+            return max == 4 || max == 5 || max == 7 || max == 8;
+        }
+        if (min == 4) {
+            return max == 5 || max == 7 || max == 9;
+        }
+        if (min == 5) {
+            return max != 5;
+        }
+        if (min == 6) {
+            return max == 7;
+        }
+        if (min == 7) {
+            return max == 8 || max == 9;
+        }
+        if (min == 8) {
+            return max == 9;
+        }
+        return false;
+    }
+
 }
