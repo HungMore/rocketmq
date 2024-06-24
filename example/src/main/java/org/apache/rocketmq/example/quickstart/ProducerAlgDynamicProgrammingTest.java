@@ -46,8 +46,10 @@ public class ProducerAlgDynamicProgrammingTest {
 //        list.add(Arrays.asList(ints3));
 //        System.out.println(test.minimumTotal(list));
 
-        System.out.println(test.integerBreak(10));
-        System.out.println(test.integerBreak(2));
+//        System.out.println(test.integerBreak(10));
+//        System.out.println(test.integerBreak(2));
+
+        System.out.println(test.canPartition(new int[]{1, 5, 11, 5}));
     }
 
     // 计算执行fib函数的次数
@@ -270,6 +272,33 @@ public class ProducerAlgDynamicProgrammingTest {
             dp[i] = res;
         }
         return dp[prices.length];
+    }
+
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (sum % 2 != 0) {
+            return false;
+        }
+        int half = sum / 2;
+        boolean[][] dp = new boolean[nums.length + 1][half + 1];
+        for (int i = 0; i <= nums.length; i++) {
+            dp[i][0] = true;
+        }
+        for (int j = 1; j <= half; j++) {
+            dp[0][j] = false;
+        }
+        for (int i = 1; i <= nums.length; i++) {
+            for (int j = 1; j <= half; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (j >= nums[i - 1]) {
+                    dp[i][j] = dp[i][j] || dp[i - 1][j - nums[i - 1]];
+                }
+            }
+        }
+        return dp[nums.length][half];
     }
 
 
