@@ -757,6 +757,39 @@ public class ProducerAlgSearchTableTest {
         }
     }
 
+    /**
+     * 找出最长等值子数组
+     * [1,3,2,3,1,3]
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public int longestEqualSubarray(List<Integer> nums, int k) {
+        // key为nums[i]，value为nums[i]对应的下标集合
+        Map<Integer, List<Integer>> num2IndexList = new HashMap<>();
+        for (int i = 0; i < nums.size(); i++) {
+            num2IndexList.computeIfAbsent(nums.get(i), key -> new ArrayList<>()).add(i);
+        }
+        // 1-> 0,4
+        // 2-> 2
+        // 3-> 1,3,5
+        int res = 1;
+        for (List<Integer> indexList : num2IndexList.values()) {
+            if (indexList.size() == 1) {
+                continue;
+            }
+            int leftCursor = 0;
+            for (int rightCursor = 1; rightCursor < indexList.size(); rightCursor++) {
+                while (leftCursor < rightCursor && indexList.get(rightCursor) - indexList.get(leftCursor) + 1 - (rightCursor - leftCursor + 1) > k) {
+                    leftCursor++;
+                }
+                res = Math.max(res, rightCursor - leftCursor + 1);
+            }
+        }
+        return res;
+    }
+
 
     /**
      * 直接暴力求解吧，两层循环，O(n^2)复杂度
