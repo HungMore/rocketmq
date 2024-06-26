@@ -49,7 +49,9 @@ public class ProducerAlgDynamicProgrammingTest {
 //        System.out.println(test.integerBreak(10));
 //        System.out.println(test.integerBreak(2));
 
-        System.out.println(test.canPartition(new int[]{1, 5, 11, 5}));
+//        System.out.println(test.canPartition(new int[]{1, 5, 11, 5}));
+
+        System.out.println(test.combinationSum4(new int[]{1, 2, 3}, 4));
     }
 
     // 计算执行fib函数的次数
@@ -326,6 +328,28 @@ public class ProducerAlgDynamicProgrammingTest {
             }
         }
         return dp[coins.length][amount] == Integer.MAX_VALUE ? -1 : dp[coins.length][amount];
+    }
+
+    public int combinationSum4(int[] nums, int target) {
+        int[][] dp = new int[nums.length + 1][target + 1];
+        for (int i = 0; i <= nums.length; i++) {
+            dp[i][0] = 1;
+        }
+        for (int j = 1; j <= target; j++) {
+            dp[0][j] = 0;
+        }
+        for (int i = 1; i <= nums.length; i++) {
+            for (int j = 1; j <= target; j++) {
+                int res = 0;
+                for (int k = 0; k < i; k++) {
+                    if (nums[k] <= j) {
+                        res += dp[i][j - nums[k]];
+                    }
+                }
+                dp[i][j] = res;
+            }
+        }
+        return dp[nums.length][target];
     }
 
 
