@@ -51,7 +51,9 @@ public class ProducerAlgDynamicProgrammingTest {
 
 //        System.out.println(test.canPartition(new int[]{1, 5, 11, 5}));
 
-        System.out.println(test.combinationSum4(new int[]{1, 2, 3}, 4));
+//        System.out.println(test.combinationSum4(new int[]{1, 2, 3}, 4));
+
+        System.out.println(test.findMaxForm(new String[]{"10", "0", "1"}, 1, 1));
     }
 
     // 计算执行fib函数的次数
@@ -352,6 +354,36 @@ public class ProducerAlgDynamicProgrammingTest {
         return dp[nums.length][target];
     }
 
+    public int findMaxForm(String[] strs, int m, int n) {
+        int[][][] dp = new int[strs.length + 1][m + 1][n + 1];
+        for (int i = 1; i <= strs.length; i++) {
+            int[] numberOfZeroAndOne = getNumberOfZeroAndOne(strs[i - 1]);
+            for (int j = 0; j <= m; j++) {
+                for (int k = 0; k <= n; k++) {
+                    if (j >= numberOfZeroAndOne[0] && k >= numberOfZeroAndOne[1]) {
+                        dp[i][j][k] = Math.max(dp[i - 1][j][k], 1 + dp[i - 1][j - numberOfZeroAndOne[0]][k - numberOfZeroAndOne[1]]);
+                    } else {
+                        dp[i][j][k] = dp[i - 1][j][k];
+                    }
+//                    System.out.println(String.format("strs的前 %d 个元素构成的最多 %d 个1、 %d 个0的最大子集长度是 %d", i, j, k, dp[i][j][k]));
+                }
+            }
+        }
+        return dp[strs.length][m][n];
+    }
+
+    private int[] getNumberOfZeroAndOne(String s) {
+        int[] res = new int[2];
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '0') {
+                res[0]++;
+            } else {
+                res[1]++;
+            }
+        }
+        return res;
+    }
 
     public static class TreeNode {
         int val;
