@@ -385,6 +385,31 @@ public class ProducerAlgDynamicProgrammingTest {
         return res;
     }
 
+    private Map<String, Boolean> memoForWordBreak = new HashMap<>();
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if (s.length() == 0) {
+            return true;
+        }
+        Boolean aBoolean = memoForWordBreak.get(s);
+        if (aBoolean == null) {
+            boolean res = false;
+            for (String word : wordDict) {
+                if (s.startsWith(word)) {
+                    boolean recursion = wordBreak(s.substring(word.length()), wordDict);
+                    if (recursion) {
+                        res = true;
+                        break;
+                    }
+                }
+            }
+            aBoolean = res;
+            memoForWordBreak.put(s, aBoolean);
+        }
+        return aBoolean;
+    }
+
+
     public static class TreeNode {
         int val;
         TreeNode left;
