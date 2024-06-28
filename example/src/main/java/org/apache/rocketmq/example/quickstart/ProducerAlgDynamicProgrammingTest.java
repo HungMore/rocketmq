@@ -409,6 +409,32 @@ public class ProducerAlgDynamicProgrammingTest {
         return aBoolean;
     }
 
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        if (target > sum || target < -sum) {
+            return 0;
+        }
+        int[][] dp = new int[nums.length + 1][2 * sum + 1];
+        // sum 是偏移量
+        dp[0][sum] = 1;
+        for (int i = 1; i <= nums.length; i++) {
+            for (int j = -sum; j <= sum; j++) {
+                int res = 0;
+                if (j - nums[i - 1] >= -sum) {
+                    res += dp[i - 1][j - nums[i - 1] + sum];
+                }
+                if (j + nums[i - 1] <= sum) {
+                    res += dp[i - 1][j + nums[i - 1] + sum];
+                }
+                dp[i][j + sum] = res;
+            }
+        }
+        return dp[nums.length][target + sum];
+    }
+
 
     public static class TreeNode {
         int val;
