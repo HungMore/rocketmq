@@ -53,7 +53,10 @@ public class ProducerAlgDynamicProgrammingTest {
 
 //        System.out.println(test.combinationSum4(new int[]{1, 2, 3}, 4));
 
-        System.out.println(test.findMaxForm(new String[]{"10", "0", "1"}, 1, 1));
+//        System.out.println(test.findMaxForm(new String[]{"10", "0", "1"}, 1, 1));
+        System.out.println(test.lengthOfLIS(new int[]{10, 9, 2, 5, 3, 7, 101, 18}));
+        System.out.println(test.lengthOfLIS(new int[]{0, 1, 0, 3, 2, 3}));
+        System.out.println(test.lengthOfLIS(new int[]{7, 7, 7, 7, 7, 7, 7}));
     }
 
     // 计算执行fib函数的次数
@@ -433,6 +436,22 @@ public class ProducerAlgDynamicProgrammingTest {
             }
         }
         return dp[nums.length][target + sum];
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = 1;
+        int res = dp[0];
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[j] < nums[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            res = Math.max(res, dp[i]);
+        }
+        return res;
     }
 
 
