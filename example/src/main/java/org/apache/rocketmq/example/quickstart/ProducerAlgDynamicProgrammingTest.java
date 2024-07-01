@@ -54,9 +54,14 @@ public class ProducerAlgDynamicProgrammingTest {
 //        System.out.println(test.combinationSum4(new int[]{1, 2, 3}, 4));
 
 //        System.out.println(test.findMaxForm(new String[]{"10", "0", "1"}, 1, 1));
-        System.out.println(test.lengthOfLIS(new int[]{10, 9, 2, 5, 3, 7, 101, 18}));
-        System.out.println(test.lengthOfLIS(new int[]{0, 1, 0, 3, 2, 3}));
-        System.out.println(test.lengthOfLIS(new int[]{7, 7, 7, 7, 7, 7, 7}));
+
+//        System.out.println(test.lengthOfLIS(new int[]{10, 9, 2, 5, 3, 7, 101, 18}));
+//        System.out.println(test.lengthOfLIS(new int[]{0, 1, 0, 3, 2, 3}));
+//        System.out.println(test.lengthOfLIS(new int[]{7, 7, 7, 7, 7, 7, 7}));
+
+        System.out.println(test.wiggleMaxLength(new int[]{1, 7, 4, 9, 2, 5}));  //6
+        System.out.println(test.wiggleMaxLength(new int[]{1, 17, 5, 10, 13, 15, 10, 5, 16, 8}));  //7
+        System.out.println(test.wiggleMaxLength(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9}));  //2
     }
 
     // 计算执行fib函数的次数
@@ -454,6 +459,27 @@ public class ProducerAlgDynamicProgrammingTest {
         return res;
     }
 
+
+    public int wiggleMaxLength(int[] nums) {
+        int[] dp = new int[nums.length];
+        int[] dp_up = new int[nums.length];
+        int[] dp_down = new int[nums.length];
+        dp[0] = dp_up[0] = dp_down[0] = 1;
+        int res = 1;
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = dp_up[i] = dp_down[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[j] > nums[i]) {
+                    dp_down[i] = Math.max(dp_down[i], 1 + dp_up[j]);
+                } else if (nums[j] < nums[i]) {
+                    dp_up[i] = Math.max(dp_up[i], 1 + dp_down[j]);
+                }
+            }
+            dp[i] = Math.max(dp_up[i], dp_down[i]);
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+    }
 
     public static class TreeNode {
         int val;
