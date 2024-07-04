@@ -22,6 +22,10 @@ public class ProducerAlgGreedyAlgorithmTest {
 //                "key1",
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
+        int[][] a = {
+                {1,2},{2,3},{3,4},{1,3}
+        };
+        System.out.println(test.eraseOverlapIntervals(a));
     }
 
     public int findContentChildren(int[] g, int[] s) {
@@ -52,6 +56,29 @@ public class ProducerAlgGreedyAlgorithmTest {
             }
         }
         return i == -1;
+    }
+
+    public int eraseOverlapIntervals(int[][] intervals) {
+        Arrays.sort(intervals, (interval1, interval2) -> interval1[0] == interval2[0] ? interval1[1] - interval2[1] : interval1[0] - interval2[0]);
+        int res = 0;
+        int i = 0, j = i + 1;
+        while (j < intervals.length) {
+            // 有交集
+            if (intervals[j][0] < intervals[i][1]) {
+                res++;
+                if (intervals[j][1] <= intervals[i][1]) {
+                    i = j;
+                    j = i + 1;
+                } else {
+                    j++;
+                }
+                // 没有交集
+            } else {
+                i = j;
+                j = i + 1;
+            }
+        }
+        return res;
     }
 
 
