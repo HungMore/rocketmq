@@ -495,6 +495,17 @@ public class ProducerAlgDynamicProgrammingTest {
         return dp[text1.length()][text2.length()];
     }
 
+    public int[] numberGame(int[] nums) {
+        int[] copy = Arrays.copyOf(nums, nums.length);
+        Arrays.sort(copy);
+        for (int i = 0; i < nums.length; i = i + 2) {
+            int temp = copy[i];
+            copy[i] = copy[i + 1];
+            copy[i + 1] = temp;
+        }
+        return copy;
+    }
+
     public static class TreeNode {
         int val;
         TreeNode left;
