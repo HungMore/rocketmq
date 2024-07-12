@@ -506,6 +506,27 @@ public class ProducerAlgDynamicProgrammingTest {
         return copy;
     }
 
+    public String longestPalindrome(String s) {
+        String res = "";
+        for (int i = 0; i < s.length(); i++) {
+            String myPalindrome1 = myPalindrome(s, i, i);
+            String myPalindrome2 = myPalindrome(s, i, i + 1);
+            String myPalindrome = myPalindrome1.length() > myPalindrome2.length() ? myPalindrome1 : myPalindrome2;
+            if (myPalindrome.length() > res.length()) {
+                res = myPalindrome;
+            }
+        }
+        return res;
+    }
+
+    private String myPalindrome(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return s.substring(left + 1, right);
+    }
+
     public static class TreeNode {
         int val;
         TreeNode left;
