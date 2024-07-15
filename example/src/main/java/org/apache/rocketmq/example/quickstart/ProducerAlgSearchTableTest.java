@@ -862,4 +862,49 @@ public class ProducerAlgSearchTableTest {
         return false;
     }
 
+
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        // email -> index，用于判重
+        HashMap<String, Integer> hashMap3 = new HashMap<>();
+        // index -> name
+        HashMap<Integer, String> hashMap1 = new HashMap<>();
+        // index -> emailList
+        HashMap<Integer, TreeSet<String>> hashMap2 = new HashMap<>();
+        int index = 0;
+        for (List<String> accountList : accounts) {
+            String name = accountList.get(0);
+            for (int i = 1; i < accountList.size(); i++) {
+                String email = accountList.get(i);
+                if (hashMap3.containsKey(email)) {
+                    Integer preIndex = hashMap3.get(email);
+                    if (preIndex != index) {
+                        hashMap1.remove(index);
+                        hashMap2.remove(index);
+                        for (int j = 1; j < accountList.size(); j++) {
+                            String anEmail = accountList.get(j);
+                            // 需要更新index！！！
+                            hashMap3.put(anEmail, preIndex);
+                            hashMap2.get(preIndex).add(anEmail);
+                        }
+                        break;
+                    }
+                } else {
+                    hashMap3.put(email, index);
+                    hashMap1.computeIfAbsent(index, key -> name);
+                    hashMap2.computeIfAbsent(index, key -> new TreeSet<>()).add(email);
+                }
+            }
+            index++;
+        }
+        List<List<String>> res = new LinkedList<>();
+        for (Map.Entry<Integer, String> entry : hashMap1.entrySet()) {
+            LinkedList<String> list = new LinkedList<>();
+            list.add(entry.getValue());
+            TreeSet<String> emailList = hashMap2.get(entry.getKey());
+            list.addAll(emailList);
+            res.add(list);
+        }
+        return res;
+    }
+
 }
