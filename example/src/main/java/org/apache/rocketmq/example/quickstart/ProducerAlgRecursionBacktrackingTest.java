@@ -54,6 +54,9 @@ public class ProducerAlgRecursionBacktrackingTest {
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
 
 
+        System.out.println(test.sumOfPowers(new int[]{1, 2, 3, 4}, 3));
+        System.out.println(test.sumOfPowers(new int[]{2, 2}, 2));
+
     }
 
     public List<String> letterCombinations(String digits) {
@@ -861,6 +864,44 @@ public class ProducerAlgRecursionBacktrackingTest {
         boolean colUsed = colNumberUsed[j][number - '1'];
         boolean unitUsed = unitNumberUsed[calculateUnit(i, j)][number - '1'];
         return !rowUsed && !colUsed && !unitUsed;
+    }
+
+    int res;
+
+    public int sumOfPowers(int[] nums, int k) {
+        res = 0;
+        sumOfPowersDfs(nums, 0, k, new LinkedList<>());
+        return res;
+    }
+
+    private void sumOfPowersDfs(int[] nums, int startIndex, int k, LinkedList<Integer> pre) {
+        if (k == 0) {
+            res += getEnergy(pre);
+            return;
+        }
+        int minIndex = nums.length - k;
+        for (int i = startIndex; i <= minIndex; i++) {
+            pre.addLast(nums[i]);
+            sumOfPowersDfs(nums, i + 1, k - 1, pre);
+            pre.removeLast();
+        }
+    }
+
+    private int getEnergy(LinkedList<Integer> linkedList) {
+        if (linkedList == null || linkedList.size() < 2) {
+            throw new RuntimeException("无法获取能量值：" + linkedList);
+        }
+        int[] array = new int[linkedList.size()];
+        int index = 0;
+        for (Integer integer : linkedList) {
+            array[index++] = integer;
+        }
+        Arrays.sort(array);
+        int res = Integer.MAX_VALUE;
+        for (int i = 1; i < array.length; i++) {
+            res = Math.min(res, array[i] - array[i - 1]);
+        }
+        return res;
     }
 
 }
