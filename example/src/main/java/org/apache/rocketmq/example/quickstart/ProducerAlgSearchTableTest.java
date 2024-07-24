@@ -909,18 +909,15 @@ public class ProducerAlgSearchTableTest {
     }
 
     public List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
-        Map<Integer, Integer> position2StoneNumber = new HashMap<>();
+        Set<Integer> hasStonePositions = new HashSet<>();
         for (int num : nums) {
-            position2StoneNumber.merge(num, 1, Integer::sum);
+            hasStonePositions.add(num);
         }
         for (int i = 0; i < moveFrom.length; i++) {
-            Integer stoneNumber = position2StoneNumber.remove(moveFrom[i]);
-            if (stoneNumber == null || stoneNumber == 0) {
-                continue;
-            }
-            position2StoneNumber.merge(moveTo[i], stoneNumber, Integer::sum);
+            hasStonePositions.remove(moveFrom[i]);
+            hasStonePositions.add(moveTo[i]);
         }
-        return position2StoneNumber.keySet().stream().sorted().collect(Collectors.toList());
+        return hasStonePositions.stream().sorted().collect(Collectors.toList());
     }
 
 }
