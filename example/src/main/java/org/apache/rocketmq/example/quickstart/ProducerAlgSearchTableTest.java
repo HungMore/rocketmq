@@ -907,4 +907,19 @@ public class ProducerAlgSearchTableTest {
         return res;
     }
 
+    public List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
+        Map<Integer, Integer> position2StoneNumber = new TreeMap<>();
+        for (int num : nums) {
+            position2StoneNumber.merge(num, 1, Integer::sum);
+        }
+        for (int i = 0; i < moveFrom.length; i++) {
+            Integer stoneNumber = position2StoneNumber.remove(moveFrom[i]);
+            if (stoneNumber == null || stoneNumber == 0) {
+                continue;
+            }
+            position2StoneNumber.merge(moveTo[i], stoneNumber, Integer::sum);
+        }
+        return new LinkedList<>(position2StoneNumber.keySet());
+    }
+
 }
