@@ -1,6 +1,7 @@
 package org.apache.rocketmq.example.quickstart;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author mo
@@ -908,7 +909,7 @@ public class ProducerAlgSearchTableTest {
     }
 
     public List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
-        Map<Integer, Integer> position2StoneNumber = new TreeMap<>();
+        Map<Integer, Integer> position2StoneNumber = new HashMap<>();
         for (int num : nums) {
             position2StoneNumber.merge(num, 1, Integer::sum);
         }
@@ -919,7 +920,7 @@ public class ProducerAlgSearchTableTest {
             }
             position2StoneNumber.merge(moveTo[i], stoneNumber, Integer::sum);
         }
-        return new LinkedList<>(position2StoneNumber.keySet());
+        return position2StoneNumber.keySet().stream().sorted().collect(Collectors.toList());
     }
 
 }
