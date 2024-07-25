@@ -12,12 +12,12 @@ public class ProducerAlgSearchTableTest {
 
     public static void main(String[] args) throws Exception {
         ProducerAlgSearchTableTest producerAlgSearchTableTest = new ProducerAlgSearchTableTest();
-        System.out.println(producerAlgSearchTableTest.containsNearbyAlmostDuplicate4(new int[]{-3, 3}, 2, 4));
-        System.out.println(-3 / 4);
-        System.out.println(-3.0 / 4);
-        System.out.println(Math.floor(-3.0 / 4));
-        System.out.println((int) Math.floor(-3.0 / 4));
-        System.out.println((int) (-3.0 / 4));
+//        System.out.println(producerAlgSearchTableTest.containsNearbyAlmostDuplicate4(new int[]{-3, 3}, 2, 4));
+//        System.out.println(-3 / 4);
+//        System.out.println(-3.0 / 4);
+//        System.out.println(Math.floor(-3.0 / 4));
+//        System.out.println((int) Math.floor(-3.0 / 4));
+//        System.out.println((int) (-3.0 / 4));
 //        System.out.println(producerAlgTest.threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -27,6 +27,10 @@ public class ProducerAlgSearchTableTest {
 //                "key1",
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
+        System.out.println(producerAlgSearchTableTest.minimumOperationsWithDP("2245047"));
+        System.out.println(producerAlgSearchTableTest.minimumOperationsWithDP("2908305"));
+        System.out.println(producerAlgSearchTableTest.minimumOperationsWithDP("10"));
+        System.out.println(producerAlgSearchTableTest.minimumOperationsWithDP("275"));
     }
 
     public int[] intersection(int[] nums1, int[] nums2) {
@@ -919,5 +923,102 @@ public class ProducerAlgSearchTableTest {
         }
         return hasStonePositions.stream().sorted().collect(Collectors.toList());
     }
+
+    public int minimumOperations(String num) {
+        int count = 0;
+        LinkedList<String> list = new LinkedList<>();
+        list.addLast(num);
+        Set<String> set = new HashSet<>();
+        set.add(num);
+        while (!list.isEmpty()) {
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+                String removeFirst = list.removeFirst();
+                if (is25Times(removeFirst)) {
+                    return count;
+                }
+                for (int j = 0; j < removeFirst.length(); j++) {
+                    String removeIndex = removeIndex(removeFirst, j);
+                    if (set.add(removeIndex)) {
+                        list.addLast(removeIndex);
+                    }
+                }
+            }
+            count++;
+        }
+        return count;
+    }
+
+    /**
+     * 移除指定下标的字符
+     *
+     * @param s
+     * @param index
+     * @return
+     */
+    private String removeIndex(String s, int index) {
+        char[] toCharArray = s.toCharArray();
+        char[] chars = new char[s.length() - 1];
+        System.arraycopy(toCharArray, 0, chars, 0, index);
+        System.arraycopy(toCharArray, index + 1, chars, index, s.length() - index - 1);
+        return new String(chars);
+    }
+
+    /**
+     * 是否能被25整除
+     *
+     * @param num
+     * @return
+     */
+    private boolean is25Times(String num) {
+        if (num == null || num.length() == 0) {
+            return true;
+        }
+        if (num.length() == 1) {
+            return "0".equals(num);
+        }
+        return num.endsWith("00") || num.endsWith("25") || num.endsWith("75") || num.endsWith("50");
+    }
+
+    public int minimumOperationsWithDP(String num) {
+        int[] dp = new int[num.length() + 1];
+        dp[0] = 0;
+        // 记录上一个0的下标
+        int lastZeroIndex = -1;
+        // 记录上一个5的下标
+        int lastFiveIndex = -1;
+        // 记录上一个2的下标
+        int lastTwoIndex = -1;
+        // 记录上一个7的下标
+        int lastSevenIndex = -1;
+        for (int i = 1; i < dp.length; i++) {
+            // 不保留当前字符
+            dp[i] = 1 + dp[i - 1];
+            char c = num.charAt(i - 1);
+            if (c == '0') {
+                int maxIndex = Math.max(lastZeroIndex, lastFiveIndex);
+                if (maxIndex != -1) {
+                    // 保留当前字符，并且前面有0或者5
+                    dp[i] = Math.min(dp[i], i - 1 - maxIndex - 1);
+                } else {
+                    // 保留当前字符，并且前面没有0和5，删除前面所有字符
+                    dp[i] = Math.min(dp[i], i - 1);
+                }
+                lastZeroIndex = i - 1;
+            } else if (c == '5') {
+                int maxIndex = Math.max(lastTwoIndex, lastSevenIndex);
+                if (maxIndex != -1) {
+                    dp[i] = Math.min(dp[i], i - 1 - maxIndex - 1);
+                }
+                lastFiveIndex = i - 1;
+            } else if (c == '2') {
+                lastTwoIndex = i - 1;
+            } else if (c == '7') {
+                lastSevenIndex = i - 1;
+            }
+        }
+        return dp[num.length()];
+    }
+
 
 }
