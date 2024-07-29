@@ -91,4 +91,29 @@ public class ProducerAlgStackTest {
         return stringBuilder.toString();
     }
 
+    public int calPoints(String[] operations) {
+        LinkedList<Integer> stack = new LinkedList<>();
+        for (String operation : operations) {
+            if ("+".equals(operation)) {
+                Integer top1 = stack.pop();
+                Integer top2 = stack.pop();
+                Integer sum = top1 + top2;
+                stack.push(top2);
+                stack.push(top1);
+                stack.push(sum);
+            } else if ("D".equals(operation)) {
+                stack.push(stack.peek() * 2);
+            } else if ("C".equals(operation)) {
+                stack.pop();
+            } else {
+                stack.push(Integer.parseInt(operation));
+            }
+        }
+        int sum = 0;
+        while (!stack.isEmpty()) {
+            sum += stack.pop();
+        }
+        return sum;
+    }
+
 }
