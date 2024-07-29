@@ -1,5 +1,8 @@
 package org.apache.rocketmq.example.quickstart;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author mo
  * @Description 生产者测试
@@ -19,6 +22,10 @@ public class ProducerAlgArrayTest {
 //                "key1",
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
+
+        String res = test.convert("PAYPALISHIRING", 3);
+        System.out.println(res);
+        System.out.println(res.equals("PAHNAPLSIIGYIR"));
     }
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -43,6 +50,30 @@ public class ProducerAlgArrayTest {
         } else {
             return merge[merge.length / 2];
         }
+    }
+
+    public String convert(String s, int numRows) {
+        List<Character>[] array = new List[numRows];
+        for (int i = 0; i < numRows; i++) {
+            array[i] = new LinkedList<>();
+        }
+        int index = 0;
+        while (index < s.length()) {
+            for (int i = 0; i < numRows && index < s.length(); i++, index++) {
+                array[i].add(s.charAt(index));
+            }
+            // 这里需要注意，往上走的时候，从倒数第二个走到第二个就可以了。然后第二轮就从第一个开始走
+            for (int i = numRows - 2; i >= 1 && index < s.length(); i--, index++) {
+                array[i].add(s.charAt(index));
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            for (Character character : array[i]) {
+                sb.append(character);
+            }
+        }
+        return sb.toString();
     }
 
 
