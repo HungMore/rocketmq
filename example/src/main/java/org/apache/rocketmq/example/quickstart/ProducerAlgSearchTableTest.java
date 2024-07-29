@@ -179,7 +179,7 @@ public class ProducerAlgSearchTableTest {
         return stringBuilder.toString();
     }
 
-    private class Pair implements Comparable<Pair> {
+    public static class Pair implements Comparable<Pair> {
         char c;
         int times;
 
