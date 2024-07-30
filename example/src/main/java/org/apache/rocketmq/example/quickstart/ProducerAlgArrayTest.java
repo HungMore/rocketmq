@@ -23,9 +23,13 @@ public class ProducerAlgArrayTest {
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
 
-        String res = test.convert("PAYPALISHIRING", 3);
-        System.out.println(res);
-        System.out.println(res.equals("PAHNAPLSIIGYIR"));
+//        String res = test.convert("PAYPALISHIRING", 3);
+//        System.out.println(res);
+//        System.out.println(res.equals("PAHNAPLSIIGYIR"));
+
+        System.out.println(test.getGoodIndices(new int[][]{{2, 3, 3, 10}, {3, 3, 3, 1}, {6, 1, 1, 4}}, 2));
+        System.out.println(test.getGoodIndices(new int[][]{{39, 3, 1000, 1000}}, 17));
+        System.out.println(test.getGoodIndices(new int[][]{{1, 2, 3, 1}}, 0));
     }
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -74,6 +78,33 @@ public class ProducerAlgArrayTest {
             }
         }
         return sb.toString();
+    }
+
+    public List<Integer> getGoodIndices(int[][] variables, int target) {
+        List<Integer> res = new LinkedList<>();
+        int index = 0;
+        for (int[] variable : variables) {
+            int cal = 1;
+            for (int i = 0; i < variable[1]; i++) {
+                cal = cal * variable[0];
+                if (cal >= 10) {
+                    cal = cal % 10;
+                }
+            }
+            int base = cal;
+            cal = 1;
+            for (int i = 0; i < variable[2]; i++) {
+                cal = cal * base;
+                if (cal >= variable[3]) {
+                    cal = cal % variable[3];
+                }
+            }
+            if (cal == target) {
+                res.add(index);
+            }
+            index++;
+        }
+        return res;
     }
 
 
