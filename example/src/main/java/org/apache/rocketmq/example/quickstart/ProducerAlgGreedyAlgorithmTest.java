@@ -23,7 +23,7 @@ public class ProducerAlgGreedyAlgorithmTest {
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
         int[][] a = {
-                {1,2},{2,3},{3,4},{1,3}
+                {1, 2}, {2, 3}, {3, 4}, {1, 3}
         };
         System.out.println(test.eraseOverlapIntervals(a));
     }
@@ -79,6 +79,25 @@ public class ProducerAlgGreedyAlgorithmTest {
             }
         }
         return res;
+    }
+
+    public String getSmallestString(String s, int k) {
+        char[] charArray = s.toCharArray();
+        for (int i = 0; i < charArray.length && k > 0; i++) {
+            int positiveDistance = 26 - charArray[i] + 'a';
+            int negativeDistance = charArray[i] - 'a';
+            int minDistance = Math.min(positiveDistance, negativeDistance);
+            if (minDistance <= k) {
+                // 剩余步数可以走到’a‘
+                charArray[i] = 'a';
+                k -= minDistance;
+            } else {
+                // 剩余步数走不到’a‘,必然只能反向操作。正向操作只会往'z'靠拢
+                charArray[i] = (char) (charArray[i] - k);
+                k = 0;
+            }
+        }
+        return new String(charArray);
     }
 
 
