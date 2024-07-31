@@ -1,5 +1,7 @@
 package org.apache.rocketmq.example.quickstart;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -103,6 +105,19 @@ public class ProducerAlgArrayTest {
                 res.add(index);
             }
             index++;
+        }
+        return res;
+    }
+
+    public int minRectanglesToCoverPoints(int[][] points, int w) {
+        Arrays.sort(points, Comparator.comparingInt(p -> p[0]));
+        int res = 1;
+        int start = points[0][0];
+        for (int i = 1; i < points.length; i++) {
+            if (points[i][0] > start + w) {
+                start = points[i][0];
+                res++;
+            }
         }
         return res;
     }
