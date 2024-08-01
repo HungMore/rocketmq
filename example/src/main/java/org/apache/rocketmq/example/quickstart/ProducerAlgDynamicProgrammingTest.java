@@ -59,9 +59,13 @@ public class ProducerAlgDynamicProgrammingTest {
 //        System.out.println(test.lengthOfLIS(new int[]{0, 1, 0, 3, 2, 3}));
 //        System.out.println(test.lengthOfLIS(new int[]{7, 7, 7, 7, 7, 7, 7}));
 
-        System.out.println(test.wiggleMaxLength(new int[]{1, 7, 4, 9, 2, 5}));  //6
-        System.out.println(test.wiggleMaxLength(new int[]{1, 17, 5, 10, 13, 15, 10, 5, 16, 8}));  //7
-        System.out.println(test.wiggleMaxLength(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9}));  //2
+//        System.out.println(test.wiggleMaxLength(new int[]{1, 7, 4, 9, 2, 5}));  //6
+//        System.out.println(test.wiggleMaxLength(new int[]{1, 17, 5, 10, 13, 15, 10, 5, 16, 8}));  //7
+//        System.out.println(test.wiggleMaxLength(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9}));  //2
+
+        System.out.println(test.maxmiumScore(new int[]{1, 2, 8, 9}, 3));
+        System.out.println(test.maxmiumScore(new int[]{3, 3, 1}, 1));
+        System.out.println(test.maxmiumScore(new int[]{1, 3, 4, 5}, 4));
     }
 
     // 计算执行fib函数的次数
@@ -545,4 +549,39 @@ public class ProducerAlgDynamicProgrammingTest {
             this.right = right;
         }
     }
+
+    public int maxmiumScore(int[] cards, int cnt) {
+        int[][] dp_odd = new int[cards.length][cnt];
+        int[][] dp_even = new int[cards.length][cnt];
+        // 0表示无法得到分数
+        // base case 设置
+        dp_odd[0][0] = cards[0] % 2 == 0 ? 0 : cards[0];
+        dp_even[0][0] = cards[0] % 2 == 0 ? cards[0] : 0;
+        for (int i = 1; i < cards.length; i++) {
+            // base case 设置
+            dp_odd[i][0] = cards[i] % 2 == 1 ? Math.max(cards[i], dp_odd[i - 1][0]) : dp_odd[i - 1][0];
+            dp_even[i][0] = cards[i] % 2 == 0 ? Math.max(cards[i], dp_even[i - 1][0]) : dp_even[i - 1][0];
+        }
+        for (int i = 1; i < cards.length; i++) {
+            int currCard = cards[i];
+            boolean isCurrCardEven = currCard % 2 == 0;
+            for (int j = 1; j <= i && j < cnt; j++) {
+                if (isCurrCardEven) {
+                    dp_odd[i][j] = Math.max(dp_odd[i - 1][j],
+                            dp_odd[i - 1][j - 1] == 0 ? 0 : (dp_odd[i - 1][j - 1] + currCard));
+
+                    dp_even[i][j] = Math.max(dp_even[i - 1][j],
+                            dp_even[i - 1][j - 1] == 0 ? 0 : (dp_even[i - 1][j - 1] + currCard));
+                } else {
+                    dp_odd[i][j] = Math.max(dp_odd[i - 1][j],
+                            dp_even[i - 1][j - 1] == 0 ? 0 : (dp_even[i - 1][j - 1] + currCard));
+                    dp_even[i][j] = Math.max(dp_even[i - 1][j],
+                            dp_odd[i - 1][j - 1] == 0 ? 0 : (dp_odd[i - 1][j - 1] + currCard));
+                }
+            }
+        }
+        return dp_even[cards.length - 1][cnt - 1];
+    }
+
+
 }
