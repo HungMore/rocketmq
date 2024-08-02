@@ -22,10 +22,11 @@ public class ProducerAlgGreedyAlgorithmTest {
 //                "key1",
 //                JSON.toJSONString("").getBytes(StandardCharsets.UTF_8));
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
-        int[][] a = {
-                {1, 2}, {2, 3}, {3, 4}, {1, 3}
-        };
-        System.out.println(test.eraseOverlapIntervals(a));
+//        int[][] a = {
+//                {1, 2}, {2, 3}, {3, 4}, {1, 3}
+//        };
+//        System.out.println(test.eraseOverlapIntervals(a));
+        System.out.println(test.maxmiumScore(new int[]{1, 2, 8, 9}, 3));
     }
 
     public int findContentChildren(int[] g, int[] s) {
@@ -98,6 +99,68 @@ public class ProducerAlgGreedyAlgorithmTest {
             }
         }
         return new String(charArray);
+    }
+
+    /**
+     * LCP 40: 心算挑战
+     * <p>
+     * 将 cards 从小到大排序后，先贪心的将后 cnt 个数字加起来，若此时 sum 为偶数，直接返回即可。
+     * 若此时答案为奇数，有两种方案:
+     * 1. 在数组前面找到一个最大的奇数与后 cnt 个数中最小的偶数进行替换；
+     * 2. 在数组前面找到一个最大的偶数与后 cnt 个数中最小的奇数进行替换。
+     * 两种方案选最大值即可。
+     *
+     * @param cards
+     * @param cnt
+     * @return
+     */
+    public int maxmiumScore(int[] cards, int cnt) {
+        // 使用拷贝来排序，避免函数副作用
+        int[] copy = Arrays.copyOf(cards, cards.length);
+        Arrays.sort(copy);
+        cards = copy;
+        int res = 0;
+        // 最小的奇数和最小的偶数
+        int minOdd = -1, minEven = -1;
+        for (int i = cards.length - 1; i >= cards.length - cnt; i--) {
+            res += cards[i];
+            if (cards[i] % 2 == 0) {
+                minEven = cards[i];
+            } else {
+                minOdd = cards[i];
+            }
+        }
+        if (res % 2 == 0) {
+            return res;
+        }
+        // 剩余数字中的最大奇数和最大偶数
+        int maxOdd = -1, maxEven = -1;
+        for (int i = cards.length - cnt - 1; i >= 0; i--) {
+            if (cards[i] % 2 == 0) {
+                if (maxEven == -1) {
+                    maxEven = cards[i];
+                }
+            } else {
+                if (maxOdd == -1) {
+                    maxOdd = cards[i];
+                }
+            }
+            if (maxEven != -1 && maxOdd != -1) {
+                break;
+            }
+        }
+        int temp1 = -1;
+        if (minOdd != -1 && maxEven != -1) {
+            temp1 = res - minOdd + maxEven;
+        }
+        int temp2 = -1;
+        if (minEven != -1 && maxOdd != -1) {
+            temp2 = res - minEven + maxOdd;
+        }
+        if (temp1 == -1 && temp2 == -1) {
+            return 0;
+        }
+        return Math.max(temp1, temp2);
     }
 
 
