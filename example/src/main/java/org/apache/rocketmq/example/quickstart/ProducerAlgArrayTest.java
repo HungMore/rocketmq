@@ -122,5 +122,28 @@ public class ProducerAlgArrayTest {
         return res;
     }
 
+    public long numberOfRightTriangles(int[][] grid) {
+        // 记录每行、每列具有的1的个数
+        int[] rowCount = new int[grid.length];
+        int[] colCount = new int[grid[0].length];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    rowCount[i]++;
+                    colCount[j]++;
+                }
+            }
+        }
+        long res = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    res += (long) (rowCount[i] - 1) * (colCount[j] - 1);
+                }
+            }
+        }
+        return res;
+    }
+
 
 }
