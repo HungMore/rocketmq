@@ -909,21 +909,25 @@ public class ProducerAlgRecursionBacktrackingTest {
         return res;
     }
 
-    private int checkRecordResult;
-
     public int checkRecord(int n) {
-        checkRecordResult = 0;
-        checkRecordDFS(n, 1, 0, 0);
-        return checkRecordResult;
+        memoForCheckRecord = new HashMap<>();
+        return checkRecordDFS(n, 1, 0, 0);
     }
 
     private final char[] checkRecordDirection = new char[]{'A', 'L', 'P'};
 
-    private void checkRecordDFS(int n, int d, int countA, int countP) {
+    private Map<String, Integer> memoForCheckRecord;
+
+    private int checkRecordDFS(int n, int d, int countA, int countP) {
         if (d > n) {
-            checkRecordResult++;
-            return;
+            return 1;
         }
+        String key = d + "_" + countA + "_" + countP;
+        Integer sumInMemo = memoForCheckRecord.get(key);
+        if (sumInMemo != null) {
+            return sumInMemo;
+        }
+        long sum = 0;
         for (char direction : checkRecordDirection) {
             int newCountA = countA;
             int newCountP = countP;
@@ -938,8 +942,11 @@ public class ProducerAlgRecursionBacktrackingTest {
             if (newCountA >= 2 || newCountP >= 3) {
                 continue;
             }
-            checkRecordDFS(n, d + 1, newCountA, newCountP);
+            sum += checkRecordDFS(n, d + 1, newCountA, newCountP);
         }
+        sum = sum % 1000000007;
+        memoForCheckRecord.put(key, (int) sum);
+        return (int) sum;
     }
 
 }
