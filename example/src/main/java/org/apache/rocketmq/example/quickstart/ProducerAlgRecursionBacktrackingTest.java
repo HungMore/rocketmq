@@ -42,7 +42,7 @@ public class ProducerAlgRecursionBacktrackingTest {
 
 //        System.out.println(test.combinationSum2(new int[]{1, 1, 1, 3, 3, 5}, 8));
 
-        System.out.println(test.readBinaryWatch(9));
+//        System.out.println(test.readBinaryWatch(9));
 
 //        DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
 //        producer.setNamesrvAddr("127.0.0.1:9876");
@@ -54,8 +54,13 @@ public class ProducerAlgRecursionBacktrackingTest {
 //        producer.send(message2, new SelectMessageQueueByHash(), "12");
 
 
-        System.out.println(test.sumOfPowers(new int[]{1, 2, 3, 4}, 3));
-        System.out.println(test.sumOfPowers(new int[]{2, 2}, 2));
+//        System.out.println(test.sumOfPowers(new int[]{1, 2, 3, 4}, 3));
+//        System.out.println(test.sumOfPowers(new int[]{2, 2}, 2));
+
+        // 问题552：学生出勤记录II
+        System.out.println(test.checkRecord(2)); // 8
+        System.out.println(test.checkRecord(1)); // 3
+        System.out.println(test.checkRecord(10101)); // 183236316
 
     }
 
@@ -902,6 +907,39 @@ public class ProducerAlgRecursionBacktrackingTest {
             res = Math.min(res, array[i] - array[i - 1]);
         }
         return res;
+    }
+
+    private int checkRecordResult;
+
+    public int checkRecord(int n) {
+        checkRecordResult = 0;
+        checkRecordDFS(n, 1, 0, 0);
+        return checkRecordResult;
+    }
+
+    private final char[] checkRecordDirection = new char[]{'A', 'L', 'P'};
+
+    private void checkRecordDFS(int n, int d, int countA, int countP) {
+        if (d > n) {
+            checkRecordResult++;
+            return;
+        }
+        for (char direction : checkRecordDirection) {
+            int newCountA = countA;
+            int newCountP = countP;
+            if (direction == 'A') {
+                newCountA = countA + 1;
+                newCountP = 0;
+            } else if (direction == 'P') {
+                newCountP = countP + 1;
+            } else {
+                newCountP = 0;
+            }
+            if (newCountA >= 2 || newCountP >= 3) {
+                continue;
+            }
+            checkRecordDFS(n, d + 1, newCountA, newCountP);
+        }
     }
 
 }
