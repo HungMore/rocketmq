@@ -145,5 +145,23 @@ public class ProducerAlgArrayTest {
         return res;
     }
 
+    // Time Limit Exceeded
+    public int largestRectangleArea(int[] heights) {
+        int res = 0;
+        for (int i = 0; i < heights.length; i++) {
+            // 中心扩散
+            int left = i - 1;
+            while (left >= 0 && heights[left] >= heights[i]) {
+                left--;
+            }
+            int right = i + 1;
+            while (right < heights.length && heights[right] >= heights[i]) {
+                right++;
+            }
+            res = Math.max(res, (right - left - 1) * heights[i]);
+        }
+        return res;
+    }
+
 
 }
