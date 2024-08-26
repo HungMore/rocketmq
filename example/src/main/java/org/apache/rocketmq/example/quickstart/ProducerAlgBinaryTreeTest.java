@@ -1,6 +1,8 @@
 package org.apache.rocketmq.example.quickstart;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author mo
@@ -453,6 +455,29 @@ public class ProducerAlgBinaryTreeTest {
             this.left = left;
             this.right = right;
         }
+    }
+
+    public static class Employee {
+        public int id;
+        public int importance;
+        public List<Integer> subordinates;
+    }
+
+    public int getImportance(List<Employee> employees, int id) {
+        Map<Integer, Employee> id2Employee = employees.stream().collect(Collectors.toMap(employee -> employee.id, Function.identity()));
+        Employee leader = id2Employee.get(id);
+        // 广度优先遍历
+        LinkedList<Employee> employeeList = new LinkedList<>();
+        employeeList.add(leader);
+        int sum = 0;
+        while (!employeeList.isEmpty()) {
+            Employee removeFirst = employeeList.removeFirst();
+            sum += removeFirst.importance;
+            if (removeFirst.subordinates != null) {
+                removeFirst.subordinates.forEach(subId -> employeeList.add(id2Employee.get(subId)));
+            }
+        }
+        return sum;
     }
 
 }
