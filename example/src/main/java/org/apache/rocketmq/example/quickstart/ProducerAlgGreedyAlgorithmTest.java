@@ -163,5 +163,27 @@ public class ProducerAlgGreedyAlgorithmTest {
         return Math.max(temp1, temp2);
     }
 
+    public String largestNumber(int[] nums) {
+        StringBuilder res = new StringBuilder();
+        String[] stringArray = new String[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            stringArray[i] = String.valueOf(nums[i]);
+        }
+        // 降序排序
+        Arrays.sort(stringArray, (s1, s2) -> {
+            String s1Start = s1 + s2;
+            String s2Start = s2 + s1;
+            return s2Start.compareTo(s1Start);
+        });
+        for (String s : stringArray) {
+            res.append(s);
+        }
+        int i = 0;
+        while (i < res.length() && res.charAt(i) == '0') {
+            i++;
+        }
+        return i == res.length() ? "0" : res.substring(i);
+    }
+
 
 }
