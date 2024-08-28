@@ -1,9 +1,6 @@
 package org.apache.rocketmq.example.quickstart;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author mo
@@ -161,6 +158,30 @@ public class ProducerAlgArrayTest {
             res = Math.max(res, (right - left - 1) * heights[i]);
         }
         return res;
+    }
+
+    public void setZeroes(int[][] matrix) {
+        Set<Integer> zeroRowSet = new HashSet<>();
+        Set<Integer> zeroColSet = new HashSet<>();
+        int m = matrix.length, n = matrix[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    zeroRowSet.add(i);
+                    zeroColSet.add(j);
+                }
+            }
+        }
+        for (Integer row : zeroRowSet) {
+            for (int i = 0; i < n; i++) {
+                matrix[row][i] = 0;
+            }
+        }
+        for (Integer col : zeroColSet) {
+            for (int i = 0; i < m; i++) {
+                matrix[i][col] = 0;
+            }
+        }
     }
 
 
