@@ -199,5 +199,26 @@ public class ProducerAlgArrayTest {
         return true;
     }
 
+    public boolean isSubstringPresent(String s) {
+        Map<Character, List<Integer>> char2IndexList = new HashMap<>();
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            List<Integer> indexList = char2IndexList.getOrDefault(chars[i], new LinkedList<>());
+            indexList.add(i);
+            char2IndexList.put(chars[i], indexList);
+        }
+        for (int i = 0; i < chars.length - 1; i++) {
+            List<Integer> indexList = char2IndexList.get(chars[i]);
+            if (indexList != null && !indexList.isEmpty()) {
+                for (Integer index : indexList) {
+                    if (index > 0 && chars[index - 1] == chars[i + 1]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
 }
